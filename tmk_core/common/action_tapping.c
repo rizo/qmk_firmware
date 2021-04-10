@@ -121,13 +121,9 @@ bool process_tapping(keyrecord_t *keyp) {
                  * This can register the key before settlement of tapping,
                  * useful for long TAPPING_TERM but may prevent fast typing.
                  */
-<<<<<<< HEAD
+
 #    if defined(TAPPING_TERM_PER_KEY) || (TAPPING_TERM >= 500) || defined(PERMISSIVE_HOLD) || defined(PERMISSIVE_HOLD_PER_KEY)
-                else if (((
-=======
-#    if defined(TAPPING_TERM_PER_KEY) || (tapping_term >= 500) || defined(PERMISSIVE_HOLD) || defined(PERMISSIVE_HOLD_PER_KEY)
                 else if (
->>>>>>> precondition/tap_term_keys
 #        ifdef TAPPING_TERM_PER_KEY
                               get_tapping_term(get_event_keycode(tapping_key.event, false), keyp)
 #        else
