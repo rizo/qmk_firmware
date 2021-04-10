@@ -1,0 +1,4 @@
+
+COMBO_ENABLE = yes
+
+TAP_TERM_KEYS_ENABLE = yes
