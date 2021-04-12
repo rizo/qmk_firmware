@@ -397,6 +397,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
+  else if (keycode == _K_NAV) {
+    // S(KC_TAB)
+    // FIXME: Repeat on second tap doesn't work.
+    if (record->tap.count > 0) {
+      if (record->event.pressed) {
+        tap_code16(is_sft_on ? KC_UNDS : S(KC_SPC));
+      }
+      ret = false;
+    }
+  }
+
   // CMD GT
   else if (keycode == _K_SCMD) {
     // FIXME: Repeat on second tap doesn't work.
