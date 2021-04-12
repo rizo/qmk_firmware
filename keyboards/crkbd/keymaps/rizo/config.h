@@ -33,6 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define TAPPING_FORCE_HOLD
 // #define TAPPING_TERM 100
 
+// Recommended for heavy chording.
+#define QMK_KEYS_PER_SCAN 4
+
 #define COMBO_COUNT 11
 #define COMBO_TERM 25
 
