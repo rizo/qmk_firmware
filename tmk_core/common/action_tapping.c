@@ -128,7 +128,7 @@ bool process_tapping(keyrecord_t *keyp) {
                  */
 
 #    if defined(TAPPING_TERM_PER_KEY) || (TAPPING_TERM >= 500) || defined(PERMISSIVE_HOLD) || defined(PERMISSIVE_HOLD_PER_KEY)
-                else if (
+                else if (((
 #        ifdef TAPPING_TERM_PER_KEY
                               get_tapping_term(get_record_keycode(&tapping_key, false), keyp)
 #        else
