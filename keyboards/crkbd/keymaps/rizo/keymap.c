@@ -402,7 +402,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // FIXME: Repeat on second tap doesn't work.
     if (record->tap.count > 0) {
       if (record->event.pressed) {
-        tap_code16(is_sft_on ? KC_UNDS : S(KC_SPC));
+        tap_code16(is_sft_on ? KC_UNDS : KC_SPC);
       }
       ret = false;
     }
