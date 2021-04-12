@@ -40,8 +40,6 @@ enum keycodes {
 #define _K_PG_D A(KC_DOWN)
 
 
-// #define _K_ALT LM(_L_ALT, MOD_LALT)
-
 #define _K_ALT LT(_L_ALT, _K_STAB)
 
 #define _K_CMD LGUI_T(KC_TAB)
@@ -363,17 +361,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
 
   // Process ALT layer actions.
-  if (IS_LAYER_ON(_L_ALT)) {
+  // if (IS_LAYER_ON(_L_ALT)) {
 
     // MUST be processed early.
-    // Unregister alt.
+    // Unregister alt on any key.
     if (keycode != _K_ALT && record->event.pressed && is_alt_on) {
       unregister_code(KC_LALT);
     }
 
     ret = switch_app(&_s_app_active, keycode, record);
     ret = switch_spl(keycode, record);
-  }
+  // }
 
   // Handle alt layer and tap.
   if (keycode == _K_ALT) {
@@ -479,6 +477,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return ret;
 }
 
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+  case _K_ALT:
+    // Easier alt.
+    // S-TAB requires a more precise tap.
+    return 150;
+  default:
+    return TAPPING_TERM;
+  }
+}
 
 // --- Debugging ---
 
