@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-#include "print.h"
+// #include "print.h"
 
 // -- Layers and keys ---
 
@@ -40,7 +40,7 @@ enum keycodes {
 #define _K_PG_D A(KC_DOWN)
 
 
-#define _K_ALT LT(_L_ALT, _K_STAB)
+#define _K_ALT LM(_L_ALT, MOD_LALT)
 
 #define _K_CMD LGUI_T(KC_TAB)
 #define _K_SYM LT(_L_SYM, KC_ENT)
@@ -353,6 +353,9 @@ bool switch_spl(uint16_t keycode, keyrecord_t *record) {
 // --- Function overrides ---
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  static uint16_t k_alt_timer = 0;
+  static bool k_alt_interrupted = false;
+
   bool ret = true;
 
   bool is_gui_on = (get_mods() & MOD_BIT(KC_LGUI));
@@ -361,38 +364,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
 
   // Process ALT layer actions.
-  // if (IS_LAYER_ON(_L_ALT)) {
+  if (IS_LAYER_ON(_L_ALT)) {
 
     // MUST be processed early.
     // Unregister alt on any key.
-    if (keycode != _K_ALT && record->event.pressed && is_alt_on) {
-      unregister_code(KC_LALT);
+    if (keycode != _K_ALT && record->event.pressed) {
+      k_alt_interrupted = true;
+      if (is_alt_on) unregister_code(KC_LALT);
     }
 
     ret = switch_app(&_s_app_active, keycode, record);
     ret = switch_spl(keycode, record);
-  // }
+  }
 
-  // Handle alt layer and tap.
-  if (keycode == _K_ALT) {
-    // S(KC_TAB)
-    // FIXME: Repeat on second tap doesn't work.
-    if (record->tap.count > 0) {
-      if (record->event.pressed) {
-        tap_code16(S(KC_TAB));
-      }
-      ret = false;
-    }
+  // Process keycodes.
+  if (false) { }
 
-    // Activate alt while holding.
-    else {
-      if (record->event.pressed) {
-        if (!is_alt_on) register_code(KC_LALT);
+  else if (keycode == _K_ALT) {
+    if(record->event.pressed) {
+        k_alt_timer = timer_read();
+        ret = true;
       } else {
-        if (is_alt_on) unregister_code(KC_LALT);
+        if (timer_elapsed(k_alt_timer) < 150 && !k_alt_interrupted) {
+          unregister_code(KC_LALT);
+          tap_code16(S(KC_TAB));
+          ret = true;
+        }
+        k_alt_interrupted = false;
+        ret = true;
       }
-      ret = true;
-    }
   }
 
   else if (keycode == _K_NAV) {
