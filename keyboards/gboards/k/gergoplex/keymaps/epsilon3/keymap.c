@@ -113,39 +113,39 @@ enum combo_events {
 
 
 //       A,       R,       S,       T
-// KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT
+// KC_LSFT, KC_LGUI, KC_LALT, KC_LCTL
 
-// A + R -> CTL + SFT
+// A + R
 const uint16_t PROGMEM   ar_mod_combo[] = {_K_CMD, KC_A, KC_R, COMBO_END};
 
-// A + S -> CTL + GUI
+// A + S
 const uint16_t PROGMEM   as_mod_combo[] = {_K_CMD, KC_A, KC_S, COMBO_END};
 
-// A + T -> CTL + ALT
+// A + T
 const uint16_t PROGMEM   at_mod_combo[] = {_K_CMD, KC_A, KC_T, COMBO_END};
 
-// R + S -> SFT + GUI
+// R + S
 const uint16_t PROGMEM   rs_mod_combo[] = {_K_CMD, KC_R, KC_S, COMBO_END};
 
-// R + T -> SFT + ALT
+// R + T
 const uint16_t PROGMEM   rt_mod_combo[] = {_K_CMD, KC_R, KC_T, COMBO_END};
 
-// S + T -> GUI + ALT
+// S + T
 const uint16_t PROGMEM   st_mod_combo[] = {_K_CMD, KC_S, KC_T, COMBO_END};
 
-// A + R + S  -> CTL + SFT + GUI
+// A + R + S 
 const uint16_t PROGMEM  ars_mod_combo[] = {_K_CMD, KC_A, KC_R, KC_S, COMBO_END};
 
-// A + R + T  -> CTL + SFT + ALT
+// A + R + T 
 const uint16_t PROGMEM  art_mod_combo[] = {_K_CMD, KC_A, KC_R, KC_T, COMBO_END};
 
-// A + S + T  -> CTL + GUI + ALT
+// A + S + T 
 const uint16_t PROGMEM  ast_mod_combo[] = {_K_CMD, KC_A, KC_S, KC_T, COMBO_END};
 
-// R + S + T  -> SFT + GUI + ALT
+// R + S + T 
 const uint16_t PROGMEM  rst_mod_combo[] = {_K_CMD, KC_R, KC_S, KC_T, COMBO_END};
 
-// A + R + S + T  -> CGI + SFT + GUI + ALT
+// A + R + S + T 
 const uint16_t PROGMEM arst_mod_combo[] = {_K_CMD, KC_A, KC_R, KC_S, KC_T, COMBO_END};
 
 
@@ -168,67 +168,67 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 
   case _E_AR_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
+      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI));
     }
     break;
 
   case _E_AS_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT));
     }
     break;
 
   case _E_AT_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LCTL));
     }
     break;
 
   case _E_RS_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI));
+      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT));
     }
     break;
 
   case _E_RT_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LCTL));
     }
     break;
 
   case _E_ST_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL));
     }
     break;
 
   case _E_ARS_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI));
+      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT));
     }
     break;
 
   case _E_ART_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LCTL));
     }
     break;
 
   case _E_AST_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL));
     }
     break;
 
   case _E_RST_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL));
     }
     break;
 
   case _E_ARST_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL));
     }
     break;
   }
@@ -255,9 +255,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_L_NAV] = LAYOUT_gergoplex(
   //,--------------------------------------------.                    ,--------------------------------------------.
-      _K_LOCK, KC_MPRV, KC_MNXT, KC_MPLY, _K_VOLU,                      XXXXXXX, _K_WD_L,   KC_UP, _K_WD_R, XXXXXXX,
+      _K_LOCK,_K_S_SPL,_K_S_APP,_K_S_TAB,_K_S_WIN,                      XXXXXXX, _K_WD_L,   KC_UP, _K_WD_R, XXXXXXX,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      _K_OCTL, _K_OSFT, _K_OGUI, _K_OALT, _K_MUTE,                      _K_PG_U, KC_LEFT, KC_DOWN,KC_RIGHT, _K_FL_T,
+      _K_OSFT, _K_OGUI, _K_OALT, _K_OCTL, _K_MUTE,                      _K_PG_U, KC_LEFT, KC_DOWN,KC_RIGHT, _K_FL_T,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
       _______, _______, _______, _______, _K_VOLD,                      _K_PG_D, _K_LN_L, XXXXXXX, _K_LN_R, _K_FL_B,
   //|--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
@@ -308,12 +308,12 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
               register_code(KC_TAB);
               return false;
             }
-        } else {
+        } else { // released
             // Don't unregister KC_LGUI yet.
             unregister_code(KC_TAB);
             return false;
         }
-    } else if (keycode == _K_ALT && !record->event.pressed) {
+    } else if (keycode == _K_NAV && !record->event.pressed) {
         unregister_code(KC_LGUI);
         *active = false;
         return true;
@@ -368,16 +368,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_sft_on = (get_mods() & MOD_BIT(KC_LSHIFT));
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
 
+
+  // MUST be processed early.
+  // // Unregister alt on any key.
+  // if (keycode != _K_ALT && record->event.pressed) {
+  //   k_alt_interrupted = true;
+  //   if (is_alt_on) unregister_code(KC_LALT);
+  // }
+
   // Process ALT layer actions.
-  if (IS_LAYER_ON(_L_ALT)) {
-
-    // MUST be processed early.
-    // Unregister alt on any key.
-    if (keycode != _K_ALT && record->event.pressed) {
-      k_alt_interrupted = true;
-      if (is_alt_on) unregister_code(KC_LALT);
-    }
-
+  if (IS_LAYER_ON(_L_NAV)) {
     ret = switch_app(&_s_app_active, keycode, record);
     ret = switch_spl(keycode, record);
   }
