@@ -2,17 +2,19 @@
 # make gergo:germ:dfu
 # Make sure you have dfu-programmer installed!
 #----------------------------------------------------------------------------
+
 # Firmware options
-MOUSEKEY_ENABLE 					= yes
+MOUSEKEY_ENABLE = no
+COMBO_ENABLE = yes
 
 #Debug options
-VERBOSE 		 							= yes
-DEBUG_MATRIX_SCAN_RATE   	= no
-DEBUG_MATRIX		 					= yes
-CONSOLE_ENABLE						= yes
+VERBOSE = no
+DEBUG_MATRIX_SCAN_RATE = no
+DEBUG_MATRIX = no
+CONSOLE_ENABLE = no
 
 #Combos!
-VPATH               			+=  keyboards/gboards/
+# VPATH               			+=  keyboards/gboards/
 
 # A bunch of stuff that you shouldn't touch unless you
 # know what you're doing.
