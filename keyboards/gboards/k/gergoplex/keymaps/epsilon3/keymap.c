@@ -15,6 +15,7 @@ enum keycodes {
     OS_SHFT = SAFE_RANGE,
 
     _K_STAB,  // Custom S(KC_TAB).
+    _K_GDEL,  // Custom G(KC_DEL).
     _K_LT,    // Custom KC_LT.
     _K_GT,    // Custom KC_GT.
     _K_CIR,   // Custom KC_CIRC.
@@ -40,13 +41,18 @@ enum keycodes {
 #define _K_PG_D A(KC_DOWN)
 
 
-#define _K_ALT LM(_L_ALT, MOD_LALT)
+// ConTrol ALt (Control in shortcuts, alt when held alone).
+#define _K_CTAL ALT_T(KC_DEL)
 
 #define _K_CMD LGUI_T(KC_TAB)
 #define _K_SYM LT(_L_SYM, KC_ENT)
 #define _K_NAV LT(_L_NAV, KC_SPC)
 #define _K_SFT SFT_T(KC_ESC)
-#define _K_CTL CTL_T(KC_BSPC)
+#define _K_ALT ALT_T(KC_BSPC)
+
+// NAV mod-taps.
+#define _K_NCMD LGUI_T(_K_STAB)
+#define _K_NCTL LCTL_T(_K_GDEL)
 
 // SYM mod-taps.
 #define _K_SALT LALT_T(_K_LT)
@@ -249,7 +255,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_K,    KC_M, _K_COMM,  _K_DOT, _K_EXLM,
   //|--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-                                  _K_ALT,  _K_CMD,  _K_SFT,     _K_SYM,  _K_NAV,  _K_CTL
+                                  _K_CTAL, _K_CMD,  _K_SFT,     _K_SYM,  _K_NAV,  _K_ALT
                              //`--------------------------'  `--------------------------'
   ),
 
@@ -257,23 +263,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,--------------------------------------------.                    ,--------------------------------------------.
       _K_LOCK,_K_S_SPL,_K_S_APP,_K_S_TAB,_K_S_WIN,                      XXXXXXX, _K_WD_L,   KC_UP, _K_WD_R, XXXXXXX,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      _K_OSFT, _K_OGUI, _K_OALT, _K_OCTL, _K_MUTE,                      _K_PG_U, KC_LEFT, KC_DOWN,KC_RIGHT, _K_FL_T,
+      _K_OSFT, _K_OGUI, _K_OALT, _K_OCTL, _K_MUTE,                      _K_LN_L, KC_LEFT, KC_DOWN,KC_RIGHT, _K_LN_R,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      _______, _______, _______, _______, _K_VOLD,                      _K_PG_D, _K_LN_L, XXXXXXX, _K_LN_R, _K_FL_B,
+      _______, _______, _______, _______, _K_VOLD,                      XXXXXXX, _K_PG_D, _K_PG_U, _K_FL_T, _K_FL_B,
   //|--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-                                 _______, _______, _______,    XXXXXXX, _______, XXXXXXX
+                                 _K_NCTL, _K_NCMD, _______,    XXXXXXX, _______, XXXXXXX
                              //`--------------------------'  `--------------------------'
   ),
 
   [_L_SYM] = LAYOUT_gergoplex(
   //,--------------------------------------------.                    ,--------------------------------------------.
-       KC_GRV, KC_HASH, KC_LBRC, KC_RBRC, KC_AMPR,                      KC_PLUS,    KC_7,    KC_8,    KC_9, KC_ASTR,
+       KC_GRV,   KC_AT, KC_LBRC, KC_RBRC, KC_AMPR,                      KC_PLUS,    KC_7,    KC_8,    KC_9, _K_SCIR,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-        KC_AT, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                       KC_EQL,    KC_1,    KC_2,    KC_3,    KC_0,
+      KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                      KC_MINS,    KC_1,    KC_2,    KC_3,    KC_0,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      KC_BSLS,  KC_DLR, KC_LCBR, KC_RCBR, KC_TILD,                      KC_MINS,    KC_4,    KC_5,    KC_6, KC_SLSH,
+      KC_BSLS,  KC_DLR, KC_LCBR, KC_RCBR, KC_HASH,                      KC_ASTR,    KC_4,    KC_5,    KC_6, KC_SLSH,
   //|--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-                                 _K_SALT, _K_SCMD, _K_SCIR,    _______, XXXXXXX, XXXXXXX
+                                 _K_SALT, _K_SCMD,  KC_EQL,    _______, XXXXXXX, XXXXXXX
                              //`--------------------------'  `--------------------------'
   ),
 
@@ -358,8 +364,8 @@ bool switch_spl(uint16_t keycode, keyrecord_t *record) {
 // --- Function overrides ---
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static uint16_t k_alt_timer = 0;
-  static bool k_alt_interrupted = false;
+  static bool k_ctal_interrupted = false;
+  static bool k_ctal_pressed = false;
 
   bool ret = true;
 
@@ -368,13 +374,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_sft_on = (get_mods() & MOD_BIT(KC_LSHIFT));
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
 
-
-  // MUST be processed early.
-  // // Unregister alt on any key.
-  // if (keycode != _K_ALT && record->event.pressed) {
-  //   k_alt_interrupted = true;
-  //   if (is_alt_on) unregister_code(KC_LALT);
-  // }
+  // Check if we are interrupting ALT.
+  // If so, unregister alt and register ctl.
+  // _K_ALT (i.e. bspc) does not alter alt.
+  if (k_ctal_pressed && !k_ctal_interrupted && record->event.pressed && keycode != _K_CTAL && keycode != _K_ALT) {
+    k_ctal_interrupted = true;
+    if (is_alt_on) unregister_code(KC_LALT);
+    if (!is_ctl_on) register_code(KC_LCTL);
+  }
 
   // Process ALT layer actions.
   if (IS_LAYER_ON(_L_NAV)) {
@@ -385,21 +392,61 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Process keycodes.
   if (false) { }
 
-  else if (keycode == _K_ALT) {
+  else if (keycode == _K_CTAL) {
     if(record->event.pressed) {
-        k_alt_timer = timer_read();
-        ret = true;
+      k_ctal_pressed = true;
+
+      // For non-basic _K_CTAL tap codes.
+      // if (record->tap.count > 0) {
+      //   // Custom tap action.
+      //   tap_code16(S(KC_TAB));
+      //   ret = false;
+      // } else {
+      //   // Allow QMK to set ALT naturally.
+      //   ret = true;
+      // }
+
+      ret = true;
+    } else { // released
+      k_ctal_pressed = false;
+      if (k_ctal_interrupted) {
+        // We need to unregister CTL set on iterruption.
+        if (is_ctl_on) unregister_code(KC_LCTL);
+        k_ctal_interrupted = false;
+        ret = true; // XXX should this be false? ALT was already unregistered on interruption.
       } else {
-        if (timer_elapsed(k_alt_timer) < 150 && !k_alt_interrupted) {
-          unregister_code(KC_LALT);
-          tap_code16(S(KC_TAB));
-          ret = true;
-        }
-        k_alt_interrupted = false;
+        // No need to do anything, ALT will be unregistered by QMK.
         ret = true;
       }
+    }
   }
 
+  // NAV: CMD S-TAB
+  else if (keycode == _K_NCMD) {
+    // S(KC_TAB)
+    // FIXME: Repeat on second tap doesn't work.
+    if (record->tap.count > 0) {
+      if (record->event.pressed) {
+        tap_code16(S(KC_TAB));
+      }
+      ret = false;
+    }
+  }
+
+
+  // NAV: CTL G(DEL)
+  else if (keycode == _K_NCTL) {
+    // S(KC_TAB)
+    // FIXME: Repeat on second tap doesn't work.
+    if (record->tap.count > 0) {
+      if (record->event.pressed) {
+        tap_code16(C(KC_K));
+      }
+      ret = false;
+    }
+  }
+
+  // NAV SP / UNDS
   else if (keycode == _K_NAV) {
     // S(KC_TAB)
     // FIXME: Repeat on second tap doesn't work.
@@ -485,7 +532,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-  case _K_ALT:
+  case _K_CTAL:
     // Easier alt.
     // S-TAB requires a more precise tap.
     return 150;
