@@ -273,11 +273,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_L_SYM] = LAYOUT_gergoplex(
   //,--------------------------------------------.                    ,--------------------------------------------.
-       KC_GRV,   KC_AT, KC_LBRC, KC_RBRC, KC_AMPR,                      KC_PLUS,    KC_7,    KC_8,    KC_9, _K_SCIR,
+       KC_GRV,   KC_AT, KC_LBRC, KC_RBRC, KC_HASH,                      KC_PLUS,    KC_7,    KC_8,    KC_9, _K_SCIR,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
       KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                      KC_MINS,    KC_1,    KC_2,    KC_3,    KC_0,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      KC_BSLS,  KC_DLR, KC_LCBR, KC_RCBR, KC_HASH,                      KC_ASTR,    KC_4,    KC_5,    KC_6, KC_SLSH,
+      KC_BSLS,  KC_DLR, KC_LCBR, KC_RCBR, KC_AMPR,                      KC_ASTR,    KC_4,    KC_5,    KC_6, KC_SLSH,
   //|--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
                                  _K_SALT, _K_SCMD,  KC_EQL,    _______, XXXXXXX, XXXXXXX
                              //`--------------------------'  `--------------------------'
