@@ -48,7 +48,10 @@ enum keycodes {
 #define _K_SYM LT(_L_SYM, KC_ENT)
 #define _K_NAV LT(_L_NAV, KC_SPC)
 #define _K_SFT SFT_T(KC_ESC)
-#define _K_ALT ALT_T(KC_BSPC)
+
+// #define _K_ALT ALT_T(KC_BSPC)
+#define _K_ALT LM(_L_ALT, MOD_LALT)
+
 
 // NAV mod-taps.
 #define _K_NCMD LGUI_T(_K_STAB)
@@ -76,12 +79,15 @@ enum keycodes {
 #define _K_ACNT A(KC_E)
 #define _K_ACRC A(KC_I)
 
-#define _K_DGRE S(A(KC_8))
+#define _K_DGRE A(KC_K)
+#define _K_TM A(KC_2)
 #define _K_SCTN A(KC_6)
+#define _K_PCRW A(KC_7)
 #define _K_PMIL S(A(KC_R))
 #define _K_EURO S(A(KC_2))
 #define _K_PND A(KC_3)
 #define _K_CDL A(KC_C)
+#define _K_CPRT A(KC_G)
 #define _K_QT_O A(KC_BSLS)
 #define _K_QT_C S(A(KC_BSLS))
 #define _K_PLMN S(A(KC_EQL))
@@ -90,6 +96,7 @@ enum keycodes {
 #define _K_MDSH S(A(KC_MINS))
 #define _K_BLLT A(KC_8)
 #define _K_ELPS A(KC_SCLN)
+#define _K_SQRT A(KC_V)
 #define _K_DIVD A(KC_SLSH)
 #define _K_APRX A(KC_X)
 #define _K_INFT A(KC_5)
@@ -285,13 +292,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_L_ALT] = LAYOUT_gergoplex(
   //,--------------------------------------------.                    ,--------------------------------------------.
-      _K_AGRV,  KC_ESC,_K_S_APP, _K_DGRE, _K_SCTN,                      _K_PLMN, _K_INFT, _K_LTE,   _K_GTE, _K_APRX,
+      _K_AGRV, KC_MPRV, KC_MNXT, KC_MPLY, _K_PCRW,                      _K_PLMN, _K_INFT, _K_DGRE, _K_QT_O, _K_QT_C,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      KC_LSFT,_K_S_WIN,_K_S_SPL,_K_S_TAB, _K_PMIL,                      _K_NEQL, _K_ATLD, _K_ACNT, _K_ACRC, _K_SL_O,
+        _K_TM, _K_VOLD, _K_VOLU, _K_MUTE, _K_PMIL,                      _K_NDSH, _K_ATLD, _K_ACNT, _K_ACRC, _K_APRX,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      _K_EURO,  _K_PND,  _K_CDL, _K_QT_O, _K_QT_C,                      _K_NDSH, _K_MDSH, _K_BLLT, _K_ELPS, _K_DIVD,
+      _K_EURO,  _K_PND,  _K_CDL, _K_CPRT, _K_SCTN,                      _K_BLLT, _K_MDSH, _K_SQRT, _K_ELPS, _K_DIVD,
   //|--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-                                 _______, XXXXXXX, XXXXXXX,    _______, _K_EMOJ, _K_DLWD
+                                  _K_LTE,  _K_GTE, _K_NEQL,    XXXXXXX, XXXXXXX, XXXXXXX
                              //`--------------------------'  `--------------------------'
   )
 };
@@ -367,6 +374,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static bool k_ctal_interrupted = false;
   static bool k_ctal_pressed = false;
 
+  static uint16_t k_alt_timer = 0;
+  static bool k_alt_interrupted = false;
+
   bool ret = true;
 
   bool is_gui_on = (get_mods() & MOD_BIT(KC_LGUI));
@@ -374,10 +384,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_sft_on = (get_mods() & MOD_BIT(KC_LSHIFT));
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
 
-  // Check if we are interrupting ALT.
+  // Check if we are interrupting CTAL.
   // If so, unregister alt and register ctl.
   // _K_ALT (i.e. bspc) does not alter alt.
-  if (k_ctal_pressed && !k_ctal_interrupted && record->event.pressed && keycode != _K_CTAL && keycode != _K_ALT) {
+  bool ctal_allow_press = keycode != _K_ALT && keycode != _K_CMD;
+  bool ctal_allow_mod = !is_gui_on;
+  if (k_ctal_pressed && !k_ctal_interrupted && record->event.pressed && ctal_allow_press && ctal_allow_mod) {
     k_ctal_interrupted = true;
     if (is_alt_on) unregister_code(KC_LALT);
     if (!is_ctl_on) register_code(KC_LCTL);
@@ -388,9 +400,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = switch_app(&_s_app_active, keycode, record);
     ret = switch_spl(keycode, record);
   }
+  else if (IS_LAYER_ON(_L_ALT)) {
+    // MUST be processed early.
+    // Unregister alt on any key.
+    if (keycode != _K_ALT && record->event.pressed) {
+      k_alt_interrupted = true;
+      if (is_alt_on) unregister_code(KC_LALT);
+    }
+  }
+
 
   // Process keycodes.
-  if (false) { }
+  if (keycode == _K_ALT) {
+    if(record->event.pressed) {
+        k_alt_timer = timer_read();
+        ret = true;
+      } else {
+        // Tap action.
+        if (timer_elapsed(k_alt_timer) < 150 && !k_alt_interrupted) {
+          // Must act as alt-bsp if ctal is pressed.
+          if (!k_ctal_pressed) unregister_code(KC_LALT);
+          tap_code(KC_BSPC);
+          ret = true;
+        }
+        k_alt_interrupted = false;
+        ret = true;
+      }
+  }
 
   else if (keycode == _K_CTAL) {
     if(record->event.pressed) {
@@ -538,6 +574,17 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     return 150;
   default:
     return TAPPING_TERM;
+  }
+}
+
+bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+  case _K_NAV:
+    return true;
+  case _K_SYM:
+    return true;
+  default:
+    return false;
   }
 }
 
