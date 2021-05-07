@@ -5,7 +5,7 @@
 
 enum layer_names {
   _L_ABC,
-  _L_NAV,
+  _L_ACT,
   _L_SYM,
   _L_ALT
 };
@@ -28,6 +28,57 @@ enum keycodes {
     _K_S_SPL,  // Switch to next split (cmd-])
 };
 
+// Home row mods
+#undef _ENABLE_HOME_ROWS
+
+#ifdef _ENABLE_HOME_ROWS
+  #define _K_A CTL_T(KC_A)
+  #define _K_R ALT_T(KC_R)
+  #define _K_S GUI_T(KC_S)
+  #define _K_T SFT_T(KC_T)
+
+  #define _K_N SFT_T(KC_N)
+  #define _K_E GUI_T(KC_E)
+  #define _K_I ALT_T(KC_I)
+  #define _K_O CTL_T(KC_O)
+#else
+  #define _K_A KC_A
+  #define _K_R KC_R
+  #define _K_S KC_S
+  #define _K_T KC_T
+
+  #define _K_N KC_N
+  #define _K_E KC_E
+  #define _K_I KC_I
+  #define _K_O KC_O
+#endif
+
+
+
+
+
+// Thumb keys
+#define _LA_TAB LT(_L_ACT, KC_TAB)
+#define _MG_TAB LGUI_T(KC_TAB)
+#define _MS_ESC LSFT_T(KC_ESC)
+
+#define _KN_BS LT(_L_ACT, KC_BSPC)
+#define _KC_ESC CTL_T(KC_ESC)
+#define _KS_TAB SFT_T(KC_TAB)
+
+// ConTrol ALt (Control in shortcuts, alt when held alone).
+#define _K_CTAL ALT_T(KC_DEL)
+
+#define _K_CMD LGUI_T(KC_TAB)
+#define _K_SYM LT(_L_SYM, KC_ENT)
+#define _K_ACT LT(_L_ACT, KC_SPC)
+#define _K_SFT SFT_T(KC_ESC)
+
+// #define _K_ALT ALT_T(KC_BSPC)
+#define _K_ALT LM(_L_ALT, MOD_LALT)
+
+
+
 #define _K_S_WIN G(KC_GRAVE)
 #define _K_S_TAB C(KC_TAB)
 
@@ -41,19 +92,9 @@ enum keycodes {
 #define _K_PG_D A(KC_DOWN)
 
 
-// ConTrol ALt (Control in shortcuts, alt when held alone).
-#define _K_CTAL ALT_T(KC_DEL)
-
-#define _K_CMD LGUI_T(KC_TAB)
-#define _K_SYM LT(_L_SYM, KC_ENT)
-#define _K_NAV LT(_L_NAV, KC_SPC)
-#define _K_SFT SFT_T(KC_ESC)
-
-// #define _K_ALT ALT_T(KC_BSPC)
-#define _K_ALT LM(_L_ALT, MOD_LALT)
 
 
-// NAV mod-taps.
+// ACT mod-taps.
 #define _K_NCMD LGUI_T(_K_STAB)
 #define _K_NCTL LCTL_T(_K_GDEL)
 
@@ -129,37 +170,37 @@ enum combo_events {
 // KC_LSFT, KC_LGUI, KC_LALT, KC_LCTL
 
 // A + R
-const uint16_t PROGMEM   ar_mod_combo[] = {_K_CMD, KC_A, KC_R, COMBO_END};
+const uint16_t PROGMEM   ar_mod_combo[] = {_K_A, _K_R, COMBO_END};
 
 // A + S
-const uint16_t PROGMEM   as_mod_combo[] = {_K_CMD, KC_A, KC_S, COMBO_END};
+const uint16_t PROGMEM   as_mod_combo[] = {_K_A, _K_S, COMBO_END};
 
 // A + T
-const uint16_t PROGMEM   at_mod_combo[] = {_K_CMD, KC_A, KC_T, COMBO_END};
+const uint16_t PROGMEM   at_mod_combo[] = {_K_A, _K_T, COMBO_END};
 
 // R + S
-const uint16_t PROGMEM   rs_mod_combo[] = {_K_CMD, KC_R, KC_S, COMBO_END};
+const uint16_t PROGMEM   rs_mod_combo[] = {_K_R, _K_S, COMBO_END};
 
 // R + T
-const uint16_t PROGMEM   rt_mod_combo[] = {_K_CMD, KC_R, KC_T, COMBO_END};
+const uint16_t PROGMEM   rt_mod_combo[] = {_K_R, _K_T, COMBO_END};
 
 // S + T
-const uint16_t PROGMEM   st_mod_combo[] = {_K_CMD, KC_S, KC_T, COMBO_END};
+const uint16_t PROGMEM   st_mod_combo[] = {_K_S, _K_T, COMBO_END};
 
 // A + R + S 
-const uint16_t PROGMEM  ars_mod_combo[] = {_K_CMD, KC_A, KC_R, KC_S, COMBO_END};
+const uint16_t PROGMEM  ars_mod_combo[] = {_K_A, _K_R, _K_S, COMBO_END};
 
 // A + R + T 
-const uint16_t PROGMEM  art_mod_combo[] = {_K_CMD, KC_A, KC_R, KC_T, COMBO_END};
+const uint16_t PROGMEM  art_mod_combo[] = {_K_A, _K_R, _K_T, COMBO_END};
 
 // A + S + T 
-const uint16_t PROGMEM  ast_mod_combo[] = {_K_CMD, KC_A, KC_S, KC_T, COMBO_END};
+const uint16_t PROGMEM  ast_mod_combo[] = {_K_A, _K_S, _K_T, COMBO_END};
 
 // R + S + T 
-const uint16_t PROGMEM  rst_mod_combo[] = {_K_CMD, KC_R, KC_S, KC_T, COMBO_END};
+const uint16_t PROGMEM  rst_mod_combo[] = {_K_R, _K_S, _K_T, COMBO_END};
 
 // A + R + S + T 
-const uint16_t PROGMEM arst_mod_combo[] = {_K_CMD, KC_A, KC_R, KC_S, KC_T, COMBO_END};
+const uint16_t PROGMEM arst_mod_combo[] = {_K_A, _K_R, _K_S, _K_T, COMBO_END};
 
 
 combo_t key_combos[COMBO_COUNT] = {
@@ -181,67 +222,67 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 
   case _E_AR_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI));
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT));
     }
     break;
 
   case _E_AS_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
     }
     break;
 
   case _E_AT_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LCTL));
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
     }
     break;
 
   case _E_RS_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI));
     }
     break;
 
   case _E_RT_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LCTL));
+      set_oneshot_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LSFT));
     }
     break;
 
   case _E_ST_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL));
+      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
     }
     break;
 
   case _E_ARS_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT));
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI));
     }
     break;
 
   case _E_ART_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LCTL));
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LSFT));
     }
     break;
 
   case _E_AST_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL));
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
     }
     break;
 
   case _E_RST_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL));
+      set_oneshot_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
     }
     break;
 
   case _E_ARST_MOD:
     if (pressed) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTL));
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
     }
     break;
   }
@@ -258,23 +299,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,--------------------------------------------.                    ,--------------------------------------------.
          KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                         KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                         KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
+         _K_A,    _K_R,    _K_S,    _K_T,    KC_D,                         KC_H,    _K_N,    _K_E,    _K_I,    _K_O,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_K,    KC_M, _K_COMM,  _K_DOT, _K_EXLM,
   //|--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-                                  _K_CTAL, _K_CMD,  _K_SFT,     _K_SYM,  _K_NAV,  _K_ALT
+                                 _K_CTAL, _MG_TAB, _MS_ESC,     _K_SYM,  _K_ACT,  _K_ALT
                              //`--------------------------'  `--------------------------'
   ),
 
-  [_L_NAV] = LAYOUT_gergoplex(
+  [_L_ACT] = LAYOUT_gergoplex(
   //,--------------------------------------------.                    ,--------------------------------------------.
-      _K_LOCK,_K_S_SPL,_K_S_APP,_K_S_TAB,_K_S_WIN,                      XXXXXXX, _K_WD_L,   KC_UP, _K_WD_R, XXXXXXX,
+      KC_ESC,  KC_MPRV, KC_MNXT, KC_MPLY, XXXXXXX,                      XXXXXXX, KC_PGUP,   KC_UP, KC_PGDN, XXXXXXX,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      _K_OSFT, _K_OGUI, _K_OALT, _K_OCTL, _K_MUTE,                      _K_LN_L, KC_LEFT, KC_DOWN,KC_RIGHT, _K_LN_R,
+      _K_OCTL, _K_OALT, _K_OGUI, _K_OSFT, XXXXXXX,                      XXXXXXX, KC_LEFT, KC_DOWN,KC_RIGHT, XXXXXXX,
   //|--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------|
-      _______, _______, _______, _______, _K_VOLD,                      XXXXXXX, _K_PG_D, _K_PG_U, _K_FL_T, _K_FL_B,
+      XXXXXXX, _K_VOLD, _K_VOLU, _K_MUTE, XXXXXXX,                      XXXXXXX, KC_HOME, XXXXXXX,  KC_END, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------|
-                                 _K_NCTL, _K_NCMD, _______,    XXXXXXX, _______, XXXXXXX
+                                 XXXXXXX, XXXXXXX, XXXXXXX,  G(KC_ENT),G(KC_SPC), XXXXXXX
                              //`--------------------------'  `--------------------------'
   ),
 
@@ -326,7 +367,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
             unregister_code(KC_TAB);
             return false;
         }
-    } else if (keycode == _K_NAV && !record->event.pressed) {
+    } else if (keycode == _K_ACT && !record->event.pressed) {
         unregister_code(KC_LGUI);
         *active = false;
         return true;
@@ -396,7 +437,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // Process ALT layer actions.
-  if (IS_LAYER_ON(_L_NAV)) {
+  if (IS_LAYER_ON(_L_ACT)) {
     ret = switch_app(&_s_app_active, keycode, record);
     ret = switch_spl(keycode, record);
   }
@@ -457,7 +498,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
-  // NAV: CMD S-TAB
+  // ACT: CMD S-TAB
   else if (keycode == _K_NCMD) {
     // S(KC_TAB)
     // FIXME: Repeat on second tap doesn't work.
@@ -470,7 +511,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
 
-  // NAV: CTL G(DEL)
+  // ACT: CTL G(DEL)
   else if (keycode == _K_NCTL) {
     // S(KC_TAB)
     // FIXME: Repeat on second tap doesn't work.
@@ -482,8 +523,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
-  // NAV SP / UNDS
-  else if (keycode == _K_NAV) {
+  // ACT SP / UNDS
+  else if (keycode == _K_ACT) {
     // S(KC_TAB)
     // FIXME: Repeat on second tap doesn't work.
     if (record->tap.count > 0) {
@@ -579,7 +620,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-  case _K_NAV:
+  case _K_ACT:
     return true;
   case _K_SYM:
     return true;
