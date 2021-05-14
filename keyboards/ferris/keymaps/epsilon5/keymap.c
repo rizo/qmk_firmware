@@ -3,6 +3,7 @@
 #include QMK_KEYBOARD_H
 
 
+// Doesn't work?
 #define WITHOUT_MODS(...) \
   do { \
     const uint8_t _real_mods = get_mods(); \
@@ -47,10 +48,10 @@ enum keycodes {
 
 
 // Thumb keys
-#define _ACT_BSP  LT(_ACT, KC_BSPC)
+#define _ACT_SPC  LT(_ACT, KC_SPC)
 #define _NUM_TAB  LT(_NUM, KC_TAB)
 #define _SYM_ENT  LT(_SYM, KC_ENT)
-#define _FUN_SPC  LT(_FUN, KC_SPC)
+#define _FUN_BSP  LT(_FUN, KC_BSPC)
 
 // ACT keys
 #define _UNDO G(KC_Z)
@@ -76,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,    KC_F,     KC_P,     KC_G,                          KC_J,     KC_L,     KC_U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
         KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, _COM_SCL, _DOT_COL, _EXC_QST,
-                                          _ACT_BSP, _NUM_TAB,  _SYM_ENT, _FUN_SPC
+                                          _ACT_SPC, _NUM_TAB,  _SYM_ENT, _FUN_BSP
   ),
 
   [_SYM] = LAYOUT(
@@ -97,7 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_ESC,  G(KC_W),G(KC_LBRC),G(KC_RBRC), _UNREDO,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
    _WIN_SWP, _APP_SWP,  _SPL_SWP,  _TAB_SWP, G(KC_A),                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
       _UNDO,     _CUT,     _COPY,     _PAST,   _REDO,                    XXXXXXX,    KC_HOME, KC_CAPS,      KC_END, XXXXXXX,
-                                              _______, _______,  KC_ENT, KC_ESC
+                                              _______, XXXXXXX,  KC_ENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
@@ -155,7 +156,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
   }
 
   // Unregister KC_LGUI on layer release.
-  else if (keycode == _ACT_BSP && !record->event.pressed) {
+  else if (keycode == _ACT_SPC && !record->event.pressed) {
     unregister_code(KC_LGUI);
     *active = false;
     return true;
@@ -184,6 +185,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_alt_on = (get_mods() & MOD_BIT(KC_LALT));
   bool is_sft_on = (get_mods() & MOD_BIT(KC_LSHIFT));
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
+  bool no_mods_on = !is_gui_on && !is_alt_on && !is_sft_on && !is_ctl_on;
 
 
   // Switcher
@@ -192,7 +194,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // SFT BSP to DEL
-  if (keycode == _ACT_BSP && record->event.pressed && record->tap.count > 0 && is_sft_on) {
+  if (keycode == _FUN_BSP && record->event.pressed && record->tap.count > 0 && is_sft_on) {
     if (is_gui_on) {
       unregister_code(KC_LSHIFT);
       unregister_code(KC_LGUI);
@@ -210,14 +212,39 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // SELECTION CAPS
   if (keycode == KC_CAPS && record->event.pressed) {
-    _caps_active = !_caps_active;
-    if (_caps_active) {
-      tap_code(KC_CAPS);
-      register_code(KC_RSHIFT);
-    } else {
-      unregister_code(KC_RSHIFT);
-      tap_code(KC_CAPS);
+    if (no_mods_on) {
+      _caps_active = !_caps_active;
+      if (_caps_active) {
+        tap_code(KC_CAPS);
+        register_code(KC_RSHIFT);
+      } else {
+        unregister_code(KC_RSHIFT);
+        tap_code(KC_CAPS);
+      }
     }
+    // Select line.
+    else if (is_gui_on) {
+      tap_code16(G(KC_LEFT));
+      tap_code16(S(G(KC_RIGHT)));
+    }
+    // Select word.
+    else if (is_ctl_on) {
+      tap_code16(C(A(KC_LEFT)));
+      tap_code16(S(C(A(KC_RIGHT))));
+    }
+    // Select Word.
+    else if (is_alt_on) {
+      tap_code16(A(KC_LEFT));
+      tap_code16(S(A(KC_RIGHT)));
+    }
+    // Select all.
+    else if (is_sft_on) {
+      unregister_code(KC_LSHIFT);
+      tap_code16(G(KC_A));
+      register_code(KC_LSHIFT);
+    }
+
+
     ret = false;
   }
 
