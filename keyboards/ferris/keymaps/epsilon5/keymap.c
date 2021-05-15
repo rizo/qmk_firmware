@@ -97,13 +97,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ACT] = LAYOUT(
      KC_ESC,  G(KC_W),G(KC_LBRC),G(KC_RBRC), _UNREDO,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
    _WIN_SWP, _APP_SWP,  _SPL_SWP,  _TAB_SWP, G(KC_A),                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
-      _UNDO,     _CUT,     _COPY,     _PAST,   _REDO,                    XXXXXXX,    KC_HOME, KC_CAPS,      KC_END, XXXXXXX,
-                                              _______, XXXXXXX,  KC_ENT, KC_BSPC
+      _UNDO,     _CUT,     _COPY,     _PAST,   _REDO,                    XXXXXXX, G(KC_LEFT), KC_CAPS, G(KC_RIGHT), XXXXXXX,
+                                              _______, XXXXXXX,  KC_ESC, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
        KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_EJCT,                   XXXXXXX,   _MUTE,   _VOLD,    _VOLU, XXXXXXX,
-       KC_F5,  KC_F6,  KC_F7,  KC_F8,  XXXXXXX,                   XXXXXXX, KC_LSFT, KC_LGUI,  KC_LALT, KC_LCTL,
+       KC_F5,  KC_F6,  KC_F7,  KC_F8,   KC_CLR,                   XXXXXXX, KC_LSFT, KC_LGUI,  KC_LALT, KC_LCTL,
        KC_F9,  KC_F10, KC_F11, KC_F12, XXXXXXX,                   XXXXXXX, KC_MPLY, KC_MPRV,  KC_MNXT, XXXXXXX,
                                        XXXXXXX, XXXXXXX,  XXXXXXX, _______
   )
@@ -194,18 +194,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // SFT BSP to DEL
-  if (keycode == _FUN_BSP && record->event.pressed && record->tap.count > 0 && is_sft_on) {
-    if (is_gui_on) {
-      unregister_code(KC_LSHIFT);
-      unregister_code(KC_LGUI);
-      tap_code16(C(KC_K));
-      register_code(KC_LSHIFT);
-      register_code(KC_LGUI);
-      ret = false;
-    } else {
-      unregister_code(KC_LSHIFT);
-      tap_code(KC_DEL);
-      register_code(KC_LSHIFT);
+  if (((keycode == _FUN_BSP && record->tap.count > 0) || keycode == KC_BSPC) && record->event.pressed) {
+    if (is_sft_on) {
+      if (is_gui_on) {
+        unregister_code(KC_LSHIFT);
+        unregister_code(KC_LGUI);
+        tap_code16(C(KC_K));
+        register_code(KC_LSHIFT);
+        register_code(KC_LGUI);
+        ret = false;
+      } 
+      // CTL
+      else if (is_ctl_on) {
+        unregister_code(KC_LSHIFT);
+        tap_code16(A(KC_DEL));
+        register_code(KC_LSHIFT);
+        ret = false;
+      }
+      // No other mods.
+      else {
+        unregister_code(KC_LSHIFT);
+        tap_code(KC_DEL);
+        register_code(KC_LSHIFT);
+        ret = false;
+      }
+    } else if (is_ctl_on) {
+      tap_code16(A(KC_BSPC));
       ret = false;
     }
   }
