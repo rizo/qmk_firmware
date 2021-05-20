@@ -48,10 +48,10 @@ enum keycodes {
 
 
 // Thumb keys
-#define _ACT_BSP  LT(_ACT, KC_BSPC)
-#define _SFT_TAB  SFT_T(KC_TAB)
-#define _SYM_ENT  LT(_SYM, KC_ENT)
-#define _NUM_SPC  LT(_NUM, KC_SPC)
+#define _ACT_TAB  LT(_ACT, KC_TAB)
+#define _SYM_SPC  LT(_SYM, KC_SPC)
+#define _SFT_ENT  SFT_T(KC_ENT)
+#define _FUN_BSP  LT(_FUN, KC_BSPC)
 
 // ACT keys
 #define _UNDO G(KC_Z)
@@ -77,28 +77,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,    KC_F,     KC_P,     KC_G,                          KC_J,     KC_L,     KC_U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
         KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, _COM_SCL, _DOT_COL, _EXC_QST,
-                                          _ACT_BSP, _SFT_TAB,  _SYM_ENT, _NUM_SPC
+                                          _ACT_TAB, _SYM_SPC,  _SFT_ENT, _FUN_BSP
   ),
 
   [_SYM] = LAYOUT(
-      KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                  XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,
-     KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                  XXXXXXX, KC_LSFT, KC_LGUI,  KC_LALT, KC_LCTL,
-     KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                  XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,
-                                             KC_LT, KC_GT,  _______, XXXXXXX
+      KC_CIRC, KC_HASH, KC_LCBR,  KC_RCBR,  KC_ASTR,                     KC_EQL, KC_1, KC_2, KC_3, KC_GRV,
+        KC_AT, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PLUS,                    KC_MINS, KC_4, KC_5, KC_6, KC_0,
+       KC_DLR, KC_AMPR,   KC_LT,    KC_GT,  KC_PERC,                    KC_SLSH, KC_7, KC_8, KC_9, KC_BSLS,
+                                            XXXXXXX, _______,  KC_LBRC, KC_RBRC
   ),
 
   [_NUM] = LAYOUT(
-      KC_CIRC, KC_1, KC_2, KC_3, KC_ASTR,                    XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,
-       KC_EQL, KC_4, KC_5, KC_6, KC_MINS,                    XXXXXXX, KC_LSFT, KC_LGUI,  KC_LALT, KC_LCTL,
-      KC_SLSH, KC_7, KC_8, KC_9, KC_PLUS,                    XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,
-                                    KC_0, KC_UNDS,  XXXXXXX, _______
+       KC_GRV, KC_1, KC_2, KC_3,  KC_EQL,                    KC_ASTR, KC_LCBR, KC_RCBR,  KC_HASH, KC_CIRC,
+         KC_0, KC_4, KC_5, KC_6, KC_MINS,                    KC_PLUS, KC_LPRN, KC_RPRN,  KC_PIPE, KC_AT,
+      KC_BSLS, KC_7, KC_8, KC_9, KC_SLSH,                    KC_PERC,   KC_LT,   KC_GT,  KC_AMPR, KC_DLR,
+                                 KC_LBRC, KC_RBRC,  _______, XXXXXXX
   ),
 
   [_ACT] = LAYOUT(
      KC_ESC,  G(KC_W),G(KC_LBRC),G(KC_RBRC), _UNREDO,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
    _WIN_SWP, _APP_SWP,  _SPL_SWP,  _TAB_SWP, G(KC_A),                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
       _UNDO,     _CUT,     _COPY,     _PAST,   _REDO,                    XXXXXXX, G(KC_LEFT), KC_CAPS, G(KC_RIGHT), XXXXXXX,
-                                              _______, XXXXXXX,  KC_ENT, KC_ESC
+                                              _______, XXXXXXX,  KC_ESC, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
@@ -156,7 +156,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
   }
 
   // Unregister KC_LGUI on layer release.
-  else if (keycode == _ACT_BSP && !record->event.pressed) {
+  else if (keycode == _ACT_TAB && !record->event.pressed) {
     unregister_code(KC_LGUI);
     *active = false;
     return true;
@@ -194,7 +194,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // SFT BSP to DEL
-  if (((keycode == _ACT_BSP && record->tap.count > 0) || keycode == KC_BSPC) && record->event.pressed) {
+  if (((keycode == _FUN_BSP && record->tap.count > 0) || keycode == KC_BSPC) && record->event.pressed) {
     if (is_sft_on) {
       if (is_gui_on) {
         unregister_code(KC_LSHIFT);
@@ -267,9 +267,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
-  // ABC: SFT(_NUM_SPC) -> UNDS
-  else if (keycode == _NUM_SPC && is_sft_on && record->event.pressed && record->tap.count > 0) {
+  // ABC: SFT(_SYM_SPC) -> UNDS
+  else if (keycode == _SYM_SPC && is_sft_on && record->event.pressed && record->tap.count > 0) {
     tap_code16(KC_UNDS);
+    ret = false;
+  }
+
+  // ABC: SFT(_ACT_TAB) -> TILD
+  else if (keycode == _ACT_TAB && is_sft_on && record->event.pressed && record->tap.count > 0) {
+    tap_code16(KC_TILD);
     ret = false;
   }
 
@@ -344,13 +350,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case _SFT_TAB:
+    case _SYM_SPC:
       return false;
-    case _NUM_SPC:
+    case _FUN_BSP:
       return false;
-    case _SYM_ENT:
+    case _SFT_ENT:
       return false;
-    case _ACT_BSP:
+    case _ACT_TAB:
       return false;
     
     default:
