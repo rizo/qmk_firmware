@@ -38,9 +38,7 @@ enum keycodes {
 // Tap dance
 
 enum {
-    TD_SLCT,
-    TD_AR_L,
-    TD_AR_R
+    TD_SLCT
 };
 
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
@@ -63,29 +61,10 @@ void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 
-void dance_arl_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    tap_code16(KC_LT);
-  } else {
-    SEND_STRING("<-");
-  }
-}
-
-
-void dance_arr_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    tap_code16(KC_GT);
-  } else {
-    SEND_STRING("->");
-  }
-}
-
 
 // All tap dance functions would go here. Only showing this one.
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_SLCT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_cln_finished, NULL, 250),
-    [TD_AR_L] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_arl_finished, NULL, 250),
-    [TD_AR_R] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_arr_finished, NULL, 250),
+    [TD_SLCT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_cln_finished, NULL, 150)
 };
 
 
@@ -102,16 +81,16 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 // TD keys
 #define _SLCT TD(TD_SLCT)
-#define _LT TD(TD_AR_L)
-#define _GT TD(TD_AR_R)
 
 // Thumb keys
-#define _ACT_BSP  LT(_ACT, KC_BSPC)
+#define _ACT_SPC  LT(_ACT, KC_SPC)
 #define _NUM_TAB  LT(_NUM, KC_TAB)
 #define _SYM_ENT  LT(_SYM, KC_ENT)
-#define _FUN_SPC  LT(_FUN, KC_SPC)
+#define _FUN_BSP  LT(_FUN, KC_BSPC)
 
 // ACT keys
+#define _LOCK G(C(KC_Q))
+#define _SFT_ESC SFT_T(KC_ESC)
 #define _UNDO G(KC_Z)
 #define _REDO S(G(KC_Z))
 #define _COPY G(KC_C)
@@ -124,7 +103,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 #define _WIN_SWP CTL_T(_WIN_SWP_FAKE)
 #define _APP_SWP ALT_T(KC_J)
-#define _SPL_SWP GUI_T(_SPL_SWP_FAKE)
+#define _SPL_SWP _SPL_SWP_FAKE
+// #define _SPL_SWP_ GUI_T(_SPL_SWP_FAKE)
 #define _TAB_SWP SFT_T(_TAB_SWP_FAKE)
 
 
@@ -134,14 +114,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,    KC_F,     KC_P,     KC_G,                          KC_J,     KC_L,     KC_U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
         KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, _COM_SCL, _DOT_COL, _EXC_QST,
-                                          _ACT_BSP, _NUM_TAB,  _SYM_ENT, _FUN_SPC
+                                          _ACT_SPC, _NUM_TAB,  _SYM_ENT, _FUN_BSP
   ),
 
   [_SYM] = LAYOUT(
         KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
        KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                   XXXXXXX, KC_LSFT, KC_LGUI, KC_LALT, KC_LCTL,
        KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                                 _LT,  _GT,    _______, XXXXXXX
+                                               KC_LT,  KC_GT,    _______, XXXXXXX
   ),
 
   [_NUM] = LAYOUT(
@@ -152,17 +132,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-     KC_ESC,  G(KC_W),G(KC_LBRC),G(KC_RBRC), _UNREDO,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _WIN_SWP, _APP_SWP,  _SPL_SWP,  _TAB_SWP, C(KC_L),                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
+      _LOCK,   KC_ESC,G(KC_LBRC),G(KC_RBRC), _UNREDO,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _WIN_SWP, _APP_SWP,  _SPL_SWP, _TAB_SWP,  KC_CAPS,                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
       _UNDO,     _CUT,     _COPY,     _PAST,   _REDO,                    XXXXXXX, G(KC_LEFT),   _SLCT, G(KC_RIGHT), XXXXXXX,
-                                              _______, XXXXXXX,  KC_ESC, G(KC_SPC)
+                                             _______, XXXXXXX,  KC_ENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
       KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                   XXXXXXX,   _MUTE,   _VOLD,    _VOLU, KC_EJCT,
       KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                   XXXXXXX, KC_LSFT, KC_LGUI,  KC_LALT, KC_LCTL,
      KC_F11, KC_F12, KC_F13, KC_F14, KC_F15,                   XXXXXXX, KC_MPLY, KC_MPRV,  KC_MNXT, XXXXXXX,
-                                    XXXXXXX, KC_CAPS, XXXXXXX, XXXXXXX
+                                     KC_SPC, KC_TAB, XXXXXXX, XXXXXXX
   )
 };
 
@@ -213,7 +193,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
   }
 
   // Unregister KC_LGUI on layer release.
-  else if (keycode == _ACT_BSP && !record->event.pressed) {
+  else if (keycode == _ACT_SPC && !record->event.pressed) {
     unregister_code(KC_LGUI);
     *active = false;
     return true;
@@ -242,6 +222,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_sft_on = (get_mods() & MOD_BIT(KC_LSHIFT));
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
 
+  static uint16_t gui_timer = 0;
+
 
   // Switcher
   if (IS_LAYER_ON(_ACT)) {
@@ -249,7 +231,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // SFT BSP to DEL
-  if (((keycode == _ACT_BSP && record->tap.count > 0) || keycode == KC_BSPC) && record->event.pressed) {
+  if (((keycode == _FUN_BSP && record->tap.count > 0) || keycode == KC_BSPC) && record->event.pressed) {
     if (is_sft_on) {
       if (is_gui_on) {
         unregister_code(KC_LSHIFT);
@@ -286,14 +268,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // ACT: SPL SWP
-  else if (keycode == _SPL_SWP && record->event.pressed && record->tap.count > 0) {
-    if (is_ctl_on) {
-      unregister_code(KC_LCTL);
-      tap_code16(S(A(KC_TAB)));
-      register_code(KC_LCTL);
+  // else if (keycode == _SPL_SWP_ && record->event.pressed && record->tap.count > 0) {
+  //   if (is_ctl_on) {
+  //     unregister_code(KC_LCTL);
+  //     tap_code16(S(A(KC_TAB)));
+  //     register_code(KC_LCTL);
+  //   } else {
+  //     tap_code16(A(KC_TAB));
+  //   }
+  //   ret = false;
+  // }
+
+  // ACT: SPL SWP
+  else if (keycode == _SPL_SWP) {
+    if (record->event.pressed) {
+      // Hold action.
+      register_code(KC_LGUI);
     } else {
-      tap_code16(A(KC_TAB));
+      unregister_code(KC_LGUI);
+      if (timer_elapsed(gui_timer) < TAPPING_TERM) {
+        // TAP action.
+        if (is_ctl_on) {
+          unregister_code(KC_LCTL);
+          tap_code16(S(A(KC_TAB)));
+          register_code(KC_LCTL);
+        } else {
+          tap_code16(A(KC_TAB));
+        }
+      }
     }
+
     ret = false;
   }
 
@@ -355,9 +359,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _NUM_TAB:
-    case _FUN_SPC:
+    case _FUN_BSP:
     case _SYM_ENT:
-    case _ACT_BSP:
+    case _ACT_SPC:
       return false;
     
     default:
