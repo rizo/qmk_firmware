@@ -31,7 +31,12 @@ enum keycodes {
     _WIN_SWP_FAKE,
     _APP_SWP_FAKE,
     _SPL_SWP_FAKE,
-    _TAB_SWP_FAKE
+    _TAB_SWP_FAKE,
+
+    _FUN_SFT_FAKE,
+    _FUN_GUI_FAKE,
+    _FUN_ALT_FAKE,
+    _FUN_CTL_FAKE,
 };
 
 
@@ -102,10 +107,16 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 
 #define _WIN_SWP CTL_T(_WIN_SWP_FAKE)
-#define _APP_SWP ALT_T(KC_J)
-#define _SPL_SWP _SPL_SWP_FAKE
-// #define _SPL_SWP_ GUI_T(_SPL_SWP_FAKE)
+#define _APP_SWP ALT_T(_APP_SWP_FAKE)
+#define _SPL_SWP GUI_T(_SPL_SWP_FAKE)
 #define _TAB_SWP SFT_T(_TAB_SWP_FAKE)
+
+// FUN keys
+#define _FUN_SFT SFT_T(_FUN_SFT_FAKE)
+#define _FUN_GUI GUI_T(_FUN_GUI_FAKE)
+#define _FUN_ALT ALT_T(_FUN_ALT_FAKE)
+#define _FUN_CTL CTL_T(_FUN_CTL_FAKE)
+
 
 
 // Keymap
@@ -140,7 +151,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_FUN] = LAYOUT(
       KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                   XXXXXXX,   _MUTE,   _VOLD,    _VOLU, KC_EJCT,
-      KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                   XXXXXXX, KC_LSFT, KC_LGUI,  KC_LALT, KC_LCTL,
+      KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                   XXXXXXX,_FUN_SFT,_FUN_GUI, _FUN_ALT,_FUN_CTL,
      KC_F11, KC_F12, KC_F13, KC_F14, KC_F15,                   XXXXXXX, KC_MPLY, KC_MPRV,  KC_MNXT, XXXXXXX,
                                      KC_SPC, KC_TAB, XXXXXXX, XXXXXXX
   )
@@ -222,9 +233,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_sft_on = (get_mods() & MOD_BIT(KC_LSHIFT));
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
 
-  static uint16_t gui_timer = 0;
-
-
   // Switcher
   if (IS_LAYER_ON(_ACT)) {
     ret = switch_app(&_s_app_active, keycode, record);
@@ -268,36 +276,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // ACT: SPL SWP
-  // else if (keycode == _SPL_SWP_ && record->event.pressed && record->tap.count > 0) {
-  //   if (is_ctl_on) {
-  //     unregister_code(KC_LCTL);
-  //     tap_code16(S(A(KC_TAB)));
-  //     register_code(KC_LCTL);
-  //   } else {
-  //     tap_code16(A(KC_TAB));
-  //   }
-  //   ret = false;
-  // }
-
-  // ACT: SPL SWP
-  else if (keycode == _SPL_SWP) {
-    if (record->event.pressed) {
-      // Hold action.
-      register_code(KC_LGUI);
+  else if (keycode == _SPL_SWP && record->event.pressed && record->tap.count > 0) {
+    if (is_ctl_on) {
+      unregister_code(KC_LCTL);
+      tap_code16(S(A(KC_TAB)));
+      register_code(KC_LCTL);
     } else {
-      unregister_code(KC_LGUI);
-      if (timer_elapsed(gui_timer) < TAPPING_TERM) {
-        // TAP action.
-        if (is_ctl_on) {
-          unregister_code(KC_LCTL);
-          tap_code16(S(A(KC_TAB)));
-          register_code(KC_LCTL);
-        } else {
-          tap_code16(A(KC_TAB));
-        }
-      }
+      tap_code16(A(KC_TAB));
     }
-
     ret = false;
   }
 
@@ -309,6 +295,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     } else {
       tap_code16(C(KC_TAB));
     }
+    ret = false;
+  }
+
+  // FUN: A(N)
+  else if (keycode == _FUN_SFT && record->event.pressed && record->tap.count > 0) {
+    tap_code16(A(KC_N));
+    ret = false;
+  }
+
+  // FUN: A(E)
+  else if (keycode == _FUN_GUI && record->event.pressed && record->tap.count > 0) {
+    tap_code16(A(KC_E));
+    ret = false;
+  }
+
+  // FUN: A(I)
+  else if (keycode == _FUN_ALT && record->event.pressed && record->tap.count > 0) {
+    tap_code16(A(KC_I));
+    ret = false;
+  }
+
+  // FUN: A(GRV)
+  else if (keycode == _FUN_CTL && record->event.pressed && record->tap.count > 0) {
+    tap_code16(A(KC_GRV));
     ret = false;
   }
 
