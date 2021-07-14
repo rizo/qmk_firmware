@@ -210,9 +210,9 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
     return true;
   }
 
-  // Simulate ESC. We do this to ensure the state is fully reset on ESC.
-  else if (*active && (keycode == KC_ESC && record->event.pressed)) {
-    tap_code(KC_ESC);
+  // Ensure the state is fully reset on keys that end swp.
+  else if (*active && ((keycode == KC_ESC || keycode == KC_ENT || keycode == KC_SPC) && record->event.pressed)) {
+    tap_code(keycode);
     unregister_code(KC_LGUI);
     *active = false;
     return false;
