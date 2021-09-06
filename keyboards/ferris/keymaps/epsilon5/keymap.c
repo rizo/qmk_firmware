@@ -37,6 +37,9 @@ enum keycodes {
     _FUN_GUI_FAKE,
     _FUN_ALT_FAKE,
     _FUN_CTL_FAKE,
+
+    _SYM_LT_FAKE,
+    _SYM_GT_FAKE,
 };
 
 
@@ -95,7 +98,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 // ACT keys
 #define _LOCK G(C(KC_Q))
-#define _SFT_ESC SFT_T(KC_ESC)
+#define _CTL_ESC CTL_T(KC_ESC)
 #define _UNDO G(KC_Z)
 #define _REDO S(G(KC_Z))
 #define _COPY G(KC_C)
@@ -104,6 +107,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define  _VOLU KC__VOLUP
 #define  _VOLD KC__VOLDOWN
 #define  _MUTE KC__MUTE
+#define _BACK G(KC_LBRC)
+#define _FWRD G(KC_RBRC)
 
 
 #define _WIN_SWP CTL_T(_WIN_SWP_FAKE)
@@ -116,6 +121,10 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _FUN_GUI GUI_T(_FUN_GUI_FAKE)
 #define _FUN_ALT ALT_T(_FUN_ALT_FAKE)
 #define _FUN_CTL CTL_T(_FUN_CTL_FAKE)
+
+// SYM keys
+#define _ACT_LT LT(_ACT, KC_LT)
+#define _NUM_GT LT(_NUM, KC_GT)
 
 
 
@@ -132,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
        KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                   XXXXXXX, KC_LSFT, KC_LGUI, KC_LALT, KC_LCTL,
        KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                               KC_LT,  KC_GT,    _______, XXXXXXX
+                                    _ACT_LT, _NUM_GT,    _______, XXXXXXX
   ),
 
   [_NUM] = LAYOUT(
@@ -143,17 +152,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-      _LOCK,   KC_ESC,G(KC_LBRC),G(KC_RBRC), _UNREDO,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _WIN_SWP, _APP_SWP,  _SPL_SWP, _TAB_SWP,  KC_CAPS,                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
-      _UNDO,     _CUT,     _COPY,     _PAST,   _REDO,                    XXXXXXX, G(KC_LEFT),   _SLCT, G(KC_RIGHT), XXXXXXX,
-                                             _______, XXXXXXX,  KC_ENT, KC_BSPC
+      _LOCK, _WIN_SWP,    _BACK,    _FWRD, XXXXXXX,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _SPL_SWP, _TAB_SWP, XXXXXXX,                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
+      _UNDO,     _CUT,    _COPY,    _PAST,   _REDO,                    XXXXXXX, G(KC_LEFT),   _SLCT, G(KC_RIGHT), XXXXXXX,
+                                           _______, XXXXXXX,  KC_ESC, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
       KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                   XXXXXXX,   _MUTE,   _VOLD,    _VOLU, KC_EJCT,
       KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                   XXXXXXX,_FUN_SFT,_FUN_GUI, _FUN_ALT,_FUN_CTL,
      KC_F11, KC_F12, KC_F13, KC_F14, KC_F15,                   XXXXXXX, KC_MPLY, KC_MPRV,  KC_MNXT, XXXXXXX,
-                                     KC_SPC, KC_TAB, XXXXXXX, XXXXXXX
+                               C(G(KC_SPC)), KC_CAPS, XXXXXXX, XXXXXXX
   )
 };
 
@@ -298,6 +307,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
+
+  // SYM: ACT LT
+  else if (keycode == _ACT_LT && record->event.pressed && record->tap.count > 0) {
+    tap_code16(S(KC_COMM));
+    ret = false;
+  }
+
+  // SYM: NUM GT
+  else if (keycode == _NUM_GT && record->event.pressed && record->tap.count > 0) {
+    tap_code16(S(KC_DOT));
+    ret = false;
+  }
+
   // FUN: A(N)
   else if (keycode == _FUN_SFT && record->event.pressed && record->tap.count > 0) {
     tap_code16(A(KC_N));
@@ -377,4 +399,11 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
     default:
       return true;
   }
+}
+
+bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        default:
+            return true;
+    }
 }
