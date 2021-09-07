@@ -133,6 +133,148 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 
 
+// --- COMBOS ---
+
+enum combo_events {
+  _E_AR_MOD,
+  _E_AS_MOD,
+  _E_AT_MOD,
+  _E_RS_MOD,
+  _E_RT_MOD,
+  _E_ST_MOD,
+  _E_ARS_MOD,
+  _E_ART_MOD,
+  _E_AST_MOD,
+  _E_RST_MOD,
+  _E_ARST_MOD
+};
+
+
+//       A,       R,       S,       T
+// KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT
+
+// A + R
+const uint16_t PROGMEM   ar_mod_combo[] = {_A, _R, COMBO_END};
+
+// A + S
+const uint16_t PROGMEM   as_mod_combo[] = {_A, _S, COMBO_END};
+
+// A + T
+const uint16_t PROGMEM   at_mod_combo[] = {_A, _T, COMBO_END};
+
+// R + S
+const uint16_t PROGMEM   rs_mod_combo[] = {_R, _S, COMBO_END};
+
+// R + T
+const uint16_t PROGMEM   rt_mod_combo[] = {_R, _T, COMBO_END};
+
+// S + T
+const uint16_t PROGMEM   st_mod_combo[] = {_S, _T, COMBO_END};
+
+// A + R + S 
+const uint16_t PROGMEM  ars_mod_combo[] = {_A, _R, _S, COMBO_END};
+
+// A + R + T 
+const uint16_t PROGMEM  art_mod_combo[] = {_A, _R, _T, COMBO_END};
+
+// A + S + T 
+const uint16_t PROGMEM  ast_mod_combo[] = {_A, _S, _T, COMBO_END};
+
+// R + S + T 
+const uint16_t PROGMEM  rst_mod_combo[] = {_R, _S, _T, COMBO_END};
+
+// A + R + S + T 
+const uint16_t PROGMEM arst_mod_combo[] = {_A, _R, _S, _T, COMBO_END};
+
+
+combo_t key_combos[COMBO_COUNT] = {
+  [_E_AR_MOD] = COMBO_ACTION(ar_mod_combo),
+  [_E_AS_MOD] = COMBO_ACTION(as_mod_combo),
+  [_E_AT_MOD] = COMBO_ACTION(at_mod_combo),
+  [_E_RS_MOD] = COMBO_ACTION(rs_mod_combo),
+  [_E_RT_MOD] = COMBO_ACTION(rt_mod_combo),
+  [_E_ST_MOD] = COMBO_ACTION(st_mod_combo),
+  [_E_ARS_MOD] = COMBO_ACTION(ars_mod_combo),
+  [_E_ART_MOD] = COMBO_ACTION(art_mod_combo),
+  [_E_AST_MOD] = COMBO_ACTION(ast_mod_combo),
+  [_E_RST_MOD] = COMBO_ACTION(rst_mod_combo),
+  [_E_ARST_MOD] = COMBO_ACTION(arst_mod_combo),
+};
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+  switch(combo_index) {
+
+  case _E_AR_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT));
+    }
+    break;
+
+  case _E_AS_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+    }
+    break;
+
+  case _E_AT_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT));
+    }
+    break;
+
+  case _E_RS_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI));
+    }
+    break;
+
+  case _E_RT_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LSFT));
+    }
+    break;
+
+  case _E_ST_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+    }
+    break;
+
+  case _E_ARS_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI));
+    }
+    break;
+
+  case _E_ART_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LSFT));
+    }
+    break;
+
+  case _E_AST_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+    }
+    break;
+
+  case _E_RST_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+    }
+    break;
+
+  case _E_ARST_MOD:
+    if (pressed) {
+      set_oneshot_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT));
+    }
+    break;
+  }
+}
+
+
+
+
 // Keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(

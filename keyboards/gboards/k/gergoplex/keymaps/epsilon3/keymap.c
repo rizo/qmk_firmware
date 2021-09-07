@@ -167,7 +167,7 @@ enum combo_events {
 
 
 //       A,       R,       S,       T
-// KC_LSFT, KC_LGUI, KC_LALT, KC_LCTL
+// KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT
 
 // A + R
 const uint16_t PROGMEM   ar_mod_combo[] = {_K_A, _K_R, COMBO_END};
