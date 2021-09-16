@@ -56,10 +56,10 @@ enum {
 #define _SLCT TD(TD_SLCT)
 
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
-  bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
+  bool is_lctl_on = (get_mods() & MOD_BIT(KC_LCTL));
   
   if (state->count == 1) {
-    if (is_ctl_on) {
+    if (is_lctl_on) {
       tap_code16(C(A(KC_LEFT)));
       tap_code16(S(C(A(KC_RIGHT))));
     } else {
@@ -304,8 +304,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_SYM] = LAYOUT(
         KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                   XXXXXXX, KC_LSFT, KC_LGUI, KC_LALT, KC_LCTL,
-       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       KC_AMPR, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                   XXXXXXX, KC_LSFT, KC_LGUI, KC_LALT, KC_LCTL,
+       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_TILD,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                     _ACT_LT, _NUM_GT,    _______, XXXXXXX
   ),
 
@@ -319,7 +319,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ACT] = LAYOUT(
       _LOCK,   KC_TAB,    _BACK,    _FWRD, _SYM_WIN,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
    _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,  XXXXXXX,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-    XXXXXXX,     _CUT,    _COPY,    _PAST,  XXXXXXX,                       KC_PGDN,      _UNDO, XXXXXXX,       _REDO, G(KC_DOWN),
+    XXXXXXX,     _CUT,    _COPY,    _PAST,  XXXXXXX,                       KC_PGDN,      _UNDO, _UNREDO,       _REDO, G(KC_DOWN),
                                             _______, XXXXXXX,  KC_ENT, KC_BSPC
   ),
 
@@ -338,7 +338,7 @@ bool _s_app_active = false;
 
 
 bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
-  bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
+  bool is_lctl_on = (get_mods() & MOD_BIT(KC_LCTL));
 
   // Swapper key detected.
   if (keycode == _APP_SWP) {
@@ -354,7 +354,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
         }
 
         // Treat CTL as shift.
-        if (is_ctl_on) {
+        if (is_lctl_on) {
           unregister_code(KC_LCTL);
           tap_code16(S(KC_TAB));
           register_code(KC_LCTL);
@@ -406,9 +406,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   uint8_t mods = get_mods();
   uint8_t oneshot_mods = get_oneshot_mods();
 
-  bool is_gui_on = (mods & MOD_BIT(KC_LGUI) || oneshot_mods & MOD_BIT(KC_LGUI));
-  bool is_sft_on = (mods & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) || oneshot_mods & MOD_BIT(KC_LSHIFT));
-  bool is_ctl_on = (mods & MOD_BIT(KC_LCTL)) || oneshot_mods & MOD_BIT(KC_LCTL);
+  bool is_lgui_on = (mods & MOD_BIT(KC_LGUI) || oneshot_mods & MOD_BIT(KC_LGUI));
+  bool is_lsft_on = (mods & MOD_BIT(KC_LSHIFT) || oneshot_mods & MOD_BIT(KC_LSHIFT));
+  bool is_rsft_on = (mods & MOD_BIT(KC_RSHIFT) || oneshot_mods & MOD_BIT(KC_RSHIFT));
+  bool is_lctl_on = (mods & MOD_BIT(KC_LCTL)) || oneshot_mods & MOD_BIT(KC_LCTL);
 
   // Switcher
   if (IS_LAYER_ON(_ACT)) {
@@ -417,11 +418,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // SFT BSP to DEL
   if (((keycode == _FUN_BSP && record->tap.count > 0) || keycode == KC_BSPC) && record->event.pressed) {
-    if (is_sft_on) {
+    if (is_rsft_on) {
+      tap_code16(KC_UNDS);
+      ret = false;
+    } else if (is_lsft_on) {
       del_oneshot_mods(MOD_BIT(KC_LSFT));
       unregister_code(KC_LSHIFT);
 
-      if (is_gui_on) {
+      if (is_lgui_on) {
         unregister_code(KC_LGUI);
         tap_code16(C(KC_K));
         register_code(KC_LSHIFT);
@@ -429,7 +433,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         ret = false;
       } 
       // CTL
-      else if (is_ctl_on) {
+      else if (is_lctl_on) {
         tap_code16(A(KC_DEL));
         register_code(KC_LSHIFT);
         ret = false;
@@ -440,11 +444,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         register_code(KC_LSHIFT);
         ret = false;
       }
-    } else if (is_ctl_on) {
+    } else if (is_lctl_on) {
       tap_code16(A(KC_BSPC));
-      ret = false;
-    } else if (mods & MOD_BIT(KC_RSHIFT)) {
-      tap_code16(KC_UNDS);
       ret = false;
     }
   }
@@ -452,7 +453,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // ACT: WIN SWP tap action
   else if (keycode == _WIN_SWP && record->event.pressed && record->tap.count > 0) {
     // Treat CTL as SFT.
-    if (is_ctl_on) {
+    if (is_lctl_on) {
       unregister_code(KC_LCTL);
       tap_code16(S(G(KC_GRV)));
       register_code(KC_LCTL);
@@ -472,7 +473,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   else if (IS_LAYER_ON(_ACT) && keycode == KC_TAB) {
     if (record->event.pressed) {
       // Treat CTL as SFT.
-      if (is_ctl_on) {
+      if (is_lctl_on) {
         unregister_code(KC_LCTL);
         register_code(KC_LSFT);
         ret = true;
@@ -481,7 +482,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         ret = true;
       }
     } else {
-      if (is_sft_on) {
+      if (is_lsft_on) {
         unregister_code(KC_LSFT);
         register_code(KC_LCTL);
       }
@@ -491,7 +492,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // ACT: SPL SWP
   else if (keycode == _SPL_SWP && record->event.pressed && record->tap.count > 0) {
     // Treat CTL as SFT.
-    if (is_ctl_on) {
+    if (is_lctl_on) {
       unregister_code(KC_LCTL);
       tap_code16(S(A(KC_TAB)));
       register_code(KC_LCTL);
@@ -504,7 +505,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // ACT: TAB SWP
   else if (keycode == _TAB_SWP && record->event.pressed && record->tap.count > 0) {
     // Treat CTL as SFT.
-    if (is_ctl_on) {
+    if (is_lctl_on) {
       tap_code16(S(KC_TAB));
     } else {
       tap_code16(C(KC_TAB));
@@ -583,7 +584,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // '.' / ':'
   else if (keycode == _DOT_COL && record->event.pressed) {
-    if (is_sft_on) {
+    if (is_lsft_on || is_rsft_on) {
       tap_code16(KC_SCLN); // ':' because sft is on
     } else {
       tap_code(KC_DOT);
@@ -593,10 +594,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // ',' / ';'
   else if (keycode == _COM_SCL && record->event.pressed) {
-    if (is_sft_on) {
-      // FIXME: does not work with normal sft.
+    if (is_lsft_on || is_rsft_on) {
       clear_oneshot_mods();
+      clear_mods();
       tap_code(KC_SCLN);
+      set_mods(mods);
     } else {
       tap_code(KC_COMM);
     }
@@ -605,7 +607,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // '!' / '?'
   else if (keycode == _EXC_QST && record->event.pressed) {
-    if (is_sft_on) {
+    if (is_lsft_on || is_rsft_on) {
       tap_code16(S(KC_SLSH)); // ?
     }
     else {
