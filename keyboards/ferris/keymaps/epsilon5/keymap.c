@@ -317,17 +317,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-      _LOCK,   KC_TAB,    _BACK,    _FWRD, _SYM_WIN,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,  XXXXXXX,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-    XXXXXXX,     _CUT,    _COPY,    _PAST,  XXXXXXX,                       KC_PGDN,      _UNDO, _UNREDO,       _REDO, G(KC_DOWN),
-                                            _______, XXXXXXX,  KC_ENT, KC_BSPC
+      _LOCK,   KC_ESC,S(KC_TAB),   KC_TAB, XXXXXXX,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+    KC_LCTL, _APP_SWP, _WIN_SWP, _TAB_SWP, XXXXXXX,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
+    XXXXXXX,     _CUT,    _COPY,    _PAST, XXXXXXX,                       KC_PGDN,      _UNDO, _UNREDO,       _REDO, G(KC_DOWN),
+                                          _______, XXXXXXX,  KC_ENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
-      KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                   _VOLU,  KC_MPRV,  KC_MPLY,  KC_MNXT, KC_EJCT,
-      KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                   _VOLD, _FUN_SFT, _FUN_GUI, _FUN_ALT, _FUN_CTL,
-     KC_F11, KC_F12, KC_F13, KC_F14, KC_F15,                   _MUTE,  XXXXXXX,  A(KC_C),  XXXXXXX, XXXXXXX,
-                                     KC_SPC, KC_CAPS, XXXXXXX, XXXXXXX
+      KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                   XXXXXXX, KC_MPRV,  KC_MPLY,  KC_MNXT, KC_EJCT,
+      KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                   XXXXXXX, _OS_SFT,  _OS_GUI,  _OS_ALT, _OS_CTL,
+     KC_F11, KC_F12, KC_F13, KC_F14, KC_F15,                   XXXXXXX,   _MUTE,    _VOLD,    _VOLU, XXXXXXX,
+                                     KC_SPC,_SYM_WIN, XXXXXXX, XXXXXXX
   )
 };
 
