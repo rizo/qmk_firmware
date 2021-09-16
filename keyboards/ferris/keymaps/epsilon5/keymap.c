@@ -41,6 +41,8 @@ enum keycodes {
     _SYM_LT_FAKE,
     _SYM_GT_FAKE,
 
+    _CAPS_WORD,
+
     _OSFT_NUM_FAKE
 };
 
@@ -318,8 +320,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ACT] = LAYOUT(
       _LOCK,   KC_ESC,S(KC_TAB),   KC_TAB, XXXXXXX,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-    KC_LCTL, _APP_SWP, _WIN_SWP, _TAB_SWP, XXXXXXX,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-    XXXXXXX,     _CUT,    _COPY,    _PAST, XXXXXXX,                       KC_PGDN,      _UNDO, _UNREDO,       _REDO, G(KC_DOWN),
+    KC_LCTL, _APP_SWP, _WIN_SWP, _TAB_SWP, _CAPS_WORD,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
+    XXXXXXX,     _CUT,    _COPY,    _PAST, XXXXXXX,                       KC_PGDN,      _UNDO, G(KC_A),       _REDO, G(KC_DOWN),
                                           _______, XXXXXXX,  KC_ENT, KC_BSPC
   ),
 
@@ -396,6 +398,80 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
 }
 
 
+bool caps_word_on = false;
+
+// by precondition
+// CAPS_WORD: A "smart" Caps Lock key that only capitalizes the next identifier you type
+// and then toggles off Caps Lock automatically when you're done.
+void caps_word_enable(void) {
+    caps_word_on = true;
+    if (!(host_keyboard_led_state().caps_lock)) {
+        tap_code(KC_CAPS);
+    }
+}
+
+void caps_word_disable(void) {
+    caps_word_on = false;
+    unregister_mods(MOD_MASK_SHIFT);
+    if (host_keyboard_led_state().caps_lock) {
+        tap_code(KC_CAPS);
+    }
+}
+
+// Used to extract the basic tapping keycode from a dual-role key.
+// Example: GET_TAP_KC(MT(MOD_RSFT, KC_E)) == KC_E
+#define GET_TAP_KC(dual_role_key) dual_role_key & 0xFF
+
+void process_caps_word(uint16_t keycode, const keyrecord_t *record) {
+    // Update caps word state
+    if (caps_word_on) {
+        switch (keycode) {
+            case QK_MOD_TAP ... QK_MOD_TAP_MAX:
+            case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
+                // Earlier return if this has not been considered tapped yet
+                if (record->tap.count == 0) { return; }
+                // Get the base tapping keycode of a mod- or layer-tap key
+                keycode = GET_TAP_KC(keycode);
+                break;
+            default:
+                break;
+        }
+
+        switch (keycode) {
+            // Keycodes to shift
+            case KC_A ... KC_Z:
+                if (record->event.pressed) {
+                    if (get_oneshot_mods() & MOD_MASK_SHIFT) {
+                        caps_word_disable();
+                        add_oneshot_mods(MOD_MASK_SHIFT);
+                    } else {
+                        caps_word_enable();
+                    }
+                }
+            // Keycodes that enable caps word but shouldn't get shifted
+            case KC_MINS:
+            case KC_BSPC:
+            case KC_UNDS:
+            case KC_PIPE:
+            case _CAPS_WORD:
+            case KC_LPRN:
+            case KC_RPRN:
+                // If chording mods, disable caps word
+                if (record->event.pressed && (get_mods() != MOD_LSFT) && (get_mods() != 0)) {
+                    caps_word_disable();
+                }
+                break;
+            default:
+                // Any other keycode should automatically disable caps
+                if (record->event.pressed && !(get_oneshot_mods() & MOD_MASK_SHIFT)) {
+                    caps_word_disable();
+                }
+                break;
+        }
+    }
+}
+
+
 uint16_t prev_keycode = KC_F20;
 
 
@@ -410,6 +486,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   bool is_lsft_on = (mods & MOD_BIT(KC_LSHIFT) || oneshot_mods & MOD_BIT(KC_LSHIFT));
   bool is_rsft_on = (mods & MOD_BIT(KC_RSHIFT) || oneshot_mods & MOD_BIT(KC_RSHIFT));
   bool is_lctl_on = (mods & MOD_BIT(KC_LCTL)) || oneshot_mods & MOD_BIT(KC_LCTL);
+  
+  process_caps_word(keycode, record);
 
   // Switcher
   if (IS_LAYER_ON(_ACT)) {
@@ -446,6 +524,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     } else if (is_lctl_on) {
       tap_code16(A(KC_BSPC));
+      ret = false;
+    }
+  }
+
+  else if (keycode == _CAPS_WORD && record->event.pressed) {
+    if (caps_word_on) {
+      caps_word_disable();
+      ret = false;
+    } else {
+      caps_word_enable();
       ret = false;
     }
   }
@@ -531,17 +619,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   else if (keycode == _OSFT_NUM) {
     if (record->event.pressed) {
       if (record->tap.count == 0) { // hold
-        if (oneshot_mods & MOD_BIT(KC_LSHIFT)) {
-          clear_oneshot_mods();
-          register_code(KC_RSFT);
-          ret = false;
-        } else {
-          ret = true;
-        }
+        ret = true;
       }
       if (record->tap.count > 0) { // tap
         if (prev_keycode == _OSFT_NUM) {
-          clear_oneshot_mods();
+          caps_word_enable();
           ret = false;
         } else {
           set_oneshot_mods(MOD_BIT(KC_LSFT));
@@ -549,11 +631,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
     } else {
-      if (mods & MOD_BIT(KC_RSFT)) {
-        // rshift was registered on OS tap.
-        unregister_code(KC_RSFT);
-        clear_oneshot_mods();
-      }
       ret = true;
     }
   }
