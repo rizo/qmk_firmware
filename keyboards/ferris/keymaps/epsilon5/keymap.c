@@ -2,8 +2,6 @@
 
 #include QMK_KEYBOARD_H
 
-#define _ENABLE_HOME_MODS
-
 
 // FIXME: Doesn't work?
 #define WITHOUT_MODS(...) \
@@ -48,10 +46,14 @@ enum keycodes {
 
 
 // Tap dance
+#ifdef _TAPDANCE_ENABLED
 
 enum {
     TD_SLCT
 };
+
+// TD keys
+#define _SLCT TD(TD_SLCT)
 
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
   bool is_ctl_on = (get_mods() & MOD_BIT(KC_LCTL));
@@ -72,13 +74,12 @@ void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
-
-
 // All tap dance functions would go here. Only showing this one.
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_SLCT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_cln_finished, NULL, 150)
 };
 
+#endif
 
 // ABC: Home row mods
 #ifdef _ENABLE_HOME_MODS
@@ -103,8 +104,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _O KC_O
 #endif
 
-// TD keys
-#define _SLCT TD(TD_SLCT)
 
 // Thumb keys
 #define _ACT_SPC  LT(_ACT, KC_SPC)
@@ -151,6 +150,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 
 // --- COMBOS ---
+#ifdef _COMBOS_ENABLED
 
 enum combo_events {
   _E_AR_MOD,
@@ -288,6 +288,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
     break;
   }
 }
+#endif
 
 
 
@@ -310,22 +311,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NUM] = LAYOUT(
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
-      KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, XXXXXXX,                    KC_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
+      KC_LCTL, KC_LSFT, KC_LGUI, KC_LALT, XXXXXXX,                    KC_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                    KC_ASTR,    KC_7,    KC_8,    KC_9, KC_SLSH,
                                           XXXXXXX, _______,   KC_EQL, KC_UNDS
   ),
 
   [_ACT] = LAYOUT(
-      _LOCK,   KC_TAB,    _BACK,    _FWRD, _SYM_WIN,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,  XXXXXXX,                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
-      _UNDO,     _CUT,    _COPY,    _PAST,    _REDO,                    XXXXXXX, G(KC_LEFT),   _SLCT, G(KC_RIGHT), XXXXXXX,
+      _LOCK,   KC_TAB,    _BACK,    _FWRD, _SYM_WIN,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,  XXXXXXX,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
+    XXXXXXX,     _CUT,    _COPY,    _PAST,  XXXXXXX,                       KC_PGDN,      _UNDO, XXXXXXX,       _REDO, G(KC_DOWN),
                                             _______, XXXXXXX,  KC_ENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
-      KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                   XXXXXXX,   _MUTE,   _VOLD,    _VOLU, KC_EJCT,
-      KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                   XXXXXXX, _OS_SFT, _OS_GUI,  _OS_ALT, _OS_CTL,
-     KC_F11, KC_F12, KC_F13, KC_F14, KC_F15,                   XXXXXXX, KC_MPLY, KC_MPRV,  KC_MNXT, XXXXXXX,
+      KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                   _VOLU,  KC_MPRV,  KC_MPLY,  KC_MNXT, KC_EJCT,
+      KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                   _VOLD, _FUN_SFT, _FUN_GUI, _FUN_ALT, _FUN_CTL,
+     KC_F11, KC_F12, KC_F13, KC_F14, KC_F15,                   _MUTE,  XXXXXXX,  A(KC_C),  XXXXXXX, XXXXXXX,
                                      KC_SPC, KC_CAPS, XXXXXXX, XXXXXXX
   )
 };
@@ -395,7 +396,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
 }
 
 
-bool _caps_active = false;
+uint16_t prev_keycode = KC_F20;
 
 
 // Function overrides.
@@ -406,7 +407,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   uint8_t oneshot_mods = get_oneshot_mods();
 
   bool is_gui_on = (mods & MOD_BIT(KC_LGUI) || oneshot_mods & MOD_BIT(KC_LGUI));
-  bool is_sft_on = (mods & MOD_BIT(KC_LSHIFT) || oneshot_mods & MOD_BIT(KC_LSHIFT));
+  bool is_sft_on = (mods & (MOD_BIT(KC_LSHIFT) | MOD_BIT(KC_RSHIFT)) || oneshot_mods & MOD_BIT(KC_LSHIFT));
   bool is_ctl_on = (mods & MOD_BIT(KC_LCTL)) || oneshot_mods & MOD_BIT(KC_LCTL);
 
   // Switcher
@@ -441,6 +442,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     } else if (is_ctl_on) {
       tap_code16(A(KC_BSPC));
+      ret = false;
+    } else if (mods & MOD_BIT(KC_RSHIFT)) {
+      tap_code16(KC_UNDS);
       ret = false;
     }
   }
@@ -523,9 +527,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
   // OST SFT
-  else if (keycode == _OSFT_NUM && record->event.pressed && record->tap.count > 0) {
-    set_oneshot_mods(MOD_BIT(KC_LSFT));
-    ret = false;
+  else if (keycode == _OSFT_NUM) {
+    if (record->event.pressed) {
+      if (record->tap.count == 0) { // hold
+        if (oneshot_mods & MOD_BIT(KC_LSHIFT)) {
+          clear_oneshot_mods();
+          register_code(KC_RSFT);
+          ret = false;
+        } else {
+          ret = true;
+        }
+      }
+      if (record->tap.count > 0) { // tap
+        if (prev_keycode == _OSFT_NUM) {
+          clear_oneshot_mods();
+          ret = false;
+        } else {
+          set_oneshot_mods(MOD_BIT(KC_LSFT));
+          ret = false;
+        }
+      }
+    } else {
+      if (mods & MOD_BIT(KC_RSFT)) {
+        // rshift was registered on OS tap.
+        unregister_code(KC_RSFT);
+        clear_oneshot_mods();
+      }
+      ret = true;
+    }
   }
 
   // FUN: A(N)
@@ -591,6 +620,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     tap_code16(S(G(KC_Z)));
     ret = false;
   }
+
+  if (record->event.pressed)
+    prev_keycode = keycode;
 
   return ret;
 }
