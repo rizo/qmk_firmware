@@ -319,10 +319,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-      _LOCK,   KC_ESC,S(KC_TAB),   KC_TAB, XXXXXXX,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-    KC_LCTL, _APP_SWP, _WIN_SWP, _TAB_SWP, _CAPS_WORD,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-    XXXXXXX,     _CUT,    _COPY,    _PAST, XXXXXXX,                       KC_PGDN,      _UNDO, G(KC_A),       _REDO, G(KC_DOWN),
-                                          _______, XXXXXXX,  KC_ENT, KC_BSPC
+      _LOCK,   KC_TAB,    _UNDO,    _REDO, XXXXXXX,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _CAPS_WORD,                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
+    XXXXXXX,     _CUT,    _COPY,    _PAST, XXXXXXX,                       XXXXXXX, G(KC_LEFT), G(KC_A), G(KC_RIGHT), XXXXXXX,
+                                          _______, XXXXXXX,  KC_KP_ENTER, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
