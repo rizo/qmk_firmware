@@ -5,7 +5,7 @@
 #define QMK_KEYS_PER_SCAN 4
 
 // Activate mods faster.
-#define TAPPING_TERM 170
+#define TAPPING_TERM 150
 
 // Prevent normal rollover on alphas from accidentally triggering mods.
 #define IGNORE_MOD_TAP_INTERRUPT_PER_KEY
@@ -21,11 +21,8 @@
 
 
 
-#undef _COMBOS_ENABLED
-
+#define _COMBOS_ENABLED
 #ifdef _COMBOS_ENABLED
-  #define COMBO_NO_TIMER
-  #define COMBO_COUNT 11
   #define COMBO_TERM 25
 #endif
 
