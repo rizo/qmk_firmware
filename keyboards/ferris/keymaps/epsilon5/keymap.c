@@ -257,17 +257,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
   [_NUM] = LAYOUT(
-       _TM,     _COPYR,  _ARROW, _ARROW2, _PLCRW,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
+          _TM,  _COPYR,  _ARROW, _ARROW2, _PLCRW,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
       _C_USHM,  _A_SPC, _G_LPRN, _S_RPRN,   _INF,                    KC_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
          _EUR,    _GBP,  _CEDIL,   _PIPE, _SECTN,                    KC_ASTR,    KC_7,    KC_8,    KC_9, KC_SLSH,
                                          XXXXXXX, _______,   KC_EQL, KC_UNDS
   ),
 
   [_ACT] = LAYOUT(
-    KC_CAPS,   KC_TAB,    _UNDO,    _REDO, _INSERT,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _REPEAT,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-     KC_CLR,     _CUT,    _COPY,   _PASTE, _PASTE2,                       KC_PGDN,      _BACK,   _MENU,       _FRWD, G(KC_DOWN),
-                                            _______, XXXXXXX,  KC_KP_ENTER, KC_BSPC
+    KC_CAPS,    _UNDO,    _BACK,    _FRWD, _INSERT,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _REPEAT,                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
+     KC_CLR,     _CUT,    _COPY,   _PASTE, _PASTE2,                    XXXXXXX, G(KC_LEFT),   _MENU, G(KC_RIGHT), XXXXXXX,
+                                            _______, XXXXXXX,  KC_ESC, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
@@ -277,7 +277,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                     KC_SPC, _SYM_WIN, XXXXXXX, XXXXXXX
   )
 };
-
 
 
 // KEY OVERRIDES
@@ -308,6 +307,10 @@ const key_override_t del2_key_override = _ko_make_strict_negmods(MOD_BIT(KC_LSFT
 const key_override_t bsp1_key_override = _ko_make_strict(MOD_MASK_ALT, _ACT_SPC, KC_BSPC);
 const key_override_t bsp2_key_override = _ko_make_strict(MOD_BIT(KC_RALT), KC_UNDS, KC_BSPC);
 
+// C(_UNDO) -> _REDO
+const key_override_t redo_key_override = _ko_make_strict(MOD_MASK_CTRL, _UNDO, S(G(KC_Z)));
+
+
 const key_override_t **key_overrides = (const key_override_t *[]) {
   &scln_key_override,
   &coln_key_override,
@@ -318,6 +321,7 @@ const key_override_t **key_overrides = (const key_override_t *[]) {
   &del2_key_override,
   &bsp1_key_override,
   &bsp2_key_override,
+  &redo_key_override,
   NULL
 };
 
