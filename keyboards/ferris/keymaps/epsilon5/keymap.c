@@ -64,6 +64,7 @@ enum keycodes {
     _REPEAT,
     _CAPS_WORD,
     _INSERT,
+    _POWER,
 
     _ACT_TAB,
 
@@ -214,8 +215,9 @@ const uint16_t PROGMEM   _wf_combo[] = {KC_W, KC_F, COMBO_END};
 const uint16_t PROGMEM   _fp_combo[] = {KC_F, KC_P, COMBO_END};
 const uint16_t PROGMEM   _st_combo[] = {_S, _T, COMBO_END};
 const uint16_t PROGMEM   _xc_combo[] = {KC_X, KC_C, COMBO_END};
+const uint16_t PROGMEM   _ne_combo[] = {_N, _E, COMBO_END};
 
-uint16_t COMBO_LEN = 6;
+uint16_t COMBO_LEN = 7;
 combo_t key_combos[] = {
   COMBO(_ar_combo,   G(KC_A)),
   COMBO(_rs_combo,   G(KC_S)),
@@ -223,6 +225,7 @@ combo_t key_combos[] = {
   COMBO(_st_combo,   G(KC_T)),
   COMBO(_fp_combo,   G(KC_F)),
   COMBO(_xc_combo,   G(KC_SLSH)),
+  COMBO(_ne_combo,   G(KC_N)),
 };
 
 
@@ -239,7 +242,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
         KC_Q,    KC_W,    KC_F,     KC_P,     KC_G,                          KC_J,     KC_L,     KC_U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
-        KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA, KC_DOT, KC_EXLM,
+        KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,    KC_DOT, KC_EXLM,
                                           _ACT_SPC, _CAPS_NUM,  _SYM_ENT, _FUN_BSP
   ),
 
@@ -265,10 +268,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_FUN] = LAYOUT(
-     KC_EJCT, KC_F1,  KC_F2, KC_F3, KC_F10,                   XXXXXXX,   _MUTE,    _VOLD,    _VOLU, XXXXXXX,
-     KC_ESC,  KC_F4,  KC_F5, KC_F6, KC_F11,                   XXXXXXX, _OS_SFT,  _OS_GUI,  _OS_ALT, _OS_CTL,
-      RESET,  KC_F7,  KC_F8, KC_F9, KC_F12,                   XXXXXXX, KC_MPRV,  KC_MPLY,  KC_MNXT, XXXXXXX,
-                                     KC_SPC,_SYM_WIN, XXXXXXX, XXXXXXX
+      _POWER, KC_F1,  KC_F2, KC_F3, KC_F10,                    DM_REC1,   _MUTE,    _VOLD,    _VOLU, XXXXXXX,
+      KC_ESC, KC_F4,  KC_F5, KC_F6, KC_F11,                    DM_RSTP, _OS_SFT,  _OS_GUI,  _OS_ALT, _OS_CTL,
+       RESET, KC_F7,  KC_F8, KC_F9, KC_F12,                    DM_PLY1, KC_MPRV,  KC_MPLY,  KC_MNXT, XXXXXXX,
+                                    KC_SPC, _SYM_WIN, XXXXXXX, XXXXXXX
   )
 };
 
@@ -705,6 +708,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   else if (keycode == _C_USHM && record->event.pressed) {
     tap_code16(KC_TILD);
     tap_code(KC_SLSH);
+    ret = false;
+  }
+
+  // _POWER
+  else if (keycode == _POWER && record->event.pressed) {
+    tap_code16(C(KC_POWER));
+    tap_code(KC_TAB);
+    tap_code(KC_TAB);
     ret = false;
   }
 
