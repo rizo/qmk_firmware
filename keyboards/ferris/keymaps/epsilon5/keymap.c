@@ -64,7 +64,6 @@ enum keycodes {
     _REPEAT,
     _CAPS_WORD,
     _INSERT,
-    _POWER,
 
     _ACT_TAB,
 
@@ -255,7 +254,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                    _ENDSH, _FUN_SFT, _FUN_GUI, _FUN_ALT, _FUN_CTL,
        KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                      _MUL,   _BULLT,   _DGREE,  _ELLPSI,     _NEQ,
                                     _ACT_LT, _NUM_GT,    _______, XXXXXXX
-  ),
+),
 
   [_NUM] = LAYOUT(
        _TM,     _COPYR,  _ARROW, _ARROW2, _PLCRW,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
@@ -272,7 +271,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_FUN] = LAYOUT(
-      _POWER, KC_F1,  KC_F2, KC_F3, KC_F10,                    DM_REC1,   _MUTE,    _VOLD,    _VOLU, XXXXXXX,
+    KC_POWER, KC_F1,  KC_F2, KC_F3, KC_F10,                    DM_REC1,   _MUTE,    _VOLD,    _VOLU, XXXXXXX,
       KC_ESC, KC_F4,  KC_F5, KC_F6, KC_F11,                    DM_RSTP, _OS_SFT,  _OS_GUI,  _OS_ALT, _OS_CTL,
        RESET, KC_F7,  KC_F8, KC_F9, KC_F12,                    DM_PLY1, KC_MPRV,  KC_MPLY,  KC_MNXT, XXXXXXX,
                                     KC_SPC, _SYM_WIN, XXXXXXX, XXXXXXX
@@ -715,14 +714,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
-  // _POWER
-  else if (keycode == _POWER && record->event.pressed) {
-    tap_code16(C(KC_POWER));
-    tap_code(KC_TAB);
-    tap_code(KC_TAB);
-    ret = false;
-  }
-
   // _CAPS_NUM
   else if (keycode == _CAPS_NUM) {
     if (record->event.pressed && record->tap.count > 0) {
@@ -730,6 +721,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (get_oneshot_mods() & MOD_MASK_SHIFT) {
         clear_oneshot_mods();
         caps_word_enable();
+        ret = false;
+      } else if (mods_state & MOD_BIT(KC_LALT)) {
+        unregister_mods(MOD_BIT(KC_LALT));
+        tap_code(KC_ENT);
+        register_mods(MOD_BIT(KC_LALT));
         ret = false;
       } else {
         set_oneshot_mods(MOD_BIT(KC_LSFT));
