@@ -246,7 +246,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,      _F,     KC_P,     KC_G,                          KC_J,     KC_L,       _U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
         KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,    KC_DOT, KC_EXLM,
-                                          _ACT_SPC, _CAPS_NUM,  _SYM_ENT, _FUN_BSP
+                                          _ACT_SPC, _NUM_TAB,  _SYM_ENT, _FUN_BSP
   ),
 
   [_SYM] = LAYOUT(
@@ -305,8 +305,8 @@ const key_override_t gdel2_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD
 const key_override_t del2_key_override = _ko_make_strict_negmods(MOD_BIT(KC_LSFT), KC_BSPC, KC_DEL, MOD_BIT(KC_LGUI));
 
 // A(_ACT_SPC) -> KC_BSPC
-const key_override_t bsp1_key_override = ko_make_basic(MOD_MASK_ALT, _ACT_SPC, KC_BSPC);
-const key_override_t bsp2_key_override = ko_make_basic(MOD_BIT(KC_RALT), KC_UNDS, KC_BSPC);
+const key_override_t bsp1_key_override = _ko_make_strict(MOD_MASK_ALT, _ACT_SPC, KC_BSPC);
+const key_override_t bsp2_key_override = _ko_make_strict(MOD_BIT(KC_RALT), KC_UNDS, KC_BSPC);
 
 const key_override_t **key_overrides = (const key_override_t *[]) {
   &scln_key_override,
@@ -407,7 +407,7 @@ void process_repeat_key(uint16_t keycode, const keyrecord_t *record) {
             case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
                 return;
         }
-        
+
         switch (keycode) {
             case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
             case QK_MOD_TAP ... QK_MOD_TAP_MAX:
