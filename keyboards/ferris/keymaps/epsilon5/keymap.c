@@ -52,13 +52,25 @@ enum keycodes {
 
     _SYM_LT_FAKE,
     _SYM_GT_FAKE,
+    
+    _PIPE,
+    _ARROW,
+    _ARROW2,
+    _USR_HOME_FAKE,
+
+    _NUM_LPRN_FAKE,
+    _NUM_RPRN_FAKE,
 
     _REPEAT,
     _CAPS_WORD,
+    _INSERT,
 
     _ACT_TAB,
 
-    _CAPS_NUM_FAKE
+    _CAPS_NUM_FAKE,
+    _MENU,
+
+    _ACT_SPC
 };
 
 
@@ -127,9 +139,11 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 // Thumb keys
 #define _ACT_SPC  LT(_ACT, KC_SPC)
 #define _NUM_TAB  LT(_NUM, KC_TAB)
+#define _NUM_SPC  LT(_NUM, KC_SPC)
 #define _SYM_ENT  LT(_SYM, KC_ENT)
 #define _FUN_BSP  LT(_FUN, KC_BSPC)
 #define _CAPS_NUM LT(_NUM, _CAPS_NUM_FAKE)
+#define _SPC_NUM  LT(_NUM, KC_SPC)
 
 // ACT keys
 #define _LOCK G(C(KC_Q))
@@ -138,6 +152,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _REDO S(G(KC_Z))
 #define _COPY G(KC_C)
 #define _PASTE G(KC_V)
+#define _PASTE2 S(A(G(KC_V)))
 #define _CUT G(KC_X)
 #define  _VOLU KC__VOLUP
 #define  _VOLD KC__VOLDOWN
@@ -162,60 +177,58 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _OS_ALT OSM(MOD_LALT)
 #define _OS_CTL OSM(MOD_LCTL)
 
-// SYM keys
+// NUM & SYM keys
 #define _ACT_LT LT(_ACT, KC_LT)
 #define _NUM_GT LT(_NUM, KC_GT)
+#define _INF A(KC_5)
+#define _COPYR A(KC_G)
+#define _GBP A(KC_3)
+#define _EUR S(A(KC_2))
+#define _TM A(KC_2)
+#define _DGREE A(KC_0)
+#define _SECTN A(KC_6)
+#define _PLCRW A(KC_7)
+#define _PLSMIN S(A(KC_EQL))
+#define _ELLPSI A(KC_SCLN)
+#define _CEDIL A(KC_C)
+#define _BULLT A(KC_8)
+#define _ENDSH A(KC_MINS)
+#define _EMDSH S(A(KC_MINS))
+#define _DIARS A(KC_U)
+#define _QUATL A(KC_BSLS)
+#define _QUATR S(A(KC_BSLS))
+#define _NEQ A(KC_EQL)
+#define _MUL S(A(KC_9))
+#define _A_SPC RALT_T(KC_SPC)
+#define _C_USHM CTL_T(_USR_HOME_FAKE)
+#define _G_LPRN GUI_T(_NUM_LPRN_FAKE)
+#define _S_RPRN SFT_T(_NUM_RPRN_FAKE)
 
 
 
 // --- COMBOS ---
 #ifdef _COMBOS_ENABLED
+const uint16_t PROGMEM   _ar_combo[] = {_A, _R, COMBO_END};
+const uint16_t PROGMEM   _rs_combo[] = {_R, _S, COMBO_END};
+const uint16_t PROGMEM   _wf_combo[] = {KC_W, KC_F, COMBO_END};
+const uint16_t PROGMEM   _fp_combo[] = {KC_F, KC_P, COMBO_END};
+const uint16_t PROGMEM   _st_combo[] = {_S, _T, COMBO_END};
+const uint16_t PROGMEM   _xc_combo[] = {KC_X, KC_C, COMBO_END};
 
-enum combo_events {
-  _E_AR_MOD,
-  _E_AS_MOD,
-  _E_AT_MOD,
-  _E_RS_MOD,
-  _E_RT_MOD,
-  _E_ST_MOD,
-  _E_ARS_MOD,
-  _E_ART_MOD,
-  _E_AST_MOD,
-  _E_RST_MOD,
-  _E_ARST_MOD,
-  COMBO_COUNT
-};
-uint16_t COMBO_LEN = COMBO_COUNT;
-
-
-//       A,       R,       S,       T
-// KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT
-const uint16_t PROGMEM   ar_mod_combo[] = {_A, _R, COMBO_END};
-const uint16_t PROGMEM   as_mod_combo[] = {_A, _S, COMBO_END};
-const uint16_t PROGMEM   at_mod_combo[] = {_A, _T, COMBO_END};
-const uint16_t PROGMEM   rs_mod_combo[] = {_R, _S, COMBO_END};
-const uint16_t PROGMEM   rt_mod_combo[] = {_R, _T, COMBO_END};
-const uint16_t PROGMEM   st_mod_combo[] = {_S, _T, COMBO_END};
-const uint16_t PROGMEM  ars_mod_combo[] = {_A, _R, _S, COMBO_END};
-const uint16_t PROGMEM  art_mod_combo[] = {_A, _R, _T, COMBO_END};
-const uint16_t PROGMEM  ast_mod_combo[] = {_A, _S, _T, COMBO_END};
-const uint16_t PROGMEM  rst_mod_combo[] = {_R, _S, _T, COMBO_END};
-const uint16_t PROGMEM arst_mod_combo[] = {_A, _R, _S, _T, COMBO_END};
-
-
+uint16_t COMBO_LEN = 6;
 combo_t key_combos[] = {
-  [_E_AR_MOD]   = COMBO(ar_mod_combo,   OSM(MOD_LCTL | MOD_LALT)),
-  [_E_AS_MOD]   = COMBO(as_mod_combo,   OSM(MOD_LCTL | MOD_LGUI)),
-  [_E_AT_MOD]   = COMBO(at_mod_combo,   OSM(MOD_LCTL | MOD_LSFT)),
-  [_E_RS_MOD]   = COMBO(rs_mod_combo,   OSM(MOD_LALT | MOD_LGUI)),
-  [_E_RT_MOD]   = COMBO(rt_mod_combo,   OSM(MOD_LALT | MOD_LSFT)),
-  [_E_ST_MOD]   = COMBO(st_mod_combo,   OSM(MOD_LGUI | MOD_LSFT)),
-  [_E_ARS_MOD]  = COMBO(ars_mod_combo,  OSM(MOD_LCTL | MOD_LALT | MOD_LGUI)),
-  [_E_ART_MOD]  = COMBO(art_mod_combo,  OSM(MOD_LCTL | MOD_LALT | MOD_LSFT)),
-  [_E_AST_MOD]  = COMBO(ast_mod_combo,  OSM(MOD_LCTL | MOD_LGUI | MOD_LSFT)),
-  [_E_RST_MOD]  = COMBO(rst_mod_combo,  OSM(MOD_LALT | MOD_LGUI | MOD_LSFT)),
-  [_E_ARST_MOD] = COMBO(arst_mod_combo, OSM(MOD_LCTL | MOD_LALT | MOD_LGUI | MOD_LSFT)),
+  COMBO(_ar_combo,   G(KC_A)),
+  COMBO(_rs_combo,   G(KC_S)),
+  COMBO(_wf_combo,   G(KC_W)),
+  COMBO(_st_combo,   G(KC_T)),
+  COMBO(_fp_combo,   G(KC_F)),
+  COMBO(_xc_combo,   G(KC_SLSH)),
 };
+
+
+bool get_combo_must_tap(uint16_t index, combo_t *combo) {
+  return true;
+}
 
 #endif
 
@@ -231,30 +244,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_SYM] = LAYOUT(
-        KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       KC_AMPR, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                   XXXXXXX, KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT,
-       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_TILD,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                   _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
+       KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                    _ENDSH, _FUN_SFT, _FUN_GUI, _FUN_ALT, _FUN_CTL,
+       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                      _MUL,   _BULLT,   _DGREE,  _ELLPSI,     _NEQ,
                                     _ACT_LT, _NUM_GT,    _______, XXXXXXX
   ),
 
   [_NUM] = LAYOUT(
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
-      KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, XXXXXXX,                    KC_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                    KC_ASTR,    KC_7,    KC_8,    KC_9, KC_SLSH,
-                                          XXXXXXX, _______,   KC_EQL, KC_UNDS
+       _TM,     _COPYR,  _ARROW, _ARROW2, _PLCRW,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
+      _C_USHM,  _A_SPC, _G_LPRN, _S_RPRN,   _INF,                    KC_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
+         _EUR,    _GBP,  _CEDIL,   _PIPE, _SECTN,                    KC_ASTR,    KC_7,    KC_8,    KC_9, KC_SLSH,
+                                         XXXXXXX, _______,   KC_EQL, KC_UNDS
   ),
 
   [_ACT] = LAYOUT(
-      _LOCK,   KC_TAB,    _BACK,    _FRWD, XXXXXXX,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,  KC_CLR,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-    XXXXXXX,     _CUT,    _COPY,   _PASTE, XXXXXXX,                       KC_PGDN,      _UNDO, _REPEAT,       _REDO, G(KC_DOWN),
+    KC_CAPS,   KC_TAB,    _UNDO,    _REDO, _INSERT,                       KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _REPEAT,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
+     KC_CLR,     _CUT,    _COPY,   _PASTE, _PASTE2,                       KC_PGDN,      _BACK,   _MENU,       _FRWD, G(KC_DOWN),
                                             _______, XXXXXXX,  KC_KP_ENTER, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
-      KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,                   XXXXXXX, KC_MPRV,  KC_MPLY,  KC_MNXT, KC_EJCT,
-      KC_F6,  KC_F7,  KC_F8,  KC_F9, KC_F10,                HYPR(KC_H), _OS_SFT,  _OS_GUI,  _OS_ALT, _OS_CTL,
-     KC_F11, KC_F12, KC_F13, KC_F14, KC_F15,                   XXXXXXX,   _MUTE,    _VOLD,    _VOLU, XXXXXXX,
+     KC_EJCT, KC_F1,  KC_F2, KC_F3, KC_F10,                   XXXXXXX,   _MUTE,    _VOLD,    _VOLU, XXXXXXX,
+     KC_ESC,  KC_F4,  KC_F5, KC_F6, KC_F11,                   XXXXXXX, _OS_SFT,  _OS_GUI,  _OS_ALT, _OS_CTL,
+      RESET,  KC_F7,  KC_F8, KC_F9, KC_F12,                   XXXXXXX, KC_MPRV,  KC_MPLY,  KC_MNXT, XXXXXXX,
                                      KC_SPC,_SYM_WIN, XXXXXXX, XXXXXXX
   )
 };
@@ -285,6 +298,10 @@ const key_override_t gdel2_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD
 // S(KC_BSPC) -> KC_DEL
 const key_override_t del2_key_override = _ko_make_strict_negmods(MOD_BIT(KC_LSFT), KC_BSPC, KC_DEL, MOD_BIT(KC_LGUI));
 
+// A(_ACT_SPC) -> KC_BSPC
+const key_override_t bsp1_key_override = ko_make_basic(MOD_MASK_ALT, _ACT_SPC, KC_BSPC);
+const key_override_t bsp2_key_override = ko_make_basic(MOD_BIT(KC_RALT), KC_UNDS, KC_BSPC);
+
 const key_override_t **key_overrides = (const key_override_t *[]) {
   &scln_key_override,
   &coln_key_override,
@@ -293,6 +310,8 @@ const key_override_t **key_overrides = (const key_override_t *[]) {
   &del1_key_override,
   &gdel2_key_override,
   &del2_key_override,
+  &bsp1_key_override,
+  &bsp2_key_override,
   NULL
 };
 
@@ -410,6 +429,37 @@ void process_repeat_key(uint16_t keycode, const keyrecord_t *record) {
 }
 
 
+/*
+ * _INSERT
+ */
+
+bool insert_on = false;
+
+
+bool process_insert(uint16_t keycode, const keyrecord_t *record) {
+  if (insert_on && record->event.pressed) {
+    switch (keycode) {
+      case KC_A ... KC_Z:
+      case KC_1 ... KC_0:
+      case KC_UNDS:
+      case KC_MINS:
+        tap_code(KC_DEL);
+        if (record->event.pressed) {
+          register_code(keycode);
+        } else {
+          unregister_code(keycode);
+        }
+        return false;
+      default:
+        insert_on = false;
+        return true;
+    }
+  } else {
+    return true;
+  }
+}
+
+
 
 /*
  * CAPS_WORD
@@ -513,12 +563,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Switcher
   ret = switch_app(&_s_app_active, keycode, record);
 
+  // ret = process_insert(keycode, record);
+
   if (keycode == _CAPS_WORD && record->event.pressed) {
     if (caps_word_on) {
       caps_word_disable();
       return false;
     } else {
       caps_word_enable();
+      return false;
+    }
+  }
+
+  else if (keycode == _INSERT && record->event.pressed) {
+    if (insert_on) {
+      insert_on = false;
+      return false;
+    } else {
+      insert_on = true;
       return false;
     }
   }
@@ -574,6 +636,77 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
+  // FUN: A(N)
+  else if (keycode == _FUN_SFT && record->event.pressed && record->tap.count > 0) {
+    tap_code16(A(KC_N));
+    ret = false;
+  }
+
+  // FUN: A(E)
+  else if (keycode == _FUN_GUI && record->event.pressed && record->tap.count > 0) {
+    tap_code16(A(KC_E));
+    ret = false;
+  }
+
+  // FUN: A(I)
+  else if (keycode == _FUN_ALT && record->event.pressed && record->tap.count > 0) {
+    tap_code16(A(KC_I));
+    ret = false;
+  }
+
+  // FUN: A(GRV)
+  else if (keycode == _FUN_CTL && record->event.pressed && record->tap.count > 0) {
+    tap_code16(A(KC_GRV));
+    ret = false;
+  }
+
+  // NUM: LPRN
+  else if (keycode == _G_LPRN && record->event.pressed && record->tap.count > 0) {
+    tap_code16(KC_LPRN);
+    ret = false;
+  }
+
+  // NUM: RPRN
+  else if (keycode == _S_RPRN && record->event.pressed && record->tap.count > 0) {
+    tap_code16(KC_RPRN);
+    ret = false;
+  }
+
+  // ACT: MENU
+  else if (keycode == _MENU && record->event.pressed) {
+    tap_code16(C(KC_F2));
+    tap_code(KC_F);
+    tap_code(KC_DOWN);
+    ret = false;
+  }
+
+  // SYM: PIPE
+  else if (keycode == _PIPE && record->event.pressed) {
+    tap_code16(S(KC_BSLS));
+    tap_code16(S(KC_DOT));
+    ret = false;
+  }
+  
+  // _ARROW
+  else if (keycode == _ARROW && record->event.pressed) {
+    tap_code(KC_MINS);
+    tap_code16(S(KC_DOT));
+    ret = false;
+  }
+
+  // _ARROW2
+  else if (keycode == _ARROW2 && record->event.pressed) {
+    tap_code(KC_EQL);
+    tap_code16(S(KC_DOT));
+    ret = false;
+  }
+
+  // _C_USHM
+  else if (keycode == _C_USHM && record->event.pressed) {
+    tap_code16(KC_TILD);
+    tap_code(KC_SLSH);
+    ret = false;
+  }
 
   // _CAPS_NUM
   else if (keycode == _CAPS_NUM) {
