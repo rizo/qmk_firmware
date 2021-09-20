@@ -264,10 +264,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-    KC_CAPS,    _UNDO,    _BACK,    _FRWD, _INSERT,                    KC_PGUP, A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _REPEAT,                    KC_PGDN,    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_DOWN),
-     KC_CLR,     _CUT,    _COPY,   _PASTE, _PASTE2,                    XXXXXXX, G(KC_LEFT),   _MENU, G(KC_RIGHT), XXXXXXX,
-                                            _______, XXXXXXX,  KC_ESC, KC_BSPC
+    KC_CAPS,    _UNDO,    _BACK,    _FRWD, _INSERT,                    KC_PGUP,    A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _REPEAT,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
+     KC_CLR,     _CUT,    _COPY,   _PASTE, _PASTE2,                    KC_PGDN,       XXXXXXX,   _MENU,     XXXXXXX, G(KC_DOWN),
+                                            _______, XXXXXXX, KC_PENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
