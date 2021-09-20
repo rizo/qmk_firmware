@@ -119,21 +119,25 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _R ALT_T(KC_R)
 #define _S GUI_T(KC_S)
 #define _T SFT_T(KC_T)
+#define _F MT(MOD_LGUI | MOD_LCTL, KC_F)
 
 #define _N SFT_T(KC_N)
 #define _E GUI_T(KC_E)
 #define _I ALT_T(KC_I)
 #define _O CTL_T(KC_O)
+#define _U MT(MOD_LGUI | MOD_LCTL, KC_U)
 #else
 #define _A KC_A
 #define _R KC_R
 #define _S KC_S
 #define _T KC_T
+#define _F KC_F
 
 #define _N KC_N
 #define _E KC_E
 #define _I KC_I
 #define _O KC_O
+#define _U KC_U
 #endif
 
 
@@ -211,8 +215,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #ifdef _COMBOS_ENABLED
 const uint16_t PROGMEM   _ar_combo[] = {_A, _R, COMBO_END};
 const uint16_t PROGMEM   _rs_combo[] = {_R, _S, COMBO_END};
-const uint16_t PROGMEM   _wf_combo[] = {KC_W, KC_F, COMBO_END};
-const uint16_t PROGMEM   _fp_combo[] = {KC_F, KC_P, COMBO_END};
+const uint16_t PROGMEM   _wf_combo[] = {KC_W, _F, COMBO_END};
+const uint16_t PROGMEM   _fp_combo[] = {_F, KC_P, COMBO_END};
 const uint16_t PROGMEM   _st_combo[] = {_S, _T, COMBO_END};
 const uint16_t PROGMEM   _xc_combo[] = {KC_X, KC_C, COMBO_END};
 const uint16_t PROGMEM   _ne_combo[] = {_N, _E, COMBO_END};
@@ -240,7 +244,7 @@ bool get_combo_must_tap(uint16_t index, combo_t *combo) {
 // Keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
-        KC_Q,    KC_W,    KC_F,     KC_P,     KC_G,                          KC_J,     KC_L,     KC_U,     KC_Y,  KC_QUOT,
+        KC_Q,    KC_W,      _F,     KC_P,     KC_G,                          KC_J,     KC_L,       _U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
         KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,    KC_DOT, KC_EXLM,
                                           _ACT_SPC, _CAPS_NUM,  _SYM_ENT, _FUN_BSP
