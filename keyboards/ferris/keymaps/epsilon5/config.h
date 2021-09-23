@@ -6,6 +6,7 @@
 
 // Activate mods faster.
 #define TAPPING_TERM 170
+#define TAPPING_TERM_PER_KEY
 
 // Prevent normal rollover on alphas from accidentally triggering mods.
 #define IGNORE_MOD_TAP_INTERRUPT_PER_KEY
@@ -20,12 +21,24 @@
 #undef _TAPDANCE_ENABLED
 
 
-
 #define _COMBOS_ENABLED
 #ifdef _COMBOS_ENABLED
   #define COMBO_MUST_TAP_PER_COMBO
   #define COMBO_TERM 25
 #endif
+
+// Mouse key speed and acceleration.
+#undef MOUSEKEY_DELAY
+#define MOUSEKEY_DELAY          0
+#undef MOUSEKEY_INTERVAL
+#define MOUSEKEY_INTERVAL       16
+#undef MOUSEKEY_WHEEL_DELAY
+#define MOUSEKEY_WHEEL_DELAY    0
+#undef MOUSEKEY_MAX_SPEED
+#define MOUSEKEY_MAX_SPEED      6
+#undef MOUSEKEY_TIME_TO_MAX
+#define MOUSEKEY_TIME_TO_MAX    40
+
 
 #define _ko_make_strict(trigger_mods_, trigger_, replacement_) { \
   .trigger           = trigger_, \
