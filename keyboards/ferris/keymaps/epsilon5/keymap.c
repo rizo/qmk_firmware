@@ -29,7 +29,8 @@ enum layers {
   _SYM,
   _NUM,
   _ACT,
-  _FUN
+  _FUN,
+  _CUR,
 };
 
 // Custom keys.
@@ -45,10 +46,10 @@ enum keycodes {
     _SPL_SWP_FAKE,
     _TAB_SWP_FAKE,
 
-    _FUN_SFT_FAKE,
-    _FUN_GUI_FAKE,
-    _FUN_ALT_FAKE,
-    _FUN_CTL_FAKE,
+    _SFT_A_N_FAKE,
+    _GUI_A_E_FAKE,
+    _ALT_FAKE_A_I,
+    _CTL_A_GR_FAKE,
 
     _SYM_LT_FAKE,
     _SYM_GT_FAKE,
@@ -67,7 +68,7 @@ enum keycodes {
 
     _ACT_TAB,
 
-    _CAPS_NUM_FAKE,
+    _NUM_CAPS_FAKE,
     _MENU,
 
     _ACT_SPC
@@ -80,13 +81,15 @@ enum keycodes {
 #ifdef _TAPDANCE_ENABLED
 
 enum {
-    TD_SLCT
+    TD_SLCT,
+    TD_J
 };
 
 // TD keys
 #define _SLCT TD(TD_SLCT)
+#define _J TD(TD_J)
 
-void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_slct_finished(qk_tap_dance_state_t *state, void *user_data) {
   bool is_lctl_on = (get_mods() & MOD_BIT(KC_LCTL));
   
   if (state->count == 1) {
@@ -105,9 +108,30 @@ void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 
+void dance_j_finished(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    if (state->interrupted || !state->pressed) {
+      // tap
+      register_code(KC_A);
+    }
+    else {
+      // hold
+      register_mods(MOD_BIT(KC_LGUI));
+      register_code(KC_A);
+    };
+  }
+}
+
+
+void dance_j_reset(qk_tap_dance_state_t *state, void *user_data) {
+  unregister_code(KC_A);
+  unregister_mods(MOD_BIT(KC_LGUI));
+}
+
 // All tap dance functions would go here. Only showing this one.
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_SLCT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_cln_finished, NULL, 150)
+    [TD_SLCT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_slct_finished, NULL, 150),
+    [TD_J] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_j_finished, dance_j_reset, 100)
 };
 
 #endif
@@ -146,7 +170,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _NUM_SPC  LT(_NUM, KC_SPC)
 #define _SYM_ENT  LT(_SYM, KC_ENT)
 #define _FUN_BSP  LT(_FUN, KC_BSPC)
-#define _CAPS_NUM LT(_NUM, _CAPS_NUM_FAKE)
+#define _NUM_CAPS LT(_NUM, _NUM_CAPS_FAKE)
 #define _SPC_NUM  LT(_NUM, KC_SPC)
 
 // ACT keys
@@ -164,6 +188,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _BACK G(KC_LBRC)
 #define _FRWD G(KC_RBRC)
 #define _SYM_WIN C(G(KC_SPC))
+#define _MOUSE TG(_CUR)
 
 
 #define _WIN_SWP GUI_T(_WIN_SWP_FAKE)
@@ -172,10 +197,10 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _TAB_SWP SFT_T(_TAB_SWP_FAKE)
 
 // FUN keys
-#define _FUN_SFT SFT_T(_FUN_SFT_FAKE)
-#define _FUN_GUI GUI_T(_FUN_GUI_FAKE)
-#define _FUN_ALT ALT_T(_FUN_ALT_FAKE)
-#define _FUN_CTL CTL_T(_FUN_CTL_FAKE)
+#define _SFT_A_N SFT_T(_SFT_A_N_FAKE)
+#define _GUI_A_E GUI_T(_GUI_A_E_FAKE)
+#define _ALT_A_I ALT_T(_ALT_FAKE_A_I)
+#define _CTL_A_GR CTL_T(_CTL_A_GR_FAKE)
 #define _OS_SFT OSM(MOD_LSFT)
 #define _OS_GUI OSM(MOD_LGUI)
 #define _OS_ALT OSM(MOD_LALT)
@@ -219,8 +244,9 @@ const uint16_t PROGMEM   _fp_combo[] = {_F, KC_P, COMBO_END};
 const uint16_t PROGMEM   _st_combo[] = {_S, _T, COMBO_END};
 const uint16_t PROGMEM   _xc_combo[] = {KC_X, KC_C, COMBO_END};
 const uint16_t PROGMEM   _ne_combo[] = {_N, _E, COMBO_END};
+const uint16_t PROGMEM   _ei_combo[] = {_E, _I, COMBO_END};
 
-uint16_t COMBO_LEN = 7;
+uint16_t COMBO_LEN = 9;
 combo_t key_combos[] = {
   COMBO(_ar_combo,   G(KC_A)),
   COMBO(_rs_combo,   G(KC_S)),
@@ -228,7 +254,8 @@ combo_t key_combos[] = {
   COMBO(_st_combo,   G(KC_T)),
   COMBO(_fp_combo,   G(KC_F)),
   COMBO(_xc_combo,   G(KC_SLSH)),
-  COMBO(_ne_combo,   G(KC_N)),
+  COMBO(_ne_combo,   A(KC_N)),
+  COMBO(_ei_combo,   A(KC_E)),
 };
 
 
@@ -246,14 +273,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,      _F,     KC_P,     KC_G,                          KC_J,     KC_L,       _U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
         KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,    KC_DOT, KC_EXLM,
-                                          _ACT_SPC, _NUM_TAB,  _SYM_ENT, _FUN_BSP
+                                          _ACT_SPC, _NUM_CAPS, _SYM_ENT, _FUN_BSP
   ),
 
   [_SYM] = LAYOUT(
-        KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                   _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
-       KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                    _ENDSH, _FUN_SFT, _FUN_GUI, _FUN_ALT, _FUN_CTL,
-       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                      _MUL,   _BULLT,   _DGREE,  _ELLPSI,     _NEQ,
-                                    _ACT_LT, _NUM_GT,    _______, XXXXXXX
+        KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                     _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
+       KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                      _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
+       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                        _MUL,   _BULLT,   _DGREE,  _ELLPSI,     _NEQ,
+                                             _ACT_LT, _NUM_GT,   _______, XXXXXXX
 ),
 
   [_NUM] = LAYOUT(
@@ -264,17 +291,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-    KC_CAPS,    _UNDO,    _BACK,    _FRWD, _INSERT,                    KC_PGUP,    A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _REPEAT,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-     KC_CLR,     _CUT,    _COPY,   _PASTE, _PASTE2,                    KC_PGDN,       XXXXXXX,   _MENU,     XXXXXXX, G(KC_DOWN),
+    KC_CAPS,   KC_TAB,    _UNDO,    _REDO, _REPEAT,                    KC_PGUP,    A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
+     KC_CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                    KC_PGDN,         _BACK,  _MOUSE,       _FRWD, G(KC_DOWN),
                                             _______, XXXXXXX, KC_PENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
-    KC_POWER, KC_F1,  KC_F2, KC_F3, KC_F10,                    DM_REC1,   _MUTE,    _VOLD,    _VOLU, XXXXXXX,
-      KC_ESC, KC_F4,  KC_F5, KC_F6, KC_F11,                    DM_RSTP, _OS_SFT,  _OS_GUI,  _OS_ALT, _OS_CTL,
-       RESET, KC_F7,  KC_F8, KC_F9, KC_F12,                    DM_PLY1, KC_MPRV,  KC_MPLY,  KC_MNXT, XXXXXXX,
+    KC_POWER, KC_F1,  KC_F2, KC_F3, KC_F10,                    DM_REC1,    _MUTE,    _VOLD,    _VOLU,  XXXXXXX,
+      KC_ESC, KC_F4,  KC_F5, KC_F6, KC_F11,                    DM_RSTP,  _OS_SFT,  _OS_GUI,  _OS_ALT,  _OS_CTL,
+       RESET, KC_F7,  KC_F8, KC_F9, KC_F12,                    DM_PLY1,  KC_MPRV,  KC_MPLY,  KC_MNXT,  XXXXXXX,
                                     KC_SPC, _SYM_WIN, XXXXXXX, XXXXXXX
+  ),
+
+  [_CUR] = LAYOUT(
+    KC_CAPS,   KC_TAB,    _UNDO,    _REDO, _REPEAT,                    XXXXXXX,  KC_WH_U,  KC_MS_U,  KC_WH_D,  XXXXXXX,
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                    KC_WH_L,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_R,
+     KC_CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                    XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
+                                          _ACT_SPC, KC_ACL2,  KC_BTN2, KC_BTN1
   )
 };
 
@@ -627,9 +661,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // ACT: TAB SWP
   else if (keycode == _TAB_SWP && record->event.pressed && record->tap.count > 0) {
     if (mods_state & MOD_BIT(KC_LCTL)) {
-      tap_code16(S(KC_TAB));
+      unregister_mods(MOD_BIT(KC_LCTL));
+      tap_code16(S(G(KC_LBRC)));
+      register_mods(MOD_BIT(KC_LCTL));
     } else {
-      tap_code16(C(KC_TAB));
+      tap_code16(S(G(KC_RBRC)));
     }
     ret = false;
   }
@@ -647,26 +683,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // FUN: A(N)
-  else if (keycode == _FUN_SFT && record->event.pressed && record->tap.count > 0) {
+  else if (keycode == _SFT_A_N && record->event.pressed && record->tap.count > 0) {
     tap_code16(A(KC_N));
+    layer_off(_SYM);
     ret = false;
   }
 
   // FUN: A(E)
-  else if (keycode == _FUN_GUI && record->event.pressed && record->tap.count > 0) {
+  else if (keycode == _GUI_A_E && record->event.pressed && record->tap.count > 0) {
     tap_code16(A(KC_E));
+    layer_off(_SYM);
     ret = false;
   }
 
   // FUN: A(I)
-  else if (keycode == _FUN_ALT && record->event.pressed && record->tap.count > 0) {
+  else if (keycode == _ALT_A_I && record->event.pressed && record->tap.count > 0) {
     tap_code16(A(KC_I));
+    layer_off(_SYM);
     ret = false;
   }
 
   // FUN: A(GRV)
-  else if (keycode == _FUN_CTL && record->event.pressed && record->tap.count > 0) {
+  else if (keycode == _CTL_A_GR && record->event.pressed && record->tap.count > 0) {
     tap_code16(A(KC_GRV));
+    layer_off(_SYM);
     ret = false;
   }
 
@@ -718,8 +758,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
-  // _CAPS_NUM
-  else if (keycode == _CAPS_NUM) {
+  // _NUM_CAPS
+  else if (keycode == _NUM_CAPS) {
     if (record->event.pressed && record->tap.count > 0) {
       // Enable word caps on second tap.
       if (get_oneshot_mods() & MOD_MASK_SHIFT) {
@@ -741,6 +781,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   process_repeat_key(keycode, record);
 
   return ret;
+}
+
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case _SYM_ENT:
+            return TAPPING_TERM - 25;
+        default:
+            return TAPPING_TERM;
+    }
 }
 
 
