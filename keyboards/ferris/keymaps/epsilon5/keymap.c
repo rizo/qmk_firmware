@@ -71,7 +71,8 @@ enum keycodes {
     _NUM_CAPS_FAKE,
     _MENU,
 
-    _ACT_SPC
+    _ACT_SPC,
+    _CUR_BTN2_FAKE
 };
 
 
@@ -163,6 +164,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _U KC_U
 #endif
 
+#define _Z HYPR_T(KC_Z)
+#define _CLR HYPR_T(KC_CLR)
+
 
 // Thumb keys
 #define _ACT_SPC  LT(_ACT, KC_SPC)
@@ -233,6 +237,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _G_LPRN GUI_T(_NUM_LPRN_FAKE)
 #define _S_RPRN SFT_T(_NUM_RPRN_FAKE)
 
+#define _CUR_BTN2 CTL_T(_CUR_BTN2_FAKE)
 
 
 // --- COMBOS ---
@@ -272,8 +277,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
         KC_Q,    KC_W,      _F,     KC_P,     KC_G,                          KC_J,     KC_L,       _U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
-        KC_Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,    KC_DOT, KC_EXLM,
-                                          _ACT_SPC, _NUM_CAPS, _SYM_ENT, _FUN_BSP
+          _Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,    KC_DOT, KC_EXLM,
+                                          _ACT_SPC, _NUM_TAB,  _SYM_ENT, _FUN_BSP
   ),
 
   [_SYM] = LAYOUT(
@@ -281,7 +286,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                      _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
        KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                        _MUL,   _BULLT,   _DGREE,  _ELLPSI,     _NEQ,
                                              _ACT_LT, _NUM_GT,   _______, XXXXXXX
-),
+  ),
 
   [_NUM] = LAYOUT(
           _TM,   _PIPE,  _ARROW, _ARROW2, _PLCRW,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
@@ -291,10 +296,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-    KC_CAPS,   KC_TAB,    _UNDO,    _REDO, _REPEAT,                    KC_PGUP,    A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                    G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-     KC_CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                    KC_PGDN,         _BACK,  _MOUSE,       _FRWD, G(KC_DOWN),
-                                            _______, XXXXXXX, KC_PENT, KC_BSPC
+    KC_CAPS,    _UNDO,    _BACK,    _FRWD, _REPEAT,                       KC_PGUP,    A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                       G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
+       _CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                       KC_PGDN,    A(KC_DOWN),  _MOUSE,    A(KC_UP), G(KC_DOWN),
+                                           _______, XXXXXXX,    KC_PENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
@@ -307,8 +312,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_CUR] = LAYOUT(
     KC_CAPS,   KC_TAB,    _UNDO,    _REDO, _REPEAT,                    XXXXXXX,  KC_WH_U,  KC_MS_U,  KC_WH_D,  XXXXXXX,
    _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                    KC_WH_L,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_R,
-     KC_CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                    XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
-                                          _ACT_SPC, KC_ACL2,  KC_BTN2, KC_BTN1
+       _CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                    XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
+                                           KC_BTN1, _CUR_BTN2, KC_SPC, KC_BSPC
   )
 };
 
@@ -752,9 +757,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // _C_USHM
-  else if (keycode == _C_USHM && record->event.pressed) {
+  else if (keycode == _C_USHM && record->event.pressed && record->tap.count > 0) {
     tap_code16(KC_TILD);
     tap_code(KC_SLSH);
+    ret = false;
+  }
+
+  // _CUR_BTN2
+  else if (keycode == _CUR_BTN2) {
+    // tap
+    if (record->event.pressed && record->tap.count > 0) {
+      tap_code16(KC_BTN2);
+    }
+    // hold
+    else {
+      if (record->event.pressed) {
+        register_code(KC_ACL2);
+      } else {
+        unregister_code(KC_ACL2);
+      }
+    }
     ret = false;
   }
 
