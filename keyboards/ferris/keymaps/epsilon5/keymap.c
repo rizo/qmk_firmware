@@ -51,6 +51,11 @@ enum keycodes {
     _ALT_FAKE_A_I,
     _CTL_A_GR_FAKE,
 
+    _F_SFT_FAKE,
+    _F_GUI_FAKE,
+    _F_ALT_FAKE,
+    _F_CTL_FAKE,
+
     _SYM_LT_FAKE,
     _SYM_GT_FAKE,
     
@@ -205,10 +210,17 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _GUI_A_E GUI_T(_GUI_A_E_FAKE)
 #define _ALT_A_I ALT_T(_ALT_FAKE_A_I)
 #define _CTL_A_GR CTL_T(_CTL_A_GR_FAKE)
+
 #define _OS_SFT OSM(MOD_LSFT)
 #define _OS_GUI OSM(MOD_LGUI)
 #define _OS_ALT OSM(MOD_LALT)
 #define _OS_CTL OSM(MOD_LCTL)
+
+#define _F_SFT SFT_T(_F_SFT_FAKE)
+#define _F_GUI GUI_T(_F_GUI_FAKE)
+#define _F_ALT ALT_T(_F_ALT_FAKE)
+#define _F_CTL CTL_T(_F_CTL_FAKE)
+
 
 // NUM & SYM keys
 #define _ACT_LT LT(_ACT, KC_LT)
@@ -296,22 +308,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-    KC_CAPS,    _UNDO,    _BACK,    _FRWD, _REPEAT,                       KC_PGUP,    A(KC_LEFT),   KC_UP, A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                       G(KC_LEFT),    KC_LEFT, KC_DOWN,    KC_RIGHT, G(KC_RIGHT),
-       _CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                       KC_PGDN,    A(KC_DOWN),  _MOUSE,    A(KC_UP), G(KC_DOWN),
+      _MENU,    _UNDO,    _BACK,    _FRWD, XXXXXXX,                       KC_PGUP,    A(KC_LEFT),   KC_UP,     A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _REPEAT,                       G(KC_LEFT),    KC_LEFT, KC_DOWN,        KC_RIGHT, G(KC_RIGHT),
+       _CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                       KC_PGDN,  C(A(KC_LEFT)),  _MOUSE, C(A(KC_RIGHT)), G(KC_DOWN),
                                            _______, XXXXXXX,    KC_PENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
     KC_POWER, KC_F1,  KC_F2, KC_F3, KC_F10,                    DM_REC1,    _MUTE,    _VOLD,    _VOLU,  XXXXXXX,
-      KC_ESC, KC_F4,  KC_F5, KC_F6, KC_F11,                    DM_RSTP,  _OS_SFT,  _OS_GUI,  _OS_ALT,  _OS_CTL,
+      KC_ESC, KC_F4,  KC_F5, KC_F6, KC_F11,                    DM_RSTP,   _F_SFT,   _F_GUI,   _F_ALT,   _F_CTL,
        RESET, KC_F7,  KC_F8, KC_F9, KC_F12,                    DM_PLY1,  KC_MPRV,  KC_MPLY,  KC_MNXT,  XXXXXXX,
-                                    KC_SPC, _SYM_WIN, XXXXXXX, XXXXXXX
+                                    KC_SPC, KC_TAB,   XXXXXXX, XXXXXXX
   ),
 
   [_CUR] = LAYOUT(
     KC_CAPS,   KC_TAB,    _UNDO,    _REDO, _REPEAT,                    XXXXXXX,  KC_WH_U,  KC_MS_U,  KC_WH_D,  XXXXXXX,
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                    KC_WH_L,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_R,
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                    KC_WH_R,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_L,
        _CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                    XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
                                            KC_BTN1, _CUR_BTN2, KC_SPC, KC_BSPC
   )
@@ -760,6 +772,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   else if (keycode == _C_USHM && record->event.pressed && record->tap.count > 0) {
     tap_code16(KC_TILD);
     tap_code(KC_SLSH);
+    ret = false;
+  }
+
+  // _F_SFT
+  else if (keycode == _F_SFT && record->event.pressed && record->tap.count > 0) {
+    tap_code(KC_CAPS);
+    ret = false;
+  }
+
+  // _F_GUI
+  else if (keycode == _F_GUI && record->event.pressed && record->tap.count > 0) {
+    if (get_oneshot_mods() & (MOD_MASK_SHIFT | MOD_MASK_GUI | MOD_MASK_ALT | MOD_MASK_CTRL)) {
+      tap_code16(S(G(A(C(KC_F1)))));
+    }
+    else {
+      set_oneshot_mods(MOD_MASK_SHIFT | MOD_MASK_GUI | MOD_MASK_ALT | MOD_MASK_CTRL);
+    }
+    ret = false;
+  }
+
+  // _F_ALT
+  else if (keycode == _F_ALT && record->event.pressed && record->tap.count > 0) {
+    tap_code16(_SYM_WIN);
     ret = false;
   }
 
