@@ -43,7 +43,6 @@ enum keycodes {
 
     _WIN_SWP_FAKE,
     _APP_SWP_FAKE,
-    _SPL_SWP_FAKE,
     _TAB_SWP_FAKE,
 
     _SFT_A_N_FAKE,
@@ -62,10 +61,11 @@ enum keycodes {
     _PIPE,
     _ARROW,
     _ARROW2,
-    _USR_HOME_FAKE,
+    _USHM_FAKE,
+    _DTSL_FAKE,
 
-    _NUM_LPRN_FAKE,
-    _NUM_RPRN_FAKE,
+    _CDIR_FAKE,
+    _PDIR_FAKE,
 
     _REPEAT,
     _CAPS_WORD,
@@ -144,17 +144,17 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 // ABC: Home row mods
 #ifdef _ENABLE_HOME_MODS
-#define _A CTL_T(KC_A)
-#define _R ALT_T(KC_R)
-#define _S GUI_T(KC_S)
-#define _T SFT_T(KC_T)
+#define _A LCTL_T(KC_A)
+#define _R LALT_T(KC_R)
+#define _S LGUI_T(KC_S)
+#define _T LSFT_T(KC_T)
 #define _F MT(MOD_LGUI | MOD_LCTL, KC_F)
 
-#define _N SFT_T(KC_N)
-#define _E GUI_T(KC_E)
-#define _I ALT_T(KC_I)
-#define _O CTL_T(KC_O)
-#define _U MT(MOD_LGUI | MOD_LCTL, KC_U)
+#define _N RSFT_T(KC_N)
+#define _E RGUI_T(KC_E)
+#define _I RALT_T(KC_I)
+#define _O RCTL_T(KC_O)
+#define _U MT(MOD_RGUI | MOD_RCTL, KC_U)
 #else
 #define _A KC_A
 #define _R KC_R
@@ -202,7 +202,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 #define _WIN_SWP GUI_T(_WIN_SWP_FAKE)
 #define _APP_SWP ALT_T(_APP_SWP_FAKE)
-#define _SPL_SWP GUI_T(_SPL_SWP_FAKE)
+#define _SPL_SWP G(A(KC_TAB))
 #define _TAB_SWP SFT_T(_TAB_SWP_FAKE)
 
 // FUN keys
@@ -229,6 +229,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _COPYR A(KC_G)
 #define _GBP A(KC_3)
 #define _EUR S(A(KC_2))
+#define _SQRT A(KC_V)
 #define _TM A(KC_2)
 #define _DGREE A(KC_0)
 #define _SECTN A(KC_6)
@@ -244,10 +245,12 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 #define _QUATR S(A(KC_BSLS))
 #define _NEQ A(KC_EQL)
 #define _MUL S(A(KC_9))
-#define _A_SPC RALT_T(KC_SPC)
-#define _C_USHM CTL_T(_USR_HOME_FAKE)
-#define _G_LPRN GUI_T(_NUM_LPRN_FAKE)
-#define _S_RPRN SFT_T(_NUM_RPRN_FAKE)
+#define _DIV A(KC_SLSH)
+
+#define _C_USHM CTL_T(_USHM_FAKE)
+#define _A_CDIR ALT_T(_CDIR_FAKE)
+#define _G_PDIR GUI_T(_PDIR_FAKE)
+#define _S_SPC  SFT_T(KC_SPC)
 
 #define _CUR_BTN2 CTL_T(_CUR_BTN2_FAKE)
 
@@ -283,7 +286,6 @@ bool get_combo_must_tap(uint16_t index, combo_t *combo) {
 #endif
 
 
-
 // Keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
@@ -296,21 +298,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_SYM] = LAYOUT(
         KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                     _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
        KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                      _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
-       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                        _MUL,   _BULLT,   _DGREE,  _ELLPSI,     _NEQ,
+       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                        _MUL,   _BULLT,  _CEDIL,  _ELLPSI,       _DIV,
                                              _ACT_LT, _NUM_GT,   _______, XXXXXXX
   ),
 
   [_NUM] = LAYOUT(
-          _TM,   _PIPE,  _ARROW, _ARROW2, _PLCRW,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
-      _C_USHM,  _A_SPC, _G_LPRN, _S_RPRN,   _INF,                    KC_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
-         _EUR,    _GBP,  _CEDIL,  _COPYR, _SECTN,                    KC_ASTR,    KC_7,    KC_8,    KC_9, KC_SLSH,
+       _DGREE,   _PIPE,  _ARROW, _ARROW2, _PLCRW,                    KC_PLUS,    KC_1,    KC_2,    KC_3, KC_CIRC,
+      _C_USHM, _A_CDIR, _G_PDIR,  _S_SPC,   _INF,                    KC_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
+         _EUR,    _GBP,  _COPYR,   _SQRT, _SECTN,                    KC_ASTR,    KC_7,    KC_8,    KC_9, KC_SLSH,
                                          XXXXXXX, _______,   KC_EQL, KC_UNDS
   ),
 
   [_ACT] = LAYOUT(
-      _MENU,    _UNDO,    _BACK,    _FRWD, XXXXXXX,                       KC_PGUP,    A(KC_LEFT),   KC_UP,     A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP, _REPEAT,                       G(KC_LEFT),    KC_LEFT, KC_DOWN,        KC_RIGHT, G(KC_RIGHT),
-       _CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                       KC_PGDN,  C(A(KC_LEFT)),  _MOUSE, C(A(KC_RIGHT)), G(KC_DOWN),
+   C(KC_UP), C(KC_RIGHT),    _BACK,    _FRWD, _MENU,                       KC_PGUP,    A(KC_LEFT),   KC_UP,     A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC,    _APP_SWP, _WIN_SWP, _TAB_SWP,_SPL_SWP,                  G(KC_LEFT),    KC_LEFT, KC_DOWN,        KC_RIGHT, G(KC_RIGHT),
+      _UNDO,        _CUT,    _COPY,   _PASTE, _REDO,                       KC_PGDN,  C(A(KC_LEFT)),  _MOUSE, C(A(KC_RIGHT)), G(KC_DOWN),
                                            _______, XXXXXXX,    KC_PENT, KC_BSPC
   ),
 
@@ -322,9 +324,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_CUR] = LAYOUT(
-    KC_CAPS,   KC_TAB,    _UNDO,    _REDO, _REPEAT,                    XXXXXXX,  KC_WH_U,  KC_MS_U,  KC_WH_D,  XXXXXXX,
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,   _MENU,                    KC_WH_R,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_L,
-       _CLR,     _CUT,    _COPY,   _PASTE, _INSERT,                    XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
+    KC_CAPS, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_UP,                    XXXXXXX,  KC_WH_U,  KC_MS_U,  KC_WH_D,  XXXXXXX,
+   _CTL_ESC, KC_MS_BTN4, KC_MS_BTN5, KC_MS_BTN6, KC_MS_DOWN,                    KC_WH_R,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_L,
+       _CLR, KC_MS_BTN7, KC_MS_BTN8, KC_MS_ACCEL0, _INSERT,                    XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
                                            KC_BTN1, _CUR_BTN2, KC_SPC, KC_BSPC
   )
 };
@@ -354,9 +356,16 @@ const key_override_t gdel2_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD
 // S(KC_BSPC) -> KC_DEL
 const key_override_t del2_key_override = _ko_make_strict_negmods(MOD_BIT(KC_LSFT), KC_BSPC, KC_DEL, MOD_BIT(KC_LGUI));
 
+
 // A(_ACT_SPC) -> KC_BSPC
 const key_override_t bsp1_key_override = _ko_make_strict(MOD_MASK_ALT, _ACT_SPC, KC_BSPC);
-const key_override_t bsp2_key_override = _ko_make_strict(MOD_BIT(KC_RALT), KC_UNDS, KC_BSPC);
+const key_override_t bsp2_key_override = ko_make_basic(MOD_BIT(KC_LCTL), KC_UNDS, KC_BSPC);
+
+// C(KC_BSPC) -> C(A(KC_BSPC))
+const key_override_t bsp3_key_override = _ko_make_strict(MOD_BIT(KC_LCTL), KC_BSPC, C(A(KC_BSPC)));
+
+// C(_FUN_BSP) -> C(A(KC_BSPC))
+const key_override_t bsp4_key_override = _ko_make_strict(MOD_BIT(KC_LCTL), _FUN_BSP, C(A(KC_BSPC)));
 
 // C(_UNDO) -> _REDO
 const key_override_t redo_key_override = _ko_make_strict(MOD_MASK_CTRL, _UNDO, S(G(KC_Z)));
@@ -372,6 +381,8 @@ const key_override_t **key_overrides = (const key_override_t *[]) {
   &del2_key_override,
   &bsp1_key_override,
   &bsp2_key_override,
+  &bsp3_key_override,
+  &bsp4_key_override,
   &redo_key_override,
   NULL
 };
@@ -636,6 +647,54 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
+  else if (keycode == C(KC_RIGHT) && record->event.pressed && get_mods() & MOD_BIT(KC_LCTL)) {
+    tap_code16(KC_LEFT);
+    ret = false;
+  }
+
+  else if (keycode == _SPL_SWP && record->event.pressed && get_mods() & MOD_BIT(KC_LCTL)) {
+    unregister_mods(MOD_BIT(KC_LCTL));
+    tap_code16(S(_SPL_SWP));
+    register_mods(MOD_BIT(KC_LCTL));
+    ret = false;
+  }
+
+  // Nullify LGUI(_T)
+  else if (keycode == _T && record->event.pressed && record->tap.count > 0 && get_mods() & MOD_BIT(KC_LGUI)) {
+    unregister_mods(MOD_BIT(KC_LGUI));
+    tap_code(KC_S);
+    tap_code(KC_T);
+    add_mods(MOD_BIT(KC_LGUI));
+    ret = false;
+  }
+
+  // Nullify LALT(_S)
+  else if (keycode == _S && record->event.pressed && record->tap.count > 0 && get_mods() & MOD_BIT(KC_LALT)) {
+    unregister_mods(MOD_BIT(KC_LALT));
+    tap_code(KC_R);
+    tap_code(KC_S);
+    add_mods(MOD_BIT(KC_LALT));
+    ret = false;
+  }
+
+  // Nullify RGUI(_N)
+  else if (keycode == _N && record->event.pressed && record->tap.count > 0 && get_mods() & MOD_BIT(KC_RGUI)) {
+    unregister_mods(MOD_BIT(KC_RGUI));
+    tap_code(KC_E);
+    tap_code(KC_N);
+    add_mods(MOD_BIT(KC_RGUI));
+    ret = false;
+  }
+
+  // Nullify RALT(_E)
+  else if (keycode == _E && record->event.pressed && record->tap.count > 0 && get_mods() & MOD_BIT(KC_RALT)) {
+    unregister_mods(MOD_BIT(KC_RALT));
+    tap_code(KC_I);
+    tap_code(KC_E);
+    add_mods(MOD_BIT(KC_RALT));
+    ret = false;
+  }
+
   else if (keycode == _INSERT && record->event.pressed) {
     if (insert_on) {
       insert_on = false;
@@ -727,22 +786,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
-  // NUM: LPRN
-  else if (keycode == _G_LPRN && record->event.pressed && record->tap.count > 0) {
-    tap_code16(KC_LPRN);
-    ret = false;
-  }
-
-  // NUM: RPRN
-  else if (keycode == _S_RPRN && record->event.pressed && record->tap.count > 0) {
-    tap_code16(KC_RPRN);
-    ret = false;
-  }
-
   // ACT: MENU
   else if (keycode == _MENU && record->event.pressed) {
     tap_code16(C(KC_F2));
-    tap_code(KC_F);
+    tap_code(KC_RIGHT);
     tap_code(KC_DOWN);
     ret = false;
   }
@@ -770,8 +817,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // _C_USHM
   else if (keycode == _C_USHM && record->event.pressed && record->tap.count > 0) {
-    tap_code16(KC_TILD);
-    tap_code(KC_SLSH);
+    SEND_STRING("~/");
+    ret = false;
+  }
+
+  // _A_CDIR
+  else if (keycode == _A_CDIR && record->event.pressed && record->tap.count > 0) {
+    SEND_STRING("./");
+    ret = false;
+  }
+
+  // _G_PDIR
+  else if (keycode == _G_PDIR && record->event.pressed && record->tap.count > 0) {
+    SEND_STRING("../");
     ret = false;
   }
 
@@ -795,6 +853,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // _F_ALT
   else if (keycode == _F_ALT && record->event.pressed && record->tap.count > 0) {
     tap_code16(_SYM_WIN);
+    ret = false;
+  }
+
+  // _F_CTL
+  else if (keycode == _F_CTL && record->event.pressed && record->tap.count > 0) {
+    tap_code16(KC_F11);
     ret = false;
   }
 

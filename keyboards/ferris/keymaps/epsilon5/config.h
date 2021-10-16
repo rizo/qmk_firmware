@@ -35,9 +35,9 @@
 #undef MOUSEKEY_WHEEL_DELAY
 #define MOUSEKEY_WHEEL_DELAY    0
 #undef MOUSEKEY_MAX_SPEED
-#define MOUSEKEY_MAX_SPEED      6
+#define MOUSEKEY_MAX_SPEED      12
 #undef MOUSEKEY_TIME_TO_MAX
-#define MOUSEKEY_TIME_TO_MAX    40
+#define MOUSEKEY_TIME_TO_MAX    60
 
 
 #define _ko_make_strict(trigger_mods_, trigger_, replacement_) { \
