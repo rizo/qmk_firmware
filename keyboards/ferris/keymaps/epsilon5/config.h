@@ -18,7 +18,6 @@
 #define ONESHOT_TIMEOUT 3000
 
 #define _ENABLE_HOME_MODS
-#undef _TAPDANCE_ENABLED
 
 
 #define _COMBOS_ENABLED

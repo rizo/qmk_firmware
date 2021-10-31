@@ -81,67 +81,6 @@ enum keycodes {
 };
 
 
-
-
-// Tap dance
-#ifdef _TAPDANCE_ENABLED
-
-enum {
-    TD_SLCT,
-    TD_J
-};
-
-// TD keys
-#define _SLCT TD(TD_SLCT)
-#define _J TD(TD_J)
-
-void dance_slct_finished(qk_tap_dance_state_t *state, void *user_data) {
-  bool is_lctl_on = (get_mods() & MOD_BIT(KC_LCTL));
-  
-  if (state->count == 1) {
-    if (is_lctl_on) {
-      tap_code16(C(A(KC_LEFT)));
-      tap_code16(S(C(A(KC_RIGHT))));
-    } else {
-      tap_code16(A(KC_LEFT));
-      tap_code16(S(A(KC_RIGHT)));
-    }
-  } else if (state->count == 2) {
-    tap_code16(G(KC_LEFT));
-    tap_code16(S(G(KC_RIGHT)));
-  } else {
-    tap_code16(G(KC_A));
-  }
-}
-
-void dance_j_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    if (state->interrupted || !state->pressed) {
-      // tap
-      register_code(KC_A);
-    }
-    else {
-      // hold
-      register_mods(MOD_BIT(KC_LGUI));
-      register_code(KC_A);
-    };
-  }
-}
-
-
-void dance_j_reset(qk_tap_dance_state_t *state, void *user_data) {
-  unregister_code(KC_A);
-  unregister_mods(MOD_BIT(KC_LGUI));
-}
-
-// All tap dance functions would go here. Only showing this one.
-qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_SLCT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_slct_finished, NULL, 150),
-    [TD_J] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_j_finished, dance_j_reset, 100)
-};
-
-#endif
-
 // ABC: Home row mods
 #ifdef _ENABLE_HOME_MODS
 #define _A LCTL_T(KC_A)
@@ -291,7 +230,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
         KC_Q,    KC_W,      _F,     KC_P,     KC_G,                          KC_J,     KC_L,       _U,     KC_Y,  KC_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
-          _Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,    KC_DOT, KC_EXLM,
+          _Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,   KC_DOT,  KC_EXLM,
                                           _ACT_SPC, _NUM_TAB,  _SYM_ENT, _FUN_BSP
   ),
 
@@ -324,10 +263,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_CUR] = LAYOUT(
-    KC_CAPS, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, KC_MS_UP,                    XXXXXXX,  KC_WH_U,  KC_MS_U,  KC_WH_D,  XXXXXXX,
-   _CTL_ESC, KC_MS_BTN4, KC_MS_BTN5, KC_MS_BTN6, KC_MS_DOWN,                    KC_WH_R,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_L,
-       _CLR, KC_MS_BTN7, KC_MS_BTN8, KC_MS_ACCEL0, _INSERT,                    XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
-                                           KC_BTN1, _CUR_BTN2, KC_SPC, KC_BSPC
+    C(KC_UP), C(KC_RIGHT),    _BACK,    _FRWD,   _MENU,                    XXXXXXX,  KC_WH_U,  KC_MS_U,  KC_WH_D,  XXXXXXX,
+    _CTL_ESC,    _APP_SWP, _WIN_SWP, _TAB_SWP,_SPL_SWP,                    KC_WH_R,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_L,
+       _UNDO,        _CUT,    _COPY,   _PASTE,   _REDO,                    XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
+                                               KC_BTN1, _CUR_BTN2, KC_SPC, KC_BSPC
   )
 };
 
@@ -344,28 +283,32 @@ const key_override_t coln_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, K
 // S(KC_EXLM) -> KC_QUES
 const key_override_t ques_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_EXLM, KC_QUES);
 
-// G(S(_FUN_BSP)) -> C(KC_K)
-const key_override_t gdel1_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT), _FUN_BSP, C(KC_K));
-
 // S(_FUN_BSP) -> KC_DEL
 const key_override_t del1_key_override = _ko_make_strict_negmods(MOD_BIT(KC_LSFT), _FUN_BSP, KC_DEL, MOD_BIT(KC_LGUI));
-
-// G(S(KC_BSPC)) -> C(KC_K)
-const key_override_t gdel2_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT), KC_BSPC, C(KC_K));
 
 // S(KC_BSPC) -> KC_DEL
 const key_override_t del2_key_override = _ko_make_strict_negmods(MOD_BIT(KC_LSFT), KC_BSPC, KC_DEL, MOD_BIT(KC_LGUI));
 
+// G(S(_FUN_BSP)) -> C(KC_K)
+const key_override_t gdel1_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT), _FUN_BSP, C(KC_K));
+
+// G(S(KC_BSPC)) -> C(KC_K)
+const key_override_t gdel2_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT), KC_BSPC, C(KC_K));
 
 // A(_ACT_SPC) -> KC_BSPC
-const key_override_t bsp1_key_override = _ko_make_strict(MOD_MASK_ALT, _ACT_SPC, KC_BSPC);
-const key_override_t bsp2_key_override = ko_make_basic(MOD_BIT(KC_LCTL), KC_UNDS, KC_BSPC);
+const key_override_t bsp1_key_override = _ko_make_strict(MOD_BIT(KC_LALT), _ACT_SPC, KC_BSPC);
+
+// A(KC_UNDS) -> KC_BSPC
+const key_override_t bsp2_key_override = ko_make_basic(MOD_BIT(KC_LALT), KC_UNDS, KC_BSPC);
 
 // C(KC_BSPC) -> C(A(KC_BSPC))
-const key_override_t bsp3_key_override = _ko_make_strict(MOD_BIT(KC_LCTL), KC_BSPC, C(A(KC_BSPC)));
+const key_override_t bsp3_key_override = _ko_make_strict(MOD_MASK_CTRL, KC_BSPC, C(A(KC_BSPC)));
 
 // C(_FUN_BSP) -> C(A(KC_BSPC))
-const key_override_t bsp4_key_override = _ko_make_strict(MOD_BIT(KC_LCTL), _FUN_BSP, C(A(KC_BSPC)));
+const key_override_t bsp4_key_override = _ko_make_strict(MOD_MASK_CTRL, _FUN_BSP, C(A(KC_BSPC)));
+
+// A(_NUM_TAB) -> KC_ENT
+const key_override_t ent1_key_override = _ko_make_strict(MOD_BIT(KC_LALT), _NUM_TAB, KC_ENT);
 
 // C(_UNDO) -> _REDO
 const key_override_t redo_key_override = _ko_make_strict(MOD_MASK_CTRL, _UNDO, S(G(KC_Z)));
@@ -383,6 +326,7 @@ const key_override_t **key_overrides = (const key_override_t *[]) {
   &bsp2_key_override,
   &bsp3_key_override,
   &bsp4_key_override,
+  &ent1_key_override,
   &redo_key_override,
   NULL
 };
