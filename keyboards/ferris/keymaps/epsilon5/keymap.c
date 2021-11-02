@@ -136,6 +136,7 @@ enum keycodes {
 #define _BACK G(KC_LBRC)
 #define _FRWD G(KC_RBRC)
 #define _SYM_WIN C(G(KC_SPC))
+#define _SPC_R C(KC_RIGHT)
 #define _MOUSE TG(_CUR)
 
 
@@ -202,19 +203,15 @@ const uint16_t PROGMEM   _wf_combo[] = {KC_W, _F, COMBO_END};
 const uint16_t PROGMEM   _fp_combo[] = {_F, KC_P, COMBO_END};
 const uint16_t PROGMEM   _st_combo[] = {_S, _T, COMBO_END};
 const uint16_t PROGMEM   _xc_combo[] = {KC_X, KC_C, COMBO_END};
-const uint16_t PROGMEM   _ne_combo[] = {_N, _E, COMBO_END};
-const uint16_t PROGMEM   _ei_combo[] = {_E, _I, COMBO_END};
 
-uint16_t COMBO_LEN = 9;
+uint16_t COMBO_LEN = 6;
 combo_t key_combos[] = {
   COMBO(_ar_combo,   G(KC_A)),
   COMBO(_rs_combo,   G(KC_S)),
   COMBO(_wf_combo,   G(KC_W)),
   COMBO(_st_combo,   G(KC_T)),
   COMBO(_fp_combo,   G(KC_F)),
-  COMBO(_xc_combo,   G(KC_SLSH)),
-  COMBO(_ne_combo,   A(KC_N)),
-  COMBO(_ei_combo,   A(KC_E)),
+  COMBO(_xc_combo,   G(KC_SLSH))
 };
 
 
@@ -249,9 +246,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-   C(KC_UP), C(KC_RIGHT),    _BACK,    _FRWD, _MENU,                       KC_PGUP,    A(KC_LEFT),   KC_UP,     A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC,    _APP_SWP, _WIN_SWP, _TAB_SWP,_SPL_SWP,                  G(KC_LEFT),    KC_LEFT, KC_DOWN,        KC_RIGHT, G(KC_RIGHT),
-      _UNDO,        _CUT,    _COPY,   _PASTE, _REDO,                       KC_PGDN,  C(A(KC_LEFT)),  _MOUSE, C(A(KC_RIGHT)), G(KC_DOWN),
+      _MENU,   _UNDO,    _BACK,   _SPC_R, C(KC_UP),                       KC_PGUP,    A(KC_LEFT),   KC_UP,     A(KC_RIGHT), G(KC_UP),
+   _CTL_ESC,_APP_SWP, _WIN_SWP, _TAB_SWP, _SPL_SWP,                  G(KC_LEFT),    KC_LEFT, KC_DOWN,        KC_RIGHT, G(KC_RIGHT),
+    XXXXXXX,    _CUT,    _COPY,   _PASTE,  XXXXXXX,                       KC_PGDN,  C(A(KC_LEFT)),  _MOUSE, C(A(KC_RIGHT)), G(KC_DOWN),
                                            _______, XXXXXXX,    KC_PENT, KC_BSPC
   ),
 
@@ -386,7 +383,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
   }
 
   // Ensure the state is fully reset on keys that end swp.
-  else if (*active && ((keycode == KC_ESC || keycode == KC_ENT || keycode == KC_KP_ENTER || keycode == KC_SPC) && record->event.pressed)) {
+  else if (*active && ((keycode == KC_ESC || keycode == _CTL_ESC || keycode == KC_ENT || keycode == KC_KP_ENTER || keycode == KC_SPC) && record->event.pressed)) {
     tap_code(keycode);
     unregister_code(KC_LGUI);
     *active = false;
@@ -589,6 +586,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       caps_word_enable();
       return false;
     }
+  }
+
+  else if (keycode == _BACK && record->event.pressed && get_mods() & MOD_BIT(KC_LCTL)) {
+    unregister_mods(MOD_BIT(KC_LCTL));
+    tap_code16(_FRWD);
+    register_mods(MOD_BIT(KC_LCTL));
+    ret = false;
   }
 
   else if (keycode == C(KC_RIGHT) && record->event.pressed && get_mods() & MOD_BIT(KC_LCTL)) {
