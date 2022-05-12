@@ -99,7 +99,7 @@ void keyboard_pre_init_kb(void) {
 }
 
 void eeconfig_init_kb(void) {
-    keyboard_config.dpi_config = PLOOPY_DPI_DEFAULT;
+    keyboard_config.dpi_config = 1;
     eeconfig_update_kb(keyboard_config.raw);
     eeconfig_init_user();
 }

@@ -40,6 +40,7 @@ enum keycodes {
     _EXC_QST,
 
     _UNREDO,
+    _SEL,
 
     _WIN_SWP_FAKE,
     _APP_SWP_FAKE,
@@ -77,7 +78,8 @@ enum keycodes {
     _MENU,
 
     _ACT_SPC,
-    _CUR_BTN2_FAKE
+    _CUR_BTN2_FAKE,
+    _LT_GT,
 };
 
 
@@ -203,16 +205,23 @@ const uint16_t PROGMEM   _wf_combo[] = {KC_W, _F, COMBO_END};
 const uint16_t PROGMEM   _fp_combo[] = {_F, KC_P, COMBO_END};
 const uint16_t PROGMEM   _st_combo[] = {_S, _T, COMBO_END};
 const uint16_t PROGMEM   _xc_combo[] = {KC_X, KC_C, COMBO_END};
+const uint16_t PROGMEM   _cv_combo[] = {KC_C, KC_V, COMBO_END};
+const uint16_t PROGMEM   _sc_combo[] = {_S, KC_C, COMBO_END};
+const uint16_t PROGMEM   _lg_combo[] = {_ACT_LT, _NUM_GT, COMBO_END};
 
-uint16_t COMBO_LEN = 6;
+uint16_t COMBO_LEN = 9;
 combo_t key_combos[] = {
   COMBO(_ar_combo,   G(KC_A)),
   COMBO(_rs_combo,   G(KC_S)),
   COMBO(_wf_combo,   G(KC_W)),
   COMBO(_st_combo,   G(KC_T)),
   COMBO(_fp_combo,   G(KC_F)),
-  COMBO(_xc_combo,   G(KC_SLSH))
+  COMBO(_xc_combo,   G(KC_SLSH)),
+  COMBO(_cv_combo,   A(KC_C)),
+  COMBO(_sc_combo,   G(KC_A)),
+  COMBO(_lg_combo,   _LT_GT),
 };
+
 
 
 bool get_combo_must_tap(uint16_t index, combo_t *combo) {
@@ -232,9 +241,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_SYM] = LAYOUT(
-        KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                     _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
+        KC_GRV,   KC_AT, KC_LCBR,  KC_RCBR,  KC_HASH,                     _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
        KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                      _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
-       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR,                        _MUL,   _BULLT,  _CEDIL,  _ELLPSI,       _DIV,
+       KC_BSLS,  KC_DLR, KC_LBRC,  KC_RBRC,  KC_AMPR,                        _MUL,   _BULLT,  _CEDIL,  _ELLPSI,       _DIV,
                                              _ACT_LT, _NUM_GT,   _______, XXXXXXX
   ),
 
@@ -246,10 +255,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-      _MENU,   _UNDO,    _BACK,   _SPC_R, C(KC_UP),                       KC_PGUP,    A(KC_LEFT),   KC_UP,     A(KC_RIGHT), G(KC_UP),
-   _CTL_ESC,_APP_SWP, _WIN_SWP, _TAB_SWP, _SPL_SWP,                  G(KC_LEFT),    KC_LEFT, KC_DOWN,        KC_RIGHT, G(KC_RIGHT),
-    XXXXXXX,    _CUT,    _COPY,   _PASTE,  XXXXXXX,                       KC_PGDN,  C(A(KC_LEFT)),  _MOUSE, C(A(KC_RIGHT)), G(KC_DOWN),
-                                           _______, XXXXXXX,    KC_PENT, KC_BSPC
+      _MENU,    _UNDO,    _BACK,    _FRWD,   C(KC_UP),                      KC_PGUP,    A(KC_LEFT),    KC_UP,   A(KC_RIGHT),    G(KC_UP),
+   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,     _SPC_R,                      G(KC_LEFT), KC_LEFT,       KC_DOWN, KC_RIGHT,       G(KC_RIGHT),
+     KC_F11,     _CUT,    _COPY,   _PASTE, C(KC_DOWN),                      KC_PGDN,    C(A(KC_LEFT)), _SEL,    C(A(KC_RIGHT)), G(KC_DOWN),
+                                              _______, XXXXXXX,    KC_PENT, KC_BSPC
   ),
 
   [_FUN] = LAYOUT(
@@ -383,7 +392,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
   }
 
   // Ensure the state is fully reset on keys that end swp.
-  else if (*active && ((keycode == KC_ESC || keycode == _CTL_ESC || keycode == KC_ENT || keycode == KC_KP_ENTER || keycode == KC_SPC) && record->event.pressed)) {
+  else if (*active && ((keycode == KC_ESC || (keycode == _CTL_ESC && record->tap.count > 0) || keycode == KC_ENT || keycode == KC_KP_ENTER || keycode == KC_SPC) && record->event.pressed)) {
     tap_code(keycode);
     unregister_code(KC_LGUI);
     *active = false;
@@ -588,6 +597,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
+  else if (keycode == _SEL && record->event.pressed) {
+    if (get_mods() & MOD_BIT(KC_LALT)) {
+      unregister_mods(MOD_BIT(KC_LALT));
+      tap_code16(G(KC_LEFT));
+      tap_code16(S(G(KC_RIGHT)));
+      register_mods(MOD_BIT(KC_LALT));
+    }
+    else if (get_mods() & MOD_BIT(KC_LGUI)) {
+      tap_code16(G(KC_A));
+    } else {
+      tap_code16(A(KC_LEFT));
+      tap_code16(S(A(KC_RIGHT)));
+    }
+  }
+
   else if (keycode == _BACK && record->event.pressed && get_mods() & MOD_BIT(KC_LCTL)) {
     unregister_mods(MOD_BIT(KC_LCTL));
     tap_code16(_FRWD);
@@ -651,6 +675,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       insert_on = true;
       return false;
     }
+  }
+
+  else if (keycode == _LT_GT && record->event.pressed) {
+    SEND_STRING("</>");
+    ret = false;
   }
 
   // _WIN_SWP -> G(KC_GRV)
@@ -854,12 +883,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case _SYM_ENT:
-            return TAPPING_TERM - 25;
-        default:
-            return TAPPING_TERM;
-    }
+  switch (keycode) {
+    case _F_SFT:
+      return TAPPING_TERM + 100;
+    case _SYM_ENT:
+      return TAPPING_TERM - 25;
+    default:
+      return TAPPING_TERM;
+  }
 }
 
 
