@@ -23,14 +23,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [ACT] = LAYOUT(
      XXXXXXX,  KC_ESC,  G(KC_LBRC), G(KC_RBRC), XXXXXXX,                       KC_PGUP, S(KC_TAB), KC_UP,   KC_TAB,   KC_HOME,
-       OSCTL,   OSALT,       OSGUI,      OSSFT, XXXXXXX,                       KC_PGDN, KC_LEFT,   KC_DOWN, KC_RIGHT, KC_END,
+       OSGUI,   OSALT,       OSCTL,      OSSFT, XXXXXXX,                       KC_PGDN, KC_LEFT,   KC_DOWN, KC_RIGHT, KC_END,
      XXXXXXX, XXXXXXX,     XXXXXXX,    XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,  XXXXXXX,
                                                 _______, XXXXXXX,      KC_ENT, KC_BSPC
   ),
 
   [NUM] = LAYOUT(
         KC_BSLS, KC_1,    KC_2,    KC_3,  KC_SLSH,                     XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,
-        KC_LBRC, KC_4,    KC_5,    KC_6,  KC_RBRC,                     XXXXXXX, KC_RSFT,  KC_RGUI, KC_RALT, KC_RCTL,
+        KC_LBRC, KC_4,    KC_5,    KC_6,  KC_RBRC,                     XXXXXXX, KC_RSFT,  KC_RCTL, KC_RALT, KC_RGUI,
          KC_GRV, KC_7,    KC_8,    KC_9,     KC_0,                     XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, RESET,
                                           KC_MINS, KC_EQL,    XXXXXXX, _______
   )
