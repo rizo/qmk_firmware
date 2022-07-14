@@ -2,7 +2,7 @@
 
 #include QMK_KEYBOARD_H
 
-#include "keymap_extras/keymap_portuguese.h"
+#include "keymap_extras/keymap_us_international_linux.h"
 
 
 // Used to extract the basic tapping keycode from a dual-role key.
@@ -175,12 +175,12 @@ enum keycodes {
 #define _NUM_GT LT(_NUM, KC_GT)
 #define _INF A(KC_5)
 #define _COPYR A(KC_G)
-#define _GBP PT_PND
-#define _EUR PT_EURO
+#define _GBP US_PND
+#define _EUR US_EURO
 #define _SQRT A(KC_V)
 #define _TM A(KC_2)
-#define _DGREE PT_MORD
-#define _SECTN PT_SECT
+#define _DGREE US_DEG
+#define _SECTN US_SECT
 #define _PLCRW A(KC_7)
 #define _PLSMIN S(A(KC_EQL))
 #define _ELLPSI A(KC_SCLN)
@@ -189,8 +189,8 @@ enum keycodes {
 #define _ENDSH A(KC_MINS)
 #define _EMDSH S(A(KC_MINS))
 #define _DIARS A(KC_U)
-#define _QUATL PT_LDAQ
-#define _QUATR PT_RDAQ
+#define _QUATL US_LDAQ
+#define _QUATR US_RDAQ
 #define _NEQ A(KC_EQL)
 #define _MUL S(A(KC_9))
 #define _DIV A(KC_SLSH)
@@ -233,24 +233,24 @@ bool get_combo_must_tap(uint16_t index, combo_t *combo) {
 // Keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
-        KC_Q,    KC_W,      _F,     KC_P,     KC_G,                          KC_J,     KC_L,       _U,     KC_Y,  PT_QUOT,
+        KC_Q,    KC_W,      _F,     KC_P,     KC_G,                          KC_J,     KC_L,       _U,     KC_Y,  US_QUOT,
           _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
           _Z,    KC_X,    KC_C,     KC_V,     KC_B,                          KC_K,     KC_M, KC_COMMA,   KC_DOT,  KC_EXLM,
                                           _ACT_SPC, _NUM_TAB,  _SYM_ENT, _FUN_BSP
   ),
 
   [_SYM] = LAYOUT(
-          _GRV,   PT_AT, PT_LCBR,  PT_RCBR,  PT_HASH,                     _PLSMIN,   _EMDSH,   _DIARS, _QUATL,   _QUATR,
-         _TILD, PT_PIPE, PT_LPRN,  PT_RPRN,  PT_PERC,                      _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
-       PT_BSLS,  PT_DLR, PT_LBRC,  PT_RBRC,  PT_AMPR,                        _MUL,   _BULLT,  PT_CCED, _ELLPSI,  _DIV,
+        US_GRV,   US_AT, US_LCBR,  US_RCBR,  US_HASH,                     _PLSMIN,   _EMDSH,   _DIARS, _QUATL,   _QUATR,
+       US_TILD, US_PIPE, US_LPRN,  US_RPRN,  US_PERC,                      _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
+       US_BSLS,  US_DLR, US_LBRC,  US_RBRC,  US_AMPR,                        _MUL,   _BULLT,  US_CCED, _ELLPSI,  _DIV,
                                              _ACT_LT, _NUM_GT,   _______, XXXXXXX
   ),
 
   [_NUM] = LAYOUT(
-       _DGREE,   _PIPE,  _ARROW, _ARROW2, _PLCRW,                    PT_PLUS,    KC_1,    KC_2,    KC_3,   _CIRC,
-      _C_USHM, _A_CDIR, _G_PDIR,  _S_SPC,   _INF,                    PT_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
-         _EUR,    _GBP,  _COPYR,   _SQRT, _SECTN,                    PT_ASTR,    KC_7,    KC_8,    KC_9, PT_SLSH,
-                                         XXXXXXX, _______,   PT_EQL, PT_UNDS
+       _DGREE,   _PIPE,  _ARROW, _ARROW2, _PLCRW,                    US_PLUS,    KC_1,    KC_2,    KC_3, US_CIRC,
+      _C_USHM, _A_CDIR, _G_PDIR,  _S_SPC,   _INF,                    US_MINS,    KC_4,    KC_5,    KC_6,    KC_0,
+         _EUR,    _GBP,  _COPYR,   _SQRT, _SECTN,                    US_ASTR,    KC_7,    KC_8,    KC_9, US_SLSH,
+                                         XXXXXXX, _______,   US_EQL, US_UNDS
   ),
 
   [_ACT] = LAYOUT(
@@ -273,16 +273,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 // S(KC_COMMA) -> KC_SCLN
-const key_override_t scln_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_COMMA, PT_SCLN);
+const key_override_t scln_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_COMMA, US_SCLN);
 
 // S(KC_DOT) -> KC_COLN
-const key_override_t coln_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, PT_COLN);
+const key_override_t coln_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, US_COLN);
 
 // S(KC_EXLM) -> KC_QUES
-const key_override_t ques_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_EXLM, PT_QUES);
+const key_override_t ques_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_EXLM, US_QUES);
 
-// S(PT_QUOT) -> PT_DQUO
-  const key_override_t dquo_key_override = _ko_make_strict(MOD_MASK_SHIFT, PT_QUOT, PT_DQUO);
+// S(US_QUOT) -> US_DQUO
+  const key_override_t dquo_key_override = _ko_make_strict(MOD_MASK_SHIFT, US_QUOT, US_DQUO);
 
 // S(_FUN_BSP) -> KC_DEL
 const key_override_t del1_key_override = _ko_make_strict_negmods(MOD_BIT(KC_LSFT), _FUN_BSP, KC_DEL, MOD_BIT(KC_LGUI));
@@ -599,24 +599,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
-  else if (keycode == _TILD && record->event.pressed) {
-    tap_code16(PT_TILD);
-    tap_code16(PT_TILD);
-    ret = false;
-  }
-
-  else if (keycode == _GRV && record->event.pressed) {
-    tap_code16(PT_GRV);
-    tap_code16(PT_GRV);
-    ret = false;
-  }
-
-  else if (keycode == _CIRC && record->event.pressed) {
-    tap_code16(PT_CIRC);
-    tap_code16(PT_CIRC);
-    ret = false;
-  }
-
   else if (keycode == C(KC_RIGHT) && record->event.pressed && get_mods() & MOD_BIT(KC_LCTL)) {
     tap_code16(KC_LEFT);
     ret = false;
@@ -716,47 +698,40 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // _ACT_LT -> KC_LT
   else if (keycode == _ACT_LT && record->event.pressed && record->tap.count > 0) {
-    tap_code16(PT_LABK);
+    tap_code16(US_LABK);
     ret = false;
   }
 
   // _NUM_GT -> KC_GT
   else if (keycode == _NUM_GT && record->event.pressed && record->tap.count > 0) {
-    tap_code16(PT_RABK);
+    tap_code16(US_RABK);
     ret = false;
   }
 
-  // FUN: A(N)
+  // FUN: DTIL
   else if (keycode == _SFT_A_N && record->event.pressed && record->tap.count > 0) {
-    tap_code16(PT_TILD);
-    // tap_code16(UC(0x203D));
-    // tap_code16(A(KC_N));
+    tap_code16(US_DTIL);
     layer_off(_SYM);
     ret = false;
   }
 
-  // FUN: A(E)
+  // FUN: ACUT
   else if (keycode == _GUI_A_E && record->event.pressed && record->tap.count > 0) {
-    // tap_code16(UC(0x0302));
-    // send_unicode_hex_string("0302");
-    tap_code16(PT_ACUT);
-    // tap_code16(A(KC_E));
+    tap_code16(US_ACUT);
     layer_off(_SYM);
     ret = false;
   }
 
-  // FUN: A(I)
+  // FUN: DCIR
   else if (keycode == _ALT_A_I && record->event.pressed && record->tap.count > 0) {
-    tap_code16(PT_CIRC);
-    // tap_code16(A(KC_I));
+    tap_code16(US_DCIR);
     layer_off(_SYM);
     ret = false;
   }
 
-  // FUN: A(GRV)
+  // FUN: DGRV
   else if (keycode == _CTL_A_GR && record->event.pressed && record->tap.count > 0) {
-    tap_code16(PT_GRV);
-    // tap_code16(A(KC_GRV));
+    tap_code16(US_DGRV);
     layer_off(_SYM);
     ret = false;
   }
@@ -771,44 +746,44 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // SYM: PIPE
   else if (keycode == _PIPE && record->event.pressed) {
-    tap_code16(PT_PIPE);
-    tap_code16(PT_RABK);
+    tap_code16(US_PIPE);
+    tap_code16(US_RABK);
     ret = false;
   }
   
   // _ARROW
   else if (keycode == _ARROW && record->event.pressed) {
-    tap_code(PT_MINS);
-    tap_code16(PT_RABK);
+    tap_code(US_MINS);
+    tap_code16(US_RABK);
     ret = false;
   }
 
   // _ARROW2
   else if (keycode == _ARROW2 && record->event.pressed) {
-    tap_code16(PT_EQL);
-    tap_code16(PT_RABK);
+    tap_code16(US_EQL);
+    tap_code16(US_RABK);
     ret = false;
   }
 
   // _C_USHM
   else if (keycode == _C_USHM && record->event.pressed && record->tap.count > 0) {
-    tap_code16(PT_TILD);
-    tap_code16(PT_SLSH);
+    tap_code16(US_TILD);
+    tap_code16(US_SLSH);
     ret = false;
   }
 
   // _A_CDIR
   else if (keycode == _A_CDIR && record->event.pressed && record->tap.count > 0) {
-    tap_code16(PT_DOT);
-    tap_code16(PT_SLSH);
+    tap_code16(US_DOT);
+    tap_code16(US_SLSH);
     ret = false;
   }
 
   // _G_PDIR
   else if (keycode == _G_PDIR && record->event.pressed && record->tap.count > 0) {
-    tap_code16(PT_DOT);
-    tap_code16(PT_DOT);
-    tap_code16(PT_SLSH);
+    tap_code16(US_DOT);
+    tap_code16(US_DOT);
+    tap_code16(US_SLSH);
     ret = false;
   }
 
