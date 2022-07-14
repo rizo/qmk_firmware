@@ -97,7 +97,7 @@ enum keycodes {
 
 #define _N RSFT_T(KC_N)
 #define _E RGUI_T(KC_E)
-#define _I RALT_T(KC_I)
+#define _I LALT_T(KC_I)
 #define _O RCTL_T(KC_O)
 #define _U MT(MOD_RGUI | MOD_RCTL, KC_U)
 #else
@@ -130,12 +130,14 @@ enum keycodes {
 // ACT keys
 #define _LOCK G(C(KC_Q))
 #define _CTL_ESC CTL_T(KC_ESC)
+
 #define _UNDO C(KC_Z)
 #define _REDO S(C(KC_Z))
 #define _COPY G(KC_C)
 #define _PASTE G(KC_V)
 #define _PASTE2 S(A(G(KC_V)))
 #define _CUT G(KC_X)
+
 #define  _VOLU KC__VOLUP
 #define  _VOLD KC__VOLDOWN
 #define  _MUTE KC__MUTE
@@ -173,12 +175,12 @@ enum keycodes {
 #define _NUM_GT LT(_NUM, KC_GT)
 #define _INF A(KC_5)
 #define _COPYR A(KC_G)
-#define _GBP A(KC_3)
-#define _EUR S(A(KC_2))
+#define _GBP PT_PND
+#define _EUR PT_EURO
 #define _SQRT A(KC_V)
 #define _TM A(KC_2)
-#define _DGREE A(KC_0)
-#define _SECTN A(KC_6)
+#define _DGREE PT_MORD
+#define _SECTN PT_SECT
 #define _PLCRW A(KC_7)
 #define _PLSMIN S(A(KC_EQL))
 #define _ELLPSI A(KC_SCLN)
@@ -187,8 +189,8 @@ enum keycodes {
 #define _ENDSH A(KC_MINS)
 #define _EMDSH S(A(KC_MINS))
 #define _DIARS A(KC_U)
-#define _QUATL A(KC_BSLS)
-#define _QUATR S(A(KC_BSLS))
+#define _QUATL PT_LDAQ
+#define _QUATR PT_RDAQ
 #define _NEQ A(KC_EQL)
 #define _MUL S(A(KC_9))
 #define _DIV A(KC_SLSH)
@@ -252,9 +254,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-    XXXXXXX, XXXXXXX,    _BACK,    _FRWD, XXXXXXX,                       KC_PGUP,    C(KC_LEFT),   KC_UP,     C(KC_RIGHT), C(KC_HOME),
-   _CTL_ESC,_APP_SWP, _WIN_SWP, _TAB_SWP, XXXXXXX,                       KC_HOME,       KC_LEFT,  KC_DOWN,       KC_RIGHT,     KC_END,
-      _UNDO,  KC_CUT,  KC_COPY, KC_PASTE,   _REDO,                       KC_PGDN,  C(A(KC_LEFT)), XXXXXXX, C(A(KC_RIGHT)),  C(KC_END),
+    XXXXXXX,  KC_ESC,    _BACK,    _FRWD, XXXXXXX,                       KC_PGUP, C(KC_LEFT),   KC_UP, C(KC_RIGHT), C(KC_HOME),
+   _CTL_ESC,_APP_SWP, _WIN_SWP, _TAB_SWP, XXXXXXX,                       KC_HOME,    KC_LEFT, KC_DOWN,    KC_RIGHT,  KC_END,
+      _UNDO,    _CUT,    _COPY,   _PASTE,   _REDO,                       KC_PGDN,    XXXXXXX, _REPEAT,     XXXXXXX, C(KC_END),
                                          _______, XXXXXXX,    KC_PENT, KC_BSPC
   ),
 
@@ -386,7 +388,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
   }
 
   // Ensure the state is fully reset on keys that end swp.
-  else if (*active && ((keycode == KC_ESC || keycode == _CTL_ESC || keycode == KC_ENT || keycode == KC_KP_ENTER || keycode == KC_SPC) && record->event.pressed)) {
+  else if (*active && ((keycode == KC_ESC || keycode == KC_ENT || keycode == KC_KP_ENTER || keycode == KC_SPC) && record->event.pressed)) {
     tap_code(keycode);
     unregister_code(KC_LGUI);
     *active = false;
@@ -552,7 +554,6 @@ void process_caps_word(uint16_t keycode, const keyrecord_t *record) {
 }
 
 
-
 // Function overrides.
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
@@ -655,12 +656,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
-  // Nullify RALT(_E)
-  else if (keycode == _E && record->event.pressed && record->tap.count > 0 && get_mods() & MOD_BIT(KC_RALT)) {
-    unregister_mods(MOD_BIT(KC_RALT));
+  // Nullify LALT(_E)
+  else if (keycode == _E && record->event.pressed && record->tap.count > 0 && get_mods() & MOD_BIT(KC_LALT)) {
+    unregister_mods(MOD_BIT(KC_LALT));
     tap_code(KC_I);
     tap_code(KC_E);
-    add_mods(MOD_BIT(KC_RALT));
+    add_mods(MOD_BIT(KC_LALT));
     ret = false;
   }
 
@@ -679,10 +680,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   else if (keycode == _WIN_SWP && record->event.pressed && record->tap.count > 0) {
     if (mods_state & MOD_BIT(KC_LCTL)) {
       unregister_mods(MOD_BIT(KC_LCTL));
-      tap_code16(S(G(KC_GRV)));
+      tap_code16(S(G(A(KC_TAB))));
       register_mods(MOD_BIT(KC_LCTL));
     } else {
-      tap_code16(G(KC_GRV));
+      tap_code16(G(A(KC_TAB)));
     }
     ret = false;
   }
@@ -770,40 +771,44 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // SYM: PIPE
   else if (keycode == _PIPE && record->event.pressed) {
-    tap_code16(S(KC_BSLS));
-    tap_code16(S(KC_DOT));
+    tap_code16(PT_PIPE);
+    tap_code16(PT_RABK);
     ret = false;
   }
   
   // _ARROW
   else if (keycode == _ARROW && record->event.pressed) {
-    tap_code(KC_MINS);
-    tap_code16(S(KC_DOT));
+    tap_code(PT_MINS);
+    tap_code16(PT_RABK);
     ret = false;
   }
 
   // _ARROW2
   else if (keycode == _ARROW2 && record->event.pressed) {
-    tap_code(KC_EQL);
-    tap_code16(S(KC_DOT));
+    tap_code16(PT_EQL);
+    tap_code16(PT_RABK);
     ret = false;
   }
 
   // _C_USHM
   else if (keycode == _C_USHM && record->event.pressed && record->tap.count > 0) {
-    SEND_STRING("~/");
+    tap_code16(PT_TILD);
+    tap_code16(PT_SLSH);
     ret = false;
   }
 
   // _A_CDIR
   else if (keycode == _A_CDIR && record->event.pressed && record->tap.count > 0) {
-    SEND_STRING("./");
+    tap_code16(PT_DOT);
+    tap_code16(PT_SLSH);
     ret = false;
   }
 
   // _G_PDIR
   else if (keycode == _G_PDIR && record->event.pressed && record->tap.count > 0) {
-    SEND_STRING("../");
+    tap_code16(PT_DOT);
+    tap_code16(PT_DOT);
+    tap_code16(PT_SLSH);
     ret = false;
   }
 
@@ -853,25 +858,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
-  // _NUM_CAPS
-  else if (keycode == _NUM_CAPS) {
-    if (record->event.pressed && record->tap.count > 0) {
-      // Enable word caps on second tap.
-      if (get_oneshot_mods() & MOD_MASK_SHIFT) {
-        clear_oneshot_mods();
-        caps_word_enable();
-        ret = false;
-      } else if (mods_state & MOD_BIT(KC_LALT)) {
-        unregister_mods(MOD_BIT(KC_LALT));
-        tap_code(KC_ENT);
-        register_mods(MOD_BIT(KC_LALT));
-        ret = false;
-      } else {
-        set_oneshot_mods(MOD_BIT(KC_LSFT));
-        ret = false;
-      }
-    }
-  }
   
   process_repeat_key(keycode, record);
 
