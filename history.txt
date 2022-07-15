@@ -1,0 +1,2 @@
+qmk compile -kb ferris/0_2 -km epsilon5-L
+sleep 5; dfu-programmer atmega32u4 erase --force; dfu-programmer atmega32u4 flash --force .build/ferris_sweep_epsilon5-L.hex
