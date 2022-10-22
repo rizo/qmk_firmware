@@ -48,7 +48,6 @@ enum keycodes {
 };
 
 
-
 // Thumb keys
 #define _ACT_OCTL LT(_ACT, _ACT_OCTL_FAKE)
 #define _NUM_CAPS LT(_NUM, _NUM_CAPS_FAKE)
@@ -157,7 +156,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 // KEY OVERRIDES
-
 
 // S(KC_COMMA) -> KC_SCLN
 const key_override_t scln_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_COMMA, US_SCLN);
