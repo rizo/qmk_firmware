@@ -22,10 +22,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
     [ACT] = LAYOUT(
-     XXXXXXX,  KC_ESC,  G(KC_LBRC), G(KC_RBRC), XXXXXXX,                       KC_PGUP, S(KC_TAB), KC_UP,   KC_TAB,   KC_HOME,
-       OSGUI,   OSALT,       OSCTL,      OSSFT, XXXXXXX,                       KC_PGDN, KC_LEFT,   KC_DOWN, KC_RIGHT, KC_END,
-     XXXXXXX, XXXXXXX,     XXXXXXX,    XXXXXXX, XXXXXXX,                       XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,  XXXXXXX,
-                                                _______, XXXXXXX,      KC_ENT, KC_BSPC
+     XXXXXXX,  KC_CAPS,  G(KC_LBRC), G(KC_RBRC), XXXXXXX,                       KC_PGUP, KC_DEL,    KC_UP,   KC_BSPC, KC_HOME,
+       OSGUI,   OSALT,       OSCTL,       OSSFT, XXXXXXX,                       KC_PGDN, KC_LEFT,   KC_DOWN, KC_RIGHT, KC_END,
+     XXXXXXX, XXXXXXX,     XXXXXXX,     XXXXXXX, XXXXXXX,                       XXXXXXX, S(KC_TAB), XXXXXXX, KC_TAB,   XXXXXXX,
+                                                _______, XXXXXXX,      KC_ENT, KC_ESC
   ),
 
   [NUM] = LAYOUT(
