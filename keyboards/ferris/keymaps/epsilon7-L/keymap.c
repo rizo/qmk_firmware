@@ -16,6 +16,7 @@ uint8_t oneshot_mods_state = 0;
 enum layers {
   _ABC,
   _ACT,
+  _NUM,
   _SYM,
 };
 
@@ -38,13 +39,19 @@ enum keycodes {
     _PIPE,
     _ARROW,
     _ARROW2,
+    _CURDIR,
+    _HOMDIR,
+    _PRVDIR,
+
     _RPT,
 };
 
 
 // Thumb keys
 #define _C_ACT LT(_ACT, _C_ACT_FAKE)
-#define _S_SYM LT(_SYM, _S_SYM_FAKE)
+#define _ACTBSP LT(_ACT, KC_BSPC)
+#define _NUMSFT LT(_NUM, _S_SYM_FAKE)
+#define _SYMENT LT(_SYM, KC_ENT)
 
 #define _STAB S(KC_TAB)
 
@@ -81,23 +88,45 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                    KC_J,     KC_L, KC_U,     KC_Y,   US_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                    KC_H,     KC_N, KC_E,     KC_I,   KC_O,
-       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, KC_COMMA, KC_DOT, US_SCLN,
-                                         _C_ACT,  _S_SYM,  KC_SPC,  KC_BSPC
+       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, US_COMM,  US_DOT, US_SCLN,
+                                        _ACTBSP, _NUMSFT,  _SYMENT, KC_SPC
   ),
 
   [_ACT] = LAYOUT(
      KC_PWR,  KC_ESC,   _BACK,   _FRWD, KC_PSCR,                    KC_PGUP, _STAB,   KC_UP,   KC_TAB,  _BOF,
       _OGUI,   _OALT,   _OCTL,   _OSFT,  KC_INS,                    KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
-    XXXXXXX,    _RPT,   _UNDO,   _REDO, XXXXXXX,                    XXXXXXX, _WLEFT,  XXXXXXX, _WRGHT,  _EOF,
-                                        _______, XXXXXXX,  KC_ENT,  KC_DEL
+    XXXXXXX,    _RPT,   _UNDO,   _REDO, XXXXXXX,                    KC_PGDN, _WLEFT,  XXXXXXX, _WRGHT,  _EOF,
+                                        _______, XXXXXXX,  KC_ENT,  KC_SPC
+  ),
+
+  [_NUM] = LAYOUT(
+    XXXXXXX,   _PIPE,  _ARROW, _ARROW2, _CURDIR,                    US_PLUS, US_1,    US_2,    US_3,    US_CIRC,
+     _G_GRV,  _A_CIR,  _C_ACU,  _S_TIL, _HOMDIR,                    US_MINS, US_4,    US_5,    US_6,    US_0,
+    XXXXXXX, XXXXXXX, US_CCED, XXXXXXX, _PRVDIR,                    US_ASTR, US_7,    US_8,    US_9,    US_SLSH,
+                                        XXXXXXX, _______,  US_EQL,  KC_SPC
   ),
 
   [_SYM] = LAYOUT(
-    XXXXXXX,   _PIPE,  _ARROW, _ARROW2, XXXXXXX,                    US_BSLS, KC_1,    KC_2,    KC_3,    US_SLSH,
-     _G_GRV,  _A_CIR,  _C_ACU,  _S_TIL, XXXXXXX,                    US_LBRC, KC_4,    KC_5,    KC_6,    US_RBRC,
-    XXXXXXX, XXXXXXX, US_CCED, XXXXXXX, XXXXXXX,                    US_GRV, KC_7,    KC_8,    KC_9,    KC_0,
-                                        XXXXXXX, _______,  US_EQL,  US_MINS
+    US_GRV,    US_AT, US_LCBR, US_RCBR, US_HASH,                    XXXXXXX, XXXXXXX, XXXXXXX, US_LDAQ, US_RDAQ,
+    US_TILD, US_PIPE, US_LPRN, US_RPRN, US_PERC,                    XXXXXXX, KC_LSFT, KC_LCTL, KC_RALT, KC_LGUI,
+    US_BSLS,  US_DLR, US_LBRC, US_RBRC, US_AMPR,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RESET,
+                                        US_LABK, US_RABK,  _______, XXXXXXX
   )
+};
+
+
+// S(COMMA) -> EXLM
+const key_override_t comma_exlm_ko = ko_make_basic(MOD_MASK_SHIFT, US_COMM, US_EXLM);
+const key_override_t spc_unds_ko = ko_make_basic(MOD_MASK_SHIFT, KC_SPC, US_UNDS);
+
+// S(DOT) -> QUES
+const key_override_t dot_ques_ko = ko_make_basic(MOD_MASK_SHIFT, US_DOT, US_QUES);
+
+const key_override_t **key_overrides = (const key_override_t *[]) {
+  &comma_exlm_ko,
+  &dot_ques_ko,
+  &spc_unds_ko,
+  NULL
 };
 
 
@@ -236,7 +265,9 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 bool is_oneshot_ignored_key(uint16_t keycode) {
     switch (keycode) {
     case _C_ACT:
-    case _S_SYM:
+    case _ACTBSP:
+    case _NUMSFT:
+    case _SYMENT:
     case _OSFT:
     case _OCTL:
     case _OALT:
@@ -309,8 +340,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
-  // TAP(_S_SYM)
-  else if (keycode == _S_SYM && record->event.pressed && record->tap.count > 0) {
+  // TAP(_NUMSFT)
+  else if (keycode == _NUMSFT && record->event.pressed && record->tap.count > 0) {
     // Second tap: enable word caps.
     if (oneshot_mods_state & MOD_MASK_SHIFT) {
       clear_oneshot_mods();
@@ -373,6 +404,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   else if (keycode == _ARROW2 && record->event.pressed) {
     tap_code16(US_EQL);
     tap_code16(US_RABK);
+    ret = false;
+  }
+
+  // _CURDIR
+  else if (keycode == _CURDIR && record->event.pressed && record->tap.count > 0) {
+    tap_code16(US_DOT);
+    tap_code16(US_SLSH);
+    ret = false;
+  }
+
+  // _HOMDIR
+  else if (keycode == _HOMDIR && record->event.pressed && record->tap.count > 0) {
+    tap_code16(US_TILD);
+    tap_code16(US_SLSH);
+    ret = false;
+  }
+
+  // _PRVDIR
+  else if (keycode == _PRVDIR && record->event.pressed && record->tap.count > 0) {
+    tap_code16(US_DOT);
+    tap_code16(US_DOT);
+    tap_code16(US_SLSH);
     ret = false;
   }
 

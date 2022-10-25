@@ -6,25 +6,16 @@
 
 // Activate mods faster.
 #define TAPPING_TERM 170
-#define TAPPING_TERM_PER_KEY
+// #define TAPPING_TERM_PER_KEY
 
 // Prevent normal rollover on alphas from accidentally triggering mods.
-#define IGNORE_MOD_TAP_INTERRUPT_PER_KEY
+// #define IGNORE_MOD_TAP_INTERRUPT_PER_KEY
 
 // Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
-#define TAPPING_FORCE_HOLD_PER_KEY
+// #define TAPPING_FORCE_HOLD_PER_KEY
 
 // #define ONESHOT_TAP_TOGGLE 2
 #define ONESHOT_TIMEOUT 3000
-
-#define _ENABLE_HOME_MODS
-
-
-#define _COMBOS_ENABLED
-#ifdef _COMBOS_ENABLED
-  #define COMBO_MUST_TAP_PER_COMBO
-  #define COMBO_TERM 25
-#endif
 
 // Mouse key speed and acceleration.
 #undef MOUSEKEY_DELAY
