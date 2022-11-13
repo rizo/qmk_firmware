@@ -227,16 +227,16 @@ bool get_combo_must_tap(uint16_t index, combo_t *combo) {
 // Keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
-        KC_Q,    KC_W,      _F,     KC_P,     KC_G,                          KC_J,     KC_L,       _U,     KC_Y,  KC_QUOT,
-          _A,      _R,      _S,       _T,     KC_D,                          KC_H,       _N,       _E,       _I,       _O,
-          _Z,    KC_X,    KC_C,     KC_V,     KC_B, XXXXXXX,        XXXXXXX, KC_K,     KC_M, KC_COMMA,   KC_DOT,  KC_EXLM,
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _ACT_SPC, _NUM_TAB,       _SYM_ENT, _FUN_BSP, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+        KC_Q,    KC_W,    KC_F,     KC_P,     KC_G,                           KC_J,     KC_L,    KC_U,     KC_Y,    KC_QUOT,
+          _A,      _R,      _S,       _T,     KC_D,                           KC_H,     _N,      _E,       _I,      _O,
+          _Z,    KC_X,    KC_C,     KC_V,     KC_B,  XXXXXXX,        XXXXXXX, KC_K,     KC_M,    KC_COMMA, KC_DOT,  KC_EXLM,
+     XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, _ACT_SPC, _NUM_TAB,       _SYM_ENT, _FUN_BSP, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX
   ),
 
   [_SYM] = LAYOUT(
-        KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                     _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
-       KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                      _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
-       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR, XXXXXXX,        XXXXXXX, _MUL,   _BULLT,  _CEDIL,  _ELLPSI,       _DIV,
+        KC_GRV,   KC_AT, KC_LBRC,  KC_RBRC,  KC_HASH,                           _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
+       KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                            _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
+       KC_BSLS,  KC_DLR, KC_LCBR,  KC_RCBR,  KC_AMPR, XXXXXXX,            XXXXXXX, _MUL,   _BULLT,  _CEDIL,  _ELLPSI, _DIV,
        XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  _ACT_LT, _NUM_GT,   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
   ),
 
@@ -248,9 +248,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-      _MENU,   _UNDO,    _BACK,   _SPC_R, C(KC_UP),                       KC_PGUP,    A(KC_LEFT),   KC_UP,     A(KC_RIGHT), G(KC_UP),
+      _MENU,   _UNDO,    _BACK,   _FRWD, XXXXXXX,                       KC_PGUP,    A(KC_LEFT),   KC_UP,     A(KC_RIGHT), G(KC_UP),
    _CTL_ESC,_APP_SWP, _WIN_SWP, _TAB_SWP, _SPL_SWP,                  G(KC_LEFT),    KC_LEFT, KC_DOWN,        KC_RIGHT, G(KC_RIGHT),
-    XXXXXXX,    _CUT,    _COPY,   _PASTE,  XXXXXXX,  XXXXXXX,        XXXXXXX,  KC_PGDN,  C(A(KC_LEFT)),  _MOUSE, C(A(KC_RIGHT)), G(KC_DOWN),
+    XXXXXXX,    _CUT,    _COPY,   _PASTE,  XXXXXXX,  XXXXXXX,        XXXXXXX,  KC_PGDN,  C(A(KC_LEFT)),  XXXXXXX, C(A(KC_RIGHT)), G(KC_DOWN),
     XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  _______, XXXXXXX,    KC_PENT, KC_BSPC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
   ),
 
@@ -259,13 +259,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_ESC, KC_F4,  KC_F5, KC_F6, KC_F11,                    DM_RSTP,   _F_SFT,   _F_GUI,   _F_ALT,   _F_CTL,
        RESET, KC_F7,  KC_F8, KC_F9, KC_F12,  XXXXXXX,        XXXXXXX,  DM_PLY1,  KC_MPRV,  KC_MPLY,  KC_MNXT,  XXXXXXX,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_SPC, KC_TAB,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-  ),
-
-  [_CUR] = LAYOUT(
-    C(KC_UP), C(KC_RIGHT),    _BACK,    _FRWD,   _MENU,                    XXXXXXX,  KC_WH_U,  KC_MS_U,  KC_WH_D,  XXXXXXX,
-    _CTL_ESC,    _APP_SWP, _WIN_SWP, _TAB_SWP,_SPL_SWP,                    KC_WH_R,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_WH_L,
-       _UNDO,        _CUT,    _COPY,   _PASTE,   _REDO, XXXXXXX,        XXXXXXX,  XXXXXXX,    _BACK,   _MOUSE,    _FRWD,  XXXXXXX,
-XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BTN1, _CUR_BTN2, KC_SPC, KC_BSPC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
   )
 };
 

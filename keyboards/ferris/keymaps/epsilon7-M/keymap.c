@@ -1,8 +1,5 @@
 #include QMK_KEYBOARD_H
 
-#include "keymap_extras/keymap_us_international_linux.h"
-#include "oneshot.h"
-
 // Used to extract the basic tapping keycode from a dual-role key.
 // Example: GET_TAP_KC(MT(MOD_RSFT, KC_E)) == KC_E
 #define GET_TAP_KC(dual_role_key) dual_role_key & 0xFF
@@ -23,18 +20,18 @@ enum layers {
 
 // Custom keys.
 enum keycodes {
-    _C_ACT_FAKE = SAFE_RANGE,
+    _G_ACT_FAKE = SAFE_RANGE,
     _S_SYM_FAKE,
 
-    _OGUI,
-    _OALT,
-    _OCTL,
-    _OSFT,
+    _OGUI_FAKE,
+    _OALT_FAKE,
+    _OCTL_FAKE,
+    _OSFT_FAKE,
 
     _S_TIL_FAKE,
-    _C_ACU_FAKE,
+    _G_ACU_FAKE,
     _A_CIR_FAKE,
-    _G_GRV_FAKE,
+    _C_GRV_FAKE,
 
     _PIPE,
     _ARROW,
@@ -44,13 +41,17 @@ enum keycodes {
     _PRVDIR,
 
     _RPT,
+    _RSTMOD,
 };
 
+// OS mods.
+#define _OGUI GUI_T(_OGUI_FAKE)
+#define _OALT ALT_T(_OALT_FAKE)
+#define _OCTL CTL_T(_OCTL_FAKE)
+#define _OSFT SFT_T(_OSFT_FAKE)
 
 // Thumb keys
-#define _C_ACT LT(_ACT, _C_ACT_FAKE)
-#define _ACTSPC LT(_ACT, KC_SPC)
-#define _ACTBSP LT(_ACT, KC_BSPC)
+#define _G_ACT LT(_ACT, _G_ACT_FAKE)
 #define _NUMSFT LT(_NUM, _S_SYM_FAKE)
 #define _SYMENT LT(_SYM, KC_ENT)
 
@@ -78,56 +79,66 @@ enum keycodes {
 #define  _MUTE KC__MUTE
 
 // Left mod accents.
-#define _G_GRV GUI_T(_G_GRV_FAKE)
+#define _C_GRV CTL_T(_C_GRV_FAKE)
 #define _A_CIR ALT_T(_A_CIR_FAKE)
-#define _C_ACU CTL_T(_C_ACU_FAKE)
+#define _G_ACU GUI_T(_G_ACU_FAKE)
 #define _S_TIL SFT_T(_S_TIL_FAKE)
 
+// INTL keys.
+#define _ACUT A(KC_E)
+#define _DTIL A(KC_N)
+#define _DCIR A(KC_I)
+#define _DGRV A(KC_GRV)
+#define _CCED A(KC_C)
+
+// Extra symbols.
+#define _LDAQ A(KC_BSLS)
+#define _RDAQ S(A(KC_BSLS))
 
 // Keymap.
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
-       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                    KC_J,     KC_L, KC_U,     KC_Y,   US_QUOT,
+       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                    KC_J,     KC_L, KC_U,     KC_Y,   KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                    KC_H,     KC_N, KC_E,     KC_I,   KC_O,
-       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, US_COMM,  US_DOT, US_SCLN,
-                                        _ACTSPC, _NUMSFT,  _SYMENT, KC_BSPC
+       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, KC_COMM,  KC_DOT, KC_SCLN,
+                                         _G_ACT, _NUMSFT,  _SYMENT, KC_SPC
   ),
 
   [_ACT] = LAYOUT(
      KC_PWR,  KC_ESC,   _BACK,   _FRWD, KC_PSCR,                    KC_PGUP, _STAB,   KC_UP,   KC_TAB,  _BOF,
-      _OGUI,   _OALT,   _OCTL,   _OSFT,  KC_INS,                    KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
-    XXXXXXX,    _RPT,   _UNDO,   _REDO, XXXXXXX,                    KC_PGDN, _WLEFT,  XXXXXXX, _WRGHT,  _EOF,
+      _OCTL,   _OALT,   _OGUI,   _OSFT,  KC_INS,                    KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
+    _RSTMOD,    _RPT,   _UNDO,   _REDO, XXXXXXX,                    KC_PGDN, _WLEFT,  XXXXXXX, _WRGHT,  _EOF,
                                         _______, XXXXXXX,  KC_ENT,  KC_BSPC
   ),
 
   [_NUM] = LAYOUT(
-    XXXXXXX,   _PIPE,  _ARROW, _ARROW2, _CURDIR,                    US_PLUS, US_1,    US_2,    US_3,    US_CIRC,
-     _G_GRV,  _A_CIR,  _C_ACU,  _S_TIL, _HOMDIR,                    US_MINS, US_4,    US_5,    US_6,    US_0,
-    XXXXXXX, XXXXXXX, US_CCED, XXXXXXX, _PRVDIR,                    US_ASTR, US_7,    US_8,    US_9,    US_SLSH,
-                                        XXXXXXX, _______,  US_EQL,  US_UNDS
+    XXXXXXX,   _PIPE,  _ARROW, _ARROW2, _CURDIR,                    KC_PLUS, KC_1,    KC_2,    KC_3,    KC_CIRC,
+     _C_GRV,  _A_CIR,  _G_ACU,  _S_TIL, _HOMDIR,                    KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
+    XXXXXXX, XXXXXXX,   _CCED, XXXXXXX, _PRVDIR,                    KC_ASTR, KC_7,    KC_8,    KC_9,    KC_SLSH,
+                                        XXXXXXX, _______,  KC_EQL,  KC_SPC
   ),
 
   [_SYM] = LAYOUT(
-    US_GRV,    US_AT, US_LCBR, US_RCBR, US_HASH,                    XXXXXXX, XXXXXXX, XXXXXXX, US_LDAQ, US_RDAQ,
-    US_TILD, US_PIPE, US_LPRN, US_RPRN, US_PERC,                    XXXXXXX, KC_LSFT, KC_LCTL, KC_RALT, KC_LGUI,
-    US_BSLS,  US_DLR, US_LBRC, US_RBRC, US_AMPR,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RESET,
-                                        US_LABK, US_RABK,  _______, XXXXXXX
+    KC_GRV,    KC_AT, KC_LCBR, KC_RCBR, KC_HASH,                    XXXXXXX, XXXXXXX, XXXXXXX, _LDAQ,   _RDAQ,
+    KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                    XXXXXXX, KC_LSFT, KC_LCTL, KC_RALT, KC_LGUI,
+    KC_BSLS,  KC_DLR, KC_LBRC, KC_RBRC, KC_AMPR,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RESET,
+                                        KC_LABK, KC_RABK,  _______, XXXXXXX
   )
 };
 
 
 // S(COMMA) -> EXLM
-const key_override_t comma_exlm_ko = ko_make_basic(MOD_MASK_SHIFT, US_COMM, US_EXLM);
+const key_override_t comma_exlm_ko = ko_make_basic(MOD_MASK_SHIFT, KC_COMM, KC_EXLM);
 
-// const key_override_t spc_unds_ko = ko_make_basic(MOD_MASK_SHIFT, KC_SPC, US_UNDS);
+const key_override_t spc_unds_ko = ko_make_basic(MOD_MASK_SHIFT, KC_SPC, KC_UNDS);
 
 // S(DOT) -> QUES
-const key_override_t dot_ques_ko = ko_make_basic(MOD_MASK_SHIFT, US_DOT, US_QUES);
+const key_override_t dot_ques_ko = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, KC_QUES);
 
 const key_override_t **key_overrides = (const key_override_t *[]) {
   &comma_exlm_ko,
   &dot_ques_ko,
-  // &spc_unds_ko,
+  &spc_unds_ko,
   NULL
 };
 
@@ -256,9 +267,7 @@ void process_caps_word(uint16_t keycode, const keyrecord_t *record) {
 
 bool is_oneshot_cancel_key(uint16_t keycode) {
     switch (keycode) {
-    // case LA_SYM:
-    // case LA_NAV:
-    case _ACTBSP:
+    case _G_ACT:
         return true;
     default:
         return false;
@@ -267,9 +276,7 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 
 bool is_oneshot_ignored_key(uint16_t keycode) {
     switch (keycode) {
-    case _C_ACT:
-    case _ACTSPC:
-    case _ACTBSP:
+    case _G_ACT:
     case _NUMSFT:
     case _SYMENT:
     case _OSFT:
@@ -281,14 +288,6 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
         return false;
     }
 }
-
-
-oneshot_state os_sft_state = os_up_unqueued;
-oneshot_state os_ctl_state = os_up_unqueued;
-oneshot_state os_alt_state = os_up_unqueued;
-oneshot_state os_gui_state = os_up_unqueued;
-
-
 
 // Function overrides.
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -308,29 +307,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   bool ret = true;
 
-  update_oneshot(
-    &os_sft_state, KC_LSFT, _OSFT,
-    keycode, record
-  );
-  update_oneshot(
-    &os_ctl_state, KC_LCTL, _OCTL,
-    keycode, record
-  );
-  update_oneshot(
-    &os_alt_state, KC_LALT, _OALT,
-    keycode, record
-  );
-  update_oneshot(
-    &os_gui_state, KC_LGUI, _OGUI,
-    keycode, record
-  );
-
-
   process_caps_word(keycode, record);
 
   mods_state = get_mods();
   oneshot_mods_state = get_oneshot_mods();
-
 
   // TAP(_NUMSFT)
   if (keycode == _NUMSFT && record->event.pressed && record->tap.count > 0) {
@@ -350,74 +330,110 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ret = false;
   }
 
+  // _RSTMOD
+  else if (keycode == _RSTMOD && record->event.pressed) {
+    clear_oneshot_mods();
+    ret = false;
+  }
+
+  // TAP(_G_ACT)
+  else if (keycode == _G_ACT && record->event.pressed && record->tap.count > 0) {
+    set_oneshot_mods(MOD_BIT(KC_LGUI));
+    ret = false;
+  }
+
+  // TAP(_OSFT)
+  else if (keycode == _OSFT && record->event.pressed && record->tap.count > 0) {
+    set_oneshot_mods(MOD_BIT(KC_LSFT) | oneshot_mods_state);
+    ret = false;
+  }
+
+  // TAP(_OGUI)
+  else if (keycode == _OGUI && record->event.pressed && record->tap.count > 0) {
+    set_oneshot_mods(MOD_BIT(KC_LGUI) | oneshot_mods_state);
+    ret = false;
+  }
+
+  // TAP(_OALT)
+  else if (keycode == _OALT && record->event.pressed && record->tap.count > 0) {
+    set_oneshot_mods(MOD_BIT(KC_LALT) | oneshot_mods_state);
+    ret = false;
+  }
+
+  // TAP(_OCTL)
+  else if (keycode == _OCTL && record->event.pressed && record->tap.count > 0) {
+    set_oneshot_mods(MOD_BIT(KC_LCTL) | oneshot_mods_state);
+    ret = false;
+  }
+
   // SYM: DTIL
   else if (keycode == _S_TIL && record->event.pressed && record->tap.count > 0) {
-    tap_code16(US_DTIL);
+    tap_code16(_DTIL);
     layer_off(_SYM);
     ret = false;
   }
 
   // SYM: ACUT
-  else if (keycode == _C_ACU && record->event.pressed && record->tap.count > 0) {
-    tap_code16(US_ACUT);
+  else if (keycode == _G_ACU && record->event.pressed && record->tap.count > 0) {
+    tap_code16(_ACUT);
     layer_off(_SYM);
     ret = false;
   }
 
   // SYM: DCIR
   else if (keycode == _A_CIR && record->event.pressed && record->tap.count > 0) {
-    tap_code16(US_DCIR);
+    tap_code16(_DCIR);
     layer_off(_SYM);
     ret = false;
   }
 
   // SYM: DGRV
-  else if (keycode == _G_GRV && record->event.pressed && record->tap.count > 0) {
-    tap_code16(US_DGRV);
+  else if (keycode == _C_GRV && record->event.pressed && record->tap.count > 0) {
+    tap_code16(_DGRV);
     layer_off(_SYM);
     ret = false;
   }
 
   // SYM: PIPE
   else if (keycode == _PIPE && record->event.pressed) {
-    tap_code16(US_PIPE);
-    tap_code16(US_RABK);
+    tap_code16(KC_PIPE);
+    tap_code16(KC_RABK);
     ret = false;
   }
   
   // _ARROW
   else if (keycode == _ARROW && record->event.pressed) {
-    tap_code(US_MINS);
-    tap_code16(US_RABK);
+    tap_code(KC_MINS);
+    tap_code16(KC_RABK);
     ret = false;
   }
 
   // _ARROW2
   else if (keycode == _ARROW2 && record->event.pressed) {
-    tap_code16(US_EQL);
-    tap_code16(US_RABK);
+    tap_code16(KC_EQL);
+    tap_code16(KC_RABK);
     ret = false;
   }
 
   // _CURDIR
   else if (keycode == _CURDIR && record->event.pressed) {
-    tap_code16(US_DOT);
-    tap_code16(US_SLSH);
+    tap_code16(KC_DOT);
+    tap_code16(KC_SLSH);
     ret = false;
   }
 
   // _HOMDIR
   else if (keycode == _HOMDIR && record->event.pressed) {
-    tap_code16(US_TILD);
-    tap_code16(US_SLSH);
+    tap_code16(KC_TILD);
+    tap_code16(KC_SLSH);
     ret = false;
   }
 
   // _PRVDIR
   else if (keycode == _PRVDIR && record->event.pressed) {
-    tap_code16(US_DOT);
-    tap_code16(US_DOT);
-    tap_code16(US_SLSH);
+    tap_code16(KC_DOT);
+    tap_code16(KC_DOT);
+    tap_code16(KC_SLSH);
     ret = false;
   }
 
