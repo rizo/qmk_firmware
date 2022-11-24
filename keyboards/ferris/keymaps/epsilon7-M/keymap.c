@@ -58,20 +58,12 @@ enum keycodes {
 #define _STAB S(KC_TAB)
 
 // Back/forward.
-#define _BACK C(KC_LBRC)
-#define _FRWD C(KC_RBRC)
+#define _BACK G(KC_LBRC)
+#define _FRWD G(KC_RBRC)
 
 // Undo/redo.
-#define _UNDO C(KC_Z)
-#define _REDO S(C(KC_Z))
-
-// Beginning/end of file.
-#define _BOF C(KC_HOME)
-#define _EOF C(KC_END)
-
-// Word navigation.
-#define _WLEFT C(KC_LEFT)
-#define _WRGHT C(KC_RIGHT)
+#define _UNDO G(KC_Z)
+#define _REDO S(G(KC_Z))
 
 // Volume keys.
 #define  _VOLU KC__VOLUP
@@ -105,9 +97,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-     KC_PWR,  KC_ESC,   _BACK,   _FRWD, KC_PSCR,                    KC_PGUP, _STAB,   KC_UP,   KC_TAB,  _BOF,
-      _OCTL,   _OALT,   _OGUI,   _OSFT,  KC_INS,                    KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
-    _RSTMOD,    _RPT,   _UNDO,   _REDO, XXXXXXX,                    KC_PGDN, _WLEFT,  XXXXXXX, _WRGHT,  _EOF,
+     KC_PWR,  KC_ESC,   _BACK,   _FRWD, KC_PSCR,                    KC_PGUP, _STAB,   KC_UP,   KC_TAB,  KC_HOME,
+      _OCTL,   _OALT,   _OGUI,   _OSFT,  KC_INS,                    KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
+    _RSTMOD,    _RPT,   _UNDO,   _REDO, XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                         _______, XXXXXXX,  KC_ENT,  KC_BSPC
   ),
 
@@ -120,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_SYM] = LAYOUT(
     KC_GRV,    KC_AT, KC_LCBR, KC_RCBR, KC_HASH,                    XXXXXXX, XXXXXXX, XXXXXXX, _LDAQ,   _RDAQ,
-    KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                    XXXXXXX, KC_LSFT, KC_LCTL, KC_RALT, KC_LGUI,
+    KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                    XXXXXXX, KC_LSFT, KC_LGUI, KC_RALT, KC_LCTL,
     KC_BSLS,  KC_DLR, KC_LBRC, KC_RBRC, KC_AMPR,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RESET,
                                         KC_LABK, KC_RABK,  _______, XXXXXXX
   )
