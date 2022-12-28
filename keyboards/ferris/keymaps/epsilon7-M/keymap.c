@@ -55,15 +55,19 @@ enum keycodes {
 #define _NUMSFT LT(_NUM, _S_SYM_FAKE)
 #define _SYMENT LT(_SYM, KC_ENT)
 
-#define _STAB S(KC_TAB)
-
 // Back/forward.
 #define _BACK G(KC_LBRC)
 #define _FRWD G(KC_RBRC)
 
-// Undo/redo.
+// Edit actions.
+#define _CUT G(KC_X)
+#define _COPY G(KC_C)
+#define _PASTE G(KC_V)
 #define _UNDO G(KC_Z)
 #define _REDO S(G(KC_Z))
+
+// Untab
+#define _STAB S(KC_TAB)
 
 // Volume keys.
 #define  _VOLU KC__VOLUP
@@ -92,14 +96,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ABC] = LAYOUT(
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                    KC_J,     KC_L, KC_U,     KC_Y,   KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                    KC_H,     KC_N, KC_E,     KC_I,   KC_O,
-       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, KC_COMM,  KC_DOT, KC_SCLN,
-                                         _G_ACT, _NUMSFT,  _SYMENT, KC_SPC
+       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, KC_COMM,  KC_DOT, KC_EXLM,
+                                         _G_ACT, _NUMSFT,  KC_SPC,  KC_BSPC
   ),
 
   [_ACT] = LAYOUT(
-     KC_PWR,  KC_ESC,   _BACK,   _FRWD, KC_PSCR,                    KC_PGUP, _STAB,   KC_UP,   KC_TAB,  KC_HOME,
-      _OCTL,   _OALT,   _OGUI,   _OSFT,  KC_INS,                    KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
-    _RSTMOD,    _RPT,   _UNDO,   _REDO, XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    _RSTMOD,    _RPT,   _BACK,   _FRWD, KC_WH_U,                    KC_PGUP, KC_ESC,   KC_UP,   KC_TAB, KC_HOME,
+      _OCTL,   _OALT,   _OGUI,   _OSFT, KC_WH_D,                    KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
+      _UNDO,    _CUT,   _COPY,  _PASTE,   _REDO,                    XXXXXXX, _STAB, KC_ESC,  KC_TAB, XXXXXXX,
                                         _______, XXXXXXX,  KC_ENT,  KC_BSPC
   ),
 
@@ -107,7 +111,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     XXXXXXX,   _PIPE,  _ARROW, _ARROW2, _CURDIR,                    KC_PLUS, KC_1,    KC_2,    KC_3,    KC_CIRC,
      _C_GRV,  _A_CIR,  _G_ACU,  _S_TIL, _HOMDIR,                    KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
     XXXXXXX, XXXXXXX,   _CCED, XXXXXXX, _PRVDIR,                    KC_ASTR, KC_7,    KC_8,    KC_9,    KC_SLSH,
-                                        XXXXXXX, _______,  KC_EQL,  KC_SPC
+                                        XXXXXXX, _______,  KC_EQL,  KC_LABK
   ),
 
   [_SYM] = LAYOUT(
@@ -118,19 +122,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
-
-// S(COMMA) -> EXLM
-const key_override_t comma_exlm_ko = ko_make_basic(MOD_MASK_SHIFT, KC_COMM, KC_EXLM);
-
+// S(KC_SPC) -> KC_UNDS
 const key_override_t spc_unds_ko = ko_make_basic(MOD_MASK_SHIFT, KC_SPC, KC_UNDS);
 
-// S(DOT) -> QUES
-const key_override_t dot_ques_ko = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, KC_QUES);
+// S(KC_COMMA) -> KC_SCLN
+const key_override_t comma_scln_ko = ko_make_basic(MOD_MASK_SHIFT, KC_COMMA, KC_SCLN);
+
+// S(KC_DOT) -> KC_COLN
+const key_override_t dot_coln_ko = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, KC_COLN);
+
+// S(KC_EXLM) -> KC_QUES
+const key_override_t exlm_ques_ko = ko_make_basic(MOD_MASK_SHIFT, KC_EXLM, KC_QUES);
+
+// S(KC_LABK) -> KC_RABK
+const key_override_t labk_rabk_ko = ko_make_basic(MOD_MASK_SHIFT, KC_LABK, KC_RABK);
 
 const key_override_t **key_overrides = (const key_override_t *[]) {
-  &comma_exlm_ko,
-  &dot_ques_ko,
   &spc_unds_ko,
+  &comma_scln_ko,
+  &dot_coln_ko,
+  &exlm_ques_ko,
+  &labk_rabk_ko,
   NULL
 };
 
