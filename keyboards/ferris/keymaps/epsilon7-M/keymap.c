@@ -59,6 +59,12 @@ enum keycodes {
 #define _BACK G(KC_LBRC)
 #define _FRWD G(KC_RBRC)
 
+// Word/line motion.
+#define _WRDL A(KC_LEFT)
+#define _WRDR A(KC_RIGHT)
+#define _LNL G(KC_LEFT)
+#define _LNR G(KC_RIGHT)
+
 // Edit actions.
 #define _CUT G(KC_X)
 #define _COPY G(KC_C)
@@ -87,6 +93,11 @@ enum keycodes {
 #define _DGRV A(KC_GRV)
 #define _CCED A(KC_C)
 
+// Media keys.
+#define _VOLU KC__VOLUP
+#define _VOLD KC__VOLDOWN
+#define _MUTE KC__MUTE
+
 // Extra symbols.
 #define _LDAQ A(KC_BSLS)
 #define _RDAQ S(A(KC_BSLS))
@@ -97,13 +108,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                    KC_J,     KC_L, KC_U,     KC_Y,   KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                    KC_H,     KC_N, KC_E,     KC_I,   KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, KC_COMM,  KC_DOT, KC_EXLM,
-                                         _G_ACT, _NUMSFT,  KC_SPC,  KC_BSPC
+                                         _G_ACT, _NUMSFT,  _SYMENT, KC_SPC
   ),
 
   [_ACT] = LAYOUT(
-    _RSTMOD,    _RPT,   _BACK,   _FRWD, KC_WH_U,                    KC_PGUP, KC_ESC,   KC_UP,   KC_TAB, KC_HOME,
-      _OCTL,   _OALT,   _OGUI,   _OSFT, KC_WH_D,                    KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
-      _UNDO,    _CUT,   _COPY,  _PASTE,   _REDO,                    XXXXXXX, _STAB, KC_ESC,  KC_TAB, XXXXXXX,
+    _RSTMOD,    _RPT,   _BACK,   _FRWD, KC_WH_U,                    KC_PGUP, _WRDL,   KC_UP,   _WRDR,   KC_HOME,
+      _OCTL,   _OALT,   _OGUI,   _OSFT, KC_WH_D,                    _LNL,    KC_LEFT, KC_DOWN, KC_RGHT, _LNR,
+      _UNDO,    _CUT,   _COPY,  _PASTE,   _REDO,                    KC_PGDN, _STAB,   KC_ESC,  KC_TAB,  KC_END,
                                         _______, XXXXXXX,  KC_ENT,  KC_BSPC
   ),
 
@@ -111,13 +122,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     XXXXXXX,   _PIPE,  _ARROW, _ARROW2, _CURDIR,                    KC_PLUS, KC_1,    KC_2,    KC_3,    KC_CIRC,
      _C_GRV,  _A_CIR,  _G_ACU,  _S_TIL, _HOMDIR,                    KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
     XXXXXXX, XXXXXXX,   _CCED, XXXXXXX, _PRVDIR,                    KC_ASTR, KC_7,    KC_8,    KC_9,    KC_SLSH,
-                                        XXXXXXX, _______,  KC_EQL,  KC_LABK
+                                        XXXXXXX, _______,  KC_EQL,  KC_SPC
   ),
 
   [_SYM] = LAYOUT(
-    KC_GRV,    KC_AT, KC_LCBR, KC_RCBR, KC_HASH,                    XXXXXXX, XXXXXXX, XXXXXXX, _LDAQ,   _RDAQ,
+    KC_GRV,    KC_AT, KC_LCBR, KC_RCBR, KC_HASH,                    XXXXXXX, _MUTE,   _VOLD,   _VOLU,   XXXXXXX,
     KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                    XXXXXXX, KC_LSFT, KC_LGUI, KC_RALT, KC_LCTL,
-    KC_BSLS,  KC_DLR, KC_LBRC, KC_RBRC, KC_AMPR,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RESET,
+    KC_BSLS,  KC_DLR, KC_LBRC, KC_RBRC, KC_AMPR,                    XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, RESET,
                                         KC_LABK, KC_RABK,  _______, XXXXXXX
   )
 };
