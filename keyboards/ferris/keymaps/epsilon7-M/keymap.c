@@ -51,7 +51,8 @@ enum keycodes {
 #define _OSFT SFT_T(_OSFT_FAKE)
 
 // Thumb keys
-#define _G_ACT LT(_ACT, _G_ACT_FAKE)
+#define _G_ACT LT(_ACT, KC_SPC)
+// #define _G_ACT LT(_ACT, _G_ACT_FAKE)
 #define _NUMSFT LT(_NUM, _S_SYM_FAKE)
 #define _SYMENT LT(_SYM, KC_ENT)
 
@@ -108,7 +109,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                    KC_J,     KC_L, KC_U,     KC_Y,   KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                    KC_H,     KC_N, KC_E,     KC_I,   KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, KC_COMM,  KC_DOT, KC_EXLM,
-                                         _G_ACT, _NUMSFT,  _SYMENT, KC_SPC
+                                         _G_ACT, _NUMSFT,  _SYMENT, KC_BSPC
   ),
 
   [_ACT] = LAYOUT(
@@ -122,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     XXXXXXX,   _PIPE,  _ARROW, _ARROW2, _CURDIR,                    KC_PLUS, KC_1,    KC_2,    KC_3,    KC_CIRC,
      _C_GRV,  _A_CIR,  _G_ACU,  _S_TIL, _HOMDIR,                    KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
     XXXXXXX, XXXXXXX,   _CCED, XXXXXXX, _PRVDIR,                    KC_ASTR, KC_7,    KC_8,    KC_9,    KC_SLSH,
-                                        XXXXXXX, _______,  KC_EQL,  KC_SPC
+                                        XXXXXXX, _______,  KC_EQL,  KC_UNDS
   ),
 
   [_SYM] = LAYOUT(
@@ -134,7 +135,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 // S(KC_SPC) -> KC_UNDS
-const key_override_t spc_unds_ko = ko_make_basic(MOD_MASK_SHIFT, KC_SPC, KC_UNDS);
+// const key_override_t spc_ent_ko = ko_make_basic(MOD_MASK_SHIFT, _SYMENT, KC_ENT);
 
 // S(KC_COMMA) -> KC_SCLN
 const key_override_t comma_scln_ko = ko_make_basic(MOD_MASK_SHIFT, KC_COMMA, KC_SCLN);
@@ -149,7 +150,7 @@ const key_override_t exlm_ques_ko = ko_make_basic(MOD_MASK_SHIFT, KC_EXLM, KC_QU
 const key_override_t labk_rabk_ko = ko_make_basic(MOD_MASK_SHIFT, KC_LABK, KC_RABK);
 
 const key_override_t **key_overrides = (const key_override_t *[]) {
-  &spc_unds_ko,
+  // &spc_ent_ko,
   &comma_scln_ko,
   &dot_coln_ko,
   &exlm_ques_ko,
@@ -191,7 +192,7 @@ void process_repeat_key(uint16_t keycode, const keyrecord_t *record) {
                 }
                 break;
         }
-    } else { // keycode == REPEAT
+    } else { // keycode == _RPT
         if (record->event.pressed) {
             register_mods(last_modifier);
             register_code16(last_tap);
@@ -340,7 +341,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     // First tap: set oneshot SFT.
     else {
-      set_oneshot_mods(MOD_BIT(KC_LSFT));
+      set_oneshot_mods(MOD_BIT(KC_RSFT));
     }
     ret = false;
   }
@@ -352,10 +353,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // TAP(_G_ACT)
-  else if (keycode == _G_ACT && record->event.pressed && record->tap.count > 0) {
-    set_oneshot_mods(MOD_BIT(KC_LGUI));
-    ret = false;
-  }
+  // else if (keycode == _G_ACT && record->event.pressed && record->tap.count > 0) {
+  //   // set_oneshot_mods(MOD_BIT(KC_LGUI));
+  //   clear_oneshot_mods();
+  //   ret = false;
+  // }
 
   // TAP(_OSFT)
   else if (keycode == _OSFT && record->event.pressed && record->tap.count > 0) {

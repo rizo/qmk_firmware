@@ -17,6 +17,12 @@
 // #define ONESHOT_TAP_TOGGLE 2
 #define ONESHOT_TIMEOUT 3000
 
+// https://github.com/qmk/qmk_firmware/blob/master/docs/tap_hold.md#quick-tap-term
+// #define QUICK_TAP_TERM 0
+
+// https://precondition.github.io/home-row-mods#tapping-force-hold
+#define TAPPING_FORCE_HOLD
+
 // Mouse key speed and acceleration.
 #undef MOUSEKEY_DELAY
 #define MOUSEKEY_DELAY          0
