@@ -58,7 +58,7 @@ enum keycodes {
 
     _SYM_LT_FAKE,
     _SYM_GT_FAKE,
-    
+
     _PIPE,
     _ARROW,
     _ARROW2,
@@ -243,7 +243,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_SYM] = LAYOUT(
         KC_GRV,   KC_AT, KC_LCBR,  KC_RCBR,  KC_HASH,                     _PLSMIN,   _EMDSH,   _DIARS,   _QUATL,   _QUATR,
        KC_TILD, KC_PIPE, KC_LPRN,  KC_RPRN,  KC_PERC,                      _ENDSH, _SFT_A_N, _GUI_A_E, _ALT_A_I, _CTL_A_GR,
-       KC_BSLS,  KC_DLR, KC_LBRC,  KC_RBRC,  KC_AMPR,                        _MUL,   _BULLT,  _CEDIL,  _ELLPSI,       _DIV,
+       KC_BSLS,  KC_DLR, KC_LBRC,  KC_RBRC,  KC_AMPR,                        _MUL,   _BULLT,   _CEDIL,  _ELLPSI,       _DIV,
                                              _ACT_LT, _NUM_GT,   _______, XXXXXXX
   ),
 
@@ -255,9 +255,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-      _MENU,    _UNDO,    _BACK,    _FRWD,   C(KC_UP),                      KC_PGUP,    A(KC_LEFT),    KC_UP,   A(KC_RIGHT),    G(KC_UP),
-   _CTL_ESC, _APP_SWP, _WIN_SWP, _TAB_SWP,     _SPC_R,                      G(KC_LEFT), KC_LEFT,       KC_DOWN, KC_RIGHT,       G(KC_RIGHT),
-     KC_F11,     _CUT,    _COPY,   _PASTE, C(KC_DOWN),                      KC_PGDN,    C(A(KC_LEFT)), _SEL,    C(A(KC_RIGHT)), G(KC_DOWN),
+      _MENU,   KC_ESC,    _BACK,    _FRWD,   C(KC_UP),                      KC_PGUP,    A(KC_LEFT),    KC_UP,   A(KC_RIGHT),    G(KC_UP),
+    KC_LCTL, _APP_SWP, _WIN_SWP, _TAB_SWP,     _SPC_R,                      G(KC_LEFT), KC_LEFT,       KC_DOWN, KC_RIGHT,       G(KC_RIGHT),
+      _UNDO,     _CUT,    _COPY,   _PASTE,      _REDO,                      KC_PGDN,    S(KC_TAB),        KC_ESC,  KC_TAB,      G(KC_DOWN),
                                               _______, XXXXXXX,    KC_PENT, KC_BSPC
   ),
 
@@ -357,7 +357,7 @@ bool switch_app(bool *active, uint16_t keycode, keyrecord_t *record) {
         // Register LGUI on activation.
         if (!*active) {
           *active = true;
-          register_code(KC_LGUI); 
+          register_code(KC_LGUI);
         }
 
         // Treat CTL as shift.
@@ -777,7 +777,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     tap_code16(S(KC_DOT));
     ret = false;
   }
-  
+
   // _ARROW
   else if (keycode == _ARROW && record->event.pressed) {
     tap_code(KC_MINS);
@@ -875,7 +875,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     }
   }
-  
+
   process_repeat_key(keycode, record);
 
   return ret;
@@ -901,7 +901,7 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
     case _SYM_ENT:
     case _ACT_SPC:
       return false;
-    
+
     default:
       return true;
   }
