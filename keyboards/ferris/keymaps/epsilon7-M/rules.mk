@@ -2,7 +2,7 @@ SRC += oneshot.c
 
 BOOTLOADER = atmel-dfu
 
-MOUSEKEY_ENABLE = yes
+MOUSEKEY_ENABLE = no
 COMBO_ENABLE = no
 TAP_DANCE_ENABLE = no
 CONSOLE_ENABLE = no

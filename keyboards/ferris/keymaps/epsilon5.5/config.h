@@ -17,7 +17,7 @@
 // #define ONESHOT_TAP_TOGGLE 2
 #define ONESHOT_TIMEOUT 900
 
-// #define _ENABLE_HOME_MODS
+#define _ENABLE_HOME_MODS
 
 
 #define _COMBOS_ENABLED

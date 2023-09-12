@@ -1,6 +1,5 @@
 #pragma once
 
-
 // For heavy chording.
 #define QMK_KEYS_PER_SCAN 4
 
@@ -16,28 +15,6 @@
 
 // #define ONESHOT_TAP_TOGGLE 2
 #define ONESHOT_TIMEOUT 900
-
-// #define _ENABLE_HOME_MODS
-
-
-#define _COMBOS_ENABLED
-#ifdef _COMBOS_ENABLED
-  #define COMBO_MUST_TAP_PER_COMBO
-  #define COMBO_TERM 25
-#endif
-
-// Mouse key speed and acceleration.
-#undef MOUSEKEY_DELAY
-#define MOUSEKEY_DELAY          0
-#undef MOUSEKEY_INTERVAL
-#define MOUSEKEY_INTERVAL       16
-#undef MOUSEKEY_WHEEL_DELAY
-#define MOUSEKEY_WHEEL_DELAY    0
-#undef MOUSEKEY_MAX_SPEED
-#define MOUSEKEY_MAX_SPEED      12
-#undef MOUSEKEY_TIME_TO_MAX
-#define MOUSEKEY_TIME_TO_MAX    60
-
 
 #define _ko_make_strict(trigger_mods_, trigger_, replacement_) { \
   .trigger           = trigger_, \

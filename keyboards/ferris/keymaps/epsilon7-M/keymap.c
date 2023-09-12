@@ -113,9 +113,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_ACT] = LAYOUT(
-    _RSTMOD,    _RPT,   _BACK,   _FRWD, KC_WH_U,                    KC_PGUP, _WRDL,   KC_UP,   _WRDR,   KC_HOME,
-      _OCTL,   _OALT,   _OGUI,   _OSFT, KC_WH_D,                    _LNL,    KC_LEFT, KC_DOWN, KC_RGHT, _LNR,
-      _UNDO,    _CUT,   _COPY,  _PASTE,   _REDO,                    KC_PGDN, _STAB,   KC_ESC,  KC_TAB,  KC_END,
+    XXXXXXX, _RSTMOD,   _BACK,   _FRWD, XXXXXXX,                    KC_PGUP, _WRDL,   KC_UP,   _WRDR,  KC_HOME,
+      _OCTL,   _OALT,   _OGUI,   _OSFT,    _RPT,                    KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
+      _UNDO,    _CUT,   _COPY,  _PASTE,   _REDO,                    XXXXXXX, _STAB,   KC_ESC,  KC_TAB,   XXXXXXX,
                                         _______, XXXXXXX,  KC_ENT,  KC_BSPC
   ),
 

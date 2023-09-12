@@ -687,10 +687,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   else if (keycode == _WIN_SWP && record->event.pressed && record->tap.count > 0) {
     if (mods_state & MOD_BIT(KC_LCTL)) {
       unregister_mods(MOD_BIT(KC_LCTL));
-      tap_code16(S(G(KC_GRV)));
+      tap_code16(S(A(KC_TAB)));
       register_mods(MOD_BIT(KC_LCTL));
     } else {
-      tap_code16(G(KC_GRV));
+      tap_code16(A(KC_TAB));
     }
     ret = false;
   }
