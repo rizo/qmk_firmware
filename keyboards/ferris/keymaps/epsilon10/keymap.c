@@ -4,14 +4,18 @@
 enum layers {
   ABC,
   SYM,
+  NUM,
   ACT,
+  MOD,
   FUN,
 };
 
 
 // Custom keys.
 enum keycodes {
-  FUN_C_FAKE = SAFE_RANGE,
+  SYM_FAKE = SAFE_RANGE,
+
+  FUN_C_FAKE,
   FUN_A_FAKE,
   FUN_G_FAKE,
   FUN_S_FAKE,
@@ -21,9 +25,45 @@ enum keycodes {
   SYM_G_FAKE,
   SYM_S_FAKE,
 
+  OSLM_C,
+  OSLM_A,
+  OSLM_G,
+  OSLM_S,
+
   REPEAT,
   RSTMOD,
 };
+
+
+typedef struct {
+  uint16_t trigger;
+  uint16_t mod;
+  uint16_t timer;
+} oslm_state_t;
+
+oslm_state_t oslm_c = {
+  .trigger = OSLM_C,
+  .mod = MOD_BIT(KC_LCTL),
+  .timer = 0,
+};
+oslm_state_t oslm_a = {
+  .trigger = OSLM_A,
+  .mod = MOD_BIT(KC_LALT),
+  .timer = 0,
+};
+oslm_state_t oslm_g = {
+  .trigger = OSLM_G,
+  .mod = MOD_BIT(KC_LGUI),
+  .timer = 0,
+};
+oslm_state_t oslm_s = {
+  .trigger = OSLM_S,
+  .mod = MOD_BIT(KC_LSFT),
+  .timer = 0,
+};
+
+// #define OSL_GUI OSL(MOD)
+#define OSL_MOD OSL(MOD)
 
 
 // c, ç
@@ -39,7 +79,7 @@ enum keycodes {
 
 // Thumb keys
 #define ACT_SPC LT(ACT, KC_SPC)
-#define SFT_SPC MT(MOD_LSFT, KC_SPC)
+#define NUM_SFT LT(NUM, SYM_FAKE)
 #define SYM_ENT LT(SYM, KC_ENT)
 #define FUN_BSP LT(FUN, KC_BSPC)
 
@@ -50,9 +90,6 @@ enum keycodes {
 #define COPY G(KC_C)
 #define PASTE G(KC_V)
 #define CUT G(KC_X)
-#define VOLU KC__VOLUP
-#define VOLD KC__VOLDOWN
-#define MUTE KC__MUTE
 #define BACK G(KC_LBRC)
 #define FRWD G(KC_RBRC)
 #define STAB S(KC_TAB)
@@ -78,6 +115,12 @@ enum keycodes {
 #define DCIR A(KC_I)
 #define DGRV A(KC_GRV)
 
+// Nav
+#define WD_L A(KC_LEFT)
+#define WD_R A(KC_RIGHT)
+#define LN_L G(KC_LEFT)
+#define LN_R G(KC_RIGHT)
+
 
 // KEYMAP
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -85,27 +128,41 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
        KC_Z,    KC_X,    MY_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-                                        ACT_SPC, KC_LSFT,    SYM_ENT, FUN_BSP
+                                        ACT_SPC, NUM_SFT,    SYM_ENT, FUN_BSP
   ),
 
   [ACT] = LAYOUT(
-     RSTMOD,  KC_ESC,    BACK,    FRWD, XXXXXXX,                      KC_PGUP, STAB,    KC_UP,   KC_TAB,  KC_HOME,
-      OSCTL,   OSALT,   OSGUI,   OSSFT,  REPEAT,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
-       UNDO,     CUT,    COPY,   PASTE,    REDO,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+     RSTMOD,  KC_ESC,    BACK,    FRWD, XXXXXXX,                      KC_PGUP, WD_L,    KC_UP,   WD_R,    KC_HOME,
+     OSLM_C,  OSLM_A,  OSLM_G,  OSLM_S,  REPEAT,                      LN_L,    KC_LEFT, KC_DOWN, KC_RGHT, LN_R,
+       UNDO,     CUT,    COPY,   PASTE,    REDO,                      KC_PGDN, STAB,    KC_ESC,  KC_TAB,  KC_END,
                                         _______, XXXXXXX,     KC_ENT, KC_BSPC
   ),
 
+  [MOD] = LAYOUT(
+       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
+       KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
+       KC_Z,    KC_X,    MY_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
+                                        ACT_SPC, NUM_SFT,    SYM_ENT, FUN_BSP
+  ),
+
+  [NUM] = LAYOUT(
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_PLUS, KC_1,    KC_2,    KC_3,    KC_CIRC,
+      SYM_C,   SYM_A,   SYM_G,   SYM_S, XXXXXXX,                      KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
+    XXXXXXX, XXXXXXX, A(KC_C), XXXXXXX, XXXXXXX,                      KC_ASTR, KC_7,    KC_8,    KC_9,    KC_SLSH,
+                                        XXXXXXX, _______,    KC_EQL,  KC_UNDS
+  ),
+
   [SYM] = LAYOUT(
-     KC_GRV,    KC_1,    KC_2,    KC_3, KC_PLUS,                      KC_HASH, KC_LCBR, KC_DLR,  KC_RCBR, KC_TILD,
-       KC_0,    KC_4,    KC_5,    KC_6, KC_MINS,                      KC_ASTR, SYM_S,   SYM_G,   SYM_A,   SYM_C,
-    KC_BSLS,    KC_7,    KC_8,    KC_9, KC_SLSH,                      KC_AMPR, KC_LT,   KC_PIPE, KC_GT,   KC_CIRC,
-                                        KC_LBRC, KC_RBRC,    _______, XXXXXXX
+    KC_GRV,    KC_AT, KC_LCBR, KC_RCBR, KC_HASH,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                      XXXXXXX, KC_LSFT, KC_LGUI, KC_RALT, KC_LCTL,
+    KC_BSLS,  KC_DLR, KC_LBRC, KC_RBRC, KC_AMPR,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                                        KC_LABK, KC_RABK,    _______, XXXXXXX
   ),
 
   [FUN] = LAYOUT(
-    XXXXXXX,   KC_F1,   KC_F2,   KC_F3,  KC_F10,                      DM_REC1, MUTE,    VOLD,    VOLU,   XXXXXXX,
+    XXXXXXX,   KC_F1,   KC_F2,   KC_F3,  KC_F10,                      DM_REC1, KC_MUTE, KC_VOLU, KC_VOLD, XXXXXXX,
      KC_PWR,   KC_F4,   KC_F5,   KC_F6,  KC_F11,                      DM_RSTP, FUN_S,   FUN_G,   FUN_A,   FUN_C,
-      RESET,   KC_F7,   KC_F8,   KC_F9,  KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX,
+    QK_BOOT,   KC_F7,   KC_F8,   KC_F9,  KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX,
                                          KC_SPC, XXXXXXX,    XXXXXXX, _______
   )
 };
@@ -117,7 +174,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const key_override_t unds_key_override = ko_make_basic(MOD_MASK_SHIFT, FUN_BSP, KC_UNDS);
 
 // S(FUN_BSP) -> KC_EQL
-const key_override_t at_key_override = ko_make_basic(MOD_MASK_SHIFT, SYM_ENT, KC_EQL);
+const key_override_t eql_key_override = ko_make_basic(MOD_MASK_SHIFT, SYM_ENT, KC_EQL);
 
 // S(KC_COMMA) -> KC_SCLN
 const key_override_t scln_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_COMMA, KC_SCLN);
@@ -136,7 +193,7 @@ const key_override_t gsbsp_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD
 
 const key_override_t **key_overrides = (const key_override_t *[]) {
   &unds_key_override,
-  &at_key_override,
+  &eql_key_override,
   &scln_key_override,
   &coln_key_override,
   &ques_key_override,
@@ -198,32 +255,101 @@ void processrepeat_key(uint16_t keycode, const keyrecord_t *record) {
   }
 }
 
+// OSLM
+
+void process_osml(oslm_state_t *oslm_state, uint16_t keycode, keyrecord_t *record) {
+  static uint16_t mods = 0;
+  if (record->event.pressed) {
+    // init: init timer, register trigger mod
+    oslm_state->timer = timer_read();
+    register_mods(oslm_state->mod);
+    // get mods at the time of pressed event.
+    mods = get_mods();
+  } else {
+    // released: check if it's a tap or hold
+    if (timer_elapsed(oslm_state->timer) < TAPPING_TERM) {
+      // tap: keep all current mods and set oneshot layer
+      set_oneshot_mods(mods);
+      set_oneshot_layer(MOD, ONESHOT_START);
+    }
+
+    // clear mod
+    unregister_mods(oslm_state->mod);
+  }
+}
+
 
 // PROCESS KEYS
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-#ifdef CONSOLE_ENABLE
-  uprintf("0x%04X,%u,%u,%u,%b,0x%02X,0x%02X,%u,%b\n",
-    keycode,
-    record->event.key.row,
-    record->event.key.col,
-    get_highest_layer(layer_state),
-    record->event.pressed,
-    get_mods(),
-    get_oneshot_mods(),
-    record->tap.count,
-    caps_word_on
-  );
-#endif
+// #ifdef CONSOLE_ENABLE
+//   uprintf("0x%04X,%u,%u,%u,%b,0x%02X,0x%02X,%u\n",
+//     keycode,
+//     record->event.key.row,
+//     record->event.key.col,
+//     get_highest_layer(layer_state),
+//     record->event.pressed,
+//     get_mods(),
+//     get_oneshot_mods(),
+//     record->tap.count
+//   );
+// #endif
 
   bool ret = true;
 
   mods_state = get_mods();
   oneshot_mods_state = get_oneshot_mods();
 
+  // Clear current OSLM oneshot state.
+  if (IS_LAYER_ON(MOD) && record->event.pressed) {
+    clear_oneshot_layer_state(ONESHOT_PRESSED);
+  }
+
+  // Clear everything OSLM release(hold(ACT_SPC)).
+  if (keycode == ACT_SPC && record->tap.count == 0 && !record->event.pressed) {
+    clear_oneshot_mods();
+    layer_clear();
+  }
+
   // RSTMOD
   if (keycode == RSTMOD && record->event.pressed) {
     clear_oneshot_mods();
+    ret = false;
+  }
+
+  // OSLM
+  else if (keycode == oslm_c.trigger) {
+    process_osml(&oslm_c, keycode, record);
+    ret = false;
+  }
+  else if (keycode == oslm_a.trigger) {
+    process_osml(&oslm_a, keycode, record);
+    ret = false;
+  }
+  else if (keycode == oslm_g.trigger) {
+    process_osml(&oslm_g, keycode, record);
+    ret = false;
+  }
+  else if (keycode == oslm_s.trigger) {
+    process_osml(&oslm_s, keycode, record);
+    ret = false;
+  }
+
+  // TAP(_NUMSFT)
+  else if (keycode == NUM_SFT && record->tap.count > 0) {
+    if (record->event.pressed) {
+      // Second tap: turn into hold
+      if (oneshot_mods_state & MOD_MASK_SHIFT) {
+        clear_oneshot_mods();
+        register_mods(MOD_MASK_SHIFT);
+      }
+      // First tap: set oneshot SFT.
+      else {
+        set_oneshot_mods(MOD_BIT(KC_RSFT));
+      }
+    } else {
+      unregister_mods(MOD_MASK_SHIFT);
+    }
     ret = false;
   }
 
@@ -266,28 +392,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // SYM_C: ~
-  else if (keycode == SYM_C && record->event.pressed && record->tap.count > 0) {
-    tap_code16(KC_AT);
-    ret = false;
-  }
-
-  // SYM_A: )
-  else if (keycode == SYM_A && record->event.pressed && record->tap.count > 0) {
-    tap_code16(KC_RPRN);
-    ret = false;
-  }
-
-  // SYM_G: %
-  else if (keycode == SYM_G && record->event.pressed && record->tap.count > 0) {
-    tap_code16(KC_PERC);
-    ret = false;
-  }
-
-  // SYM_S: (
-  else if (keycode == SYM_S && record->event.pressed && record->tap.count > 0) {
-    tap_code16(KC_LPRN);
-    ret = false;
-  }
+  //else if (keycode == SYM_C && record->event.pressed && record->tap.count > 0) {
+  //  tap_code16(KC_AT);
+  //  ret = false;
+  //}
 
   processrepeat_key(keycode, record);
 
@@ -298,5 +406,16 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         default:
             return true;
+    }
+}
+
+
+// Prevent tap key repeat on second quick tap.
+// https://docs.qmk.fm/#/tap_hold?id=quick-tap-term
+uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case NUM_SFT: return 200;
+        default:
+            return 0;
     }
 }
