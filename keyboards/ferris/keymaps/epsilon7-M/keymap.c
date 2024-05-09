@@ -94,11 +94,6 @@ enum keycodes {
 #define _DGRV A(KC_GRV)
 #define _CCED A(KC_C)
 
-// Media keys.
-#define _VOLU KC__VOLUP
-#define _VOLD KC__VOLDOWN
-#define _MUTE KC__MUTE
-
 // Extra symbols.
 #define _LDAQ A(KC_BSLS)
 #define _RDAQ S(A(KC_BSLS))
@@ -127,7 +122,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_SYM] = LAYOUT(
-    KC_GRV,    KC_AT, KC_LCBR, KC_RCBR, KC_HASH,                    XXXXXXX, _MUTE,   _VOLD,   _VOLU,   XXXXXXX,
+    KC_GRV,    KC_AT, KC_LCBR, KC_RCBR, KC_HASH,                    XXXXXXX, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,
     KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                    XXXXXXX, KC_LSFT, KC_LGUI, KC_RALT, KC_LCTL,
     KC_BSLS,  KC_DLR, KC_LBRC, KC_RBRC, KC_AMPR,                    XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, RESET,
                                         KC_LABK, KC_RABK,  _______, XXXXXXX
