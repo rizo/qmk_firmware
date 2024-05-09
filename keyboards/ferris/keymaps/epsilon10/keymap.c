@@ -68,7 +68,8 @@ oslm_state_t oslm_g = {
 };
 oslm_state_t oslm_s = {
   .trigger = OSLM_S,
-  .mod = MOD_BIT(KC_LSFT),
+  // HACK: R is used to overcome the count>1 issue (see journal).
+  .mod = MOD_BIT(KC_RSFT),
   .timer = 0,
 };
 
@@ -124,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-                                        ACT_SPC, NUM_SFT,    KC_BSPC, FUN_BSP
+                                        ACT_SPC, NUM_SFT,    SYM_ENT, FUN_BSP
   ),
 
   [ACT] = LAYOUT(
@@ -138,7 +139,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-                                        ACT_SPC, NUM_SFT,    SYM_ENT, FUN_BSP
+                                        ACT_SPC, NUM_SFT,     KC_ENT, KC_BSPC
   ),
 
   [NUM] = LAYOUT(
@@ -167,36 +168,40 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // KEY OVERRIDES
 
 // S(FUN_BSP) -> KC_UNDS
-// const key_override_t unds_key_override = ko_make_basic(MOD_BIT(KC_LSFT), FUN_BSP, KC_UNDS);
+const key_override_t unds_key_override = ko_make_basic(MOD_BIT(KC_LSFT), FUN_BSP, KC_UNDS);
+const key_override_t unds2_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_BSPC, KC_UNDS);
 
-// // S(SYM_ENT) -> KC_EQL
-// const key_override_t eql_key_override = ko_make_basic(MOD_BIT(KC_LSFT), SYM_ENT, KC_EQL);
+// S(SYM_ENT) -> KC_EQL
+const key_override_t eql_key_override = ko_make_basic(MOD_BIT(KC_LSFT), SYM_ENT, KC_EQL);
+const key_override_t eql2_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_ENT, KC_EQL);
 
-// // S(KC_COMMA) -> KC_SCLN
-// const key_override_t scln_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_COMMA, KC_SCLN);
+// S(KC_COMMA) -> KC_SCLN
+const key_override_t scln_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_COMMA, KC_SCLN);
 
-// // S(KC_DOT) -> KC_COLN
-// const key_override_t coln_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_DOT, KC_COLN);
+// S(KC_DOT) -> KC_COLN
+const key_override_t coln_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_DOT, KC_COLN);
 
-// // S(KC_EXLM) -> KC_QUES
-// const key_override_t ques_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_EXLM, KC_QUES);
+// S(KC_EXLM) -> KC_QUES
+const key_override_t ques_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_EXLM, KC_QUES);
 
-// // S(KC_BSPC) -> KC_DEL
-// const key_override_t sbsp_key_override = _ko_make_strict_negmods(MOD_BIT(KC_LSFT), KC_BSPC, KC_DEL, MOD_BIT(KC_LGUI));
+// S(KC_BSPC) -> KC_DEL
+const key_override_t sbsp_key_override = _ko_make_strict_negmods(MOD_BIT(KC_RSFT), KC_BSPC, KC_DEL, MOD_BIT(KC_LGUI));
 
-// // G(S(KC_BSPC)) -> C(KC_K)
-// const key_override_t gsbsp_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD_BIT(KC_LSFT), KC_BSPC, C(KC_K));
+// G(S(KC_BSPC)) -> C(KC_K)
+const key_override_t gsbsp_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD_BIT(KC_RSFT), KC_BSPC, C(KC_K));
 
-// const key_override_t **key_overrides = (const key_override_t *[]) {
-//   // &unds_key_override,
-//   &eql_key_override,
-//   &scln_key_override,
-//   &coln_key_override,
-//   &ques_key_override,
-//   &sbsp_key_override,
-//   &gsbsp_key_override,
-//   NULL
-// };
+const key_override_t **key_overrides = (const key_override_t *[]) {
+  &unds_key_override,
+  &unds2_key_override,
+  &eql_key_override,
+  &eql2_key_override,
+  &scln_key_override,
+  &coln_key_override,
+  &ques_key_override,
+  &sbsp_key_override,
+  &gsbsp_key_override,
+  NULL
+};
 
 
 // REPEAT
@@ -331,9 +336,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         if (record->event.pressed) {
           clear_oneshot_mods();
+          layer_on(MOD);
           register_mods(MOD_BIT(KC_LSFT));
         } else {
           unregister_mods(MOD_BIT(KC_LSFT));
+          layer_off(MOD);
         }
       }
       break;
