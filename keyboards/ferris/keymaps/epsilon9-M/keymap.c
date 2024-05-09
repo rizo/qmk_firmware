@@ -55,7 +55,7 @@ enum keycodes {
 // Thumb keys
 #define NUM_ACT LT(NUM, NUM_ACT_FAKE)
 #define SFT_ABC MT(MOD_RSFT, SFT_ABC_FAKE)
-#define SYM_BSP LT(SYM, KC_BSPC)
+#define SYM_ENT LT(SYM, KC_ENT)
 
 // Back/forward.
 #define _BACK G(KC_LBRC)
@@ -104,17 +104,24 @@ enum keycodes {
 // Keymap.
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [ABC] = LAYOUT(
-       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                    KC_J,     KC_L, KC_U,     KC_Y,   KC_QUOT,
-       KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                    KC_H,     KC_N, KC_E,     KC_I,   KC_O,
-       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,     KC_M, KC_COMM,  KC_DOT, KC_EXLM,
-                                        NUM_ACT, SFT_ABC,   KC_SPC, SYM_BSP
+       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                    KC_J,    KC_L, KC_U,     KC_Y,   KC_QUOT,
+       KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                    KC_H,    KC_N, KC_E,     KC_I,   KC_O,
+       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                    KC_K,    KC_M, KC_COMM,  KC_DOT, KC_EXLM,
+                                        NUM_ACT, SFT_ABC,   KC_SPC, SYM_ENT
   ),
 
   [ACT] = LAYOUT(
-    _RSTMOD,    XMOD,   _BACK,   _FRWD, KC_WH_U,                    KC_PGUP, KC_ESC,  KC_UP,   KC_TAB,  KC_HOME,
+    _RSTMOD, KC_CAPS,   _BACK,   _FRWD, KC_WH_U,                    KC_PGUP, KC_ESC,  KC_UP,   KC_BSPC, KC_HOME,
       _OCTL,   _OALT,   _OGUI,   _OSFT, KC_WH_D,                    KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
-      _UNDO,    _CUT,   _COPY,  _PASTE,   _REDO,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                        _______, _______,  KC_ENT,  KC_BSPC
+      _UNDO,    _CUT,   _COPY,  _PASTE,   _REDO,                    XXXXXXX, _STAB,   KC_ESC,  KC_TAB,  XXXXXXX,
+                                        _______, _______,   KC_SPC, KC_ENT
+  ),
+
+  [SYM] = LAYOUT(
+    KC_GRV,  KC_1,    KC_2,    KC_3, KC_PLUS,                    KC_PLUS, KC_1,    KC_2,    KC_3,    KC_CIRC,
+      _OCTL, KC_4,    KC_5,    KC_6, KC_MINS,                    KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
+    KC_BSLS, KC_7,    KC_8,    KC_9, KC_SLSH,                    KC_ASTR, KC_7,    KC_8,    KC_9,    KC_SLSH,
+                                     KC_LBRC, KC_AMPR,  _______, _______
   ),
 
   [NUM] = LAYOUT(
