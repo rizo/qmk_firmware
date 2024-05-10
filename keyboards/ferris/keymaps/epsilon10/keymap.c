@@ -15,15 +15,15 @@ enum layers {
 enum keycodes {
   SYM_FAKE = SAFE_RANGE,
 
-  FUN_C_FAKE,
-  FUN_A_FAKE,
-  FUN_G_FAKE,
-  FUN_S_FAKE,
+  EP_AC_C_FAKE,
+  EP_AC_A_FAKE,
+  EP_AC_G_FAKE,
+  EP_AC_S_FAKE,
 
-  SYM_C_FAKE,
-  SYM_A_FAKE,
-  SYM_G_FAKE,
-  SYM_S_FAKE,
+  NUM_C_FAKE,
+  NUM_A_FAKE,
+  NUM_G_FAKE,
+  NUM_S_FAKE,
 
   OSLM_C,
   OSLM_A,
@@ -80,6 +80,10 @@ oslm_state_t oslm_s = {
 #define SYM_ENT LT(SYM, KC_ENT)
 #define FUN_BSP LT(FUN, KC_BSPC)
 
+#define EP_OS_C OSM(MOD_LCTL)
+#define EP_OS_A OSM(MOD_LALT)
+#define EP_OS_G OSM(MOD_LGUI)
+#define EP_OS_S OSM(MOD_LSFT)
 
 // ACT keys
 #define UNDO G(KC_Z)
@@ -87,23 +91,22 @@ oslm_state_t oslm_s = {
 #define COPY G(KC_C)
 #define PASTE G(KC_V)
 #define CUT G(KC_X)
-#define BACK G(KC_LBRC)
-#define FRWD G(KC_RBRC)
+#define EP_BACK G(KC_LBRC)
+#define EP_FRWD G(KC_RBRC)
 #define EP_STAB S(KC_TAB)
 
 
-// FUN keys
-#define FUN_C CTL_T(FUN_C_FAKE)
-#define FUN_A ALT_T(FUN_A_FAKE)
-#define FUN_G GUI_T(FUN_G_FAKE)
-#define FUN_S SFT_T(FUN_S_FAKE)
+// Mods with accent keys
+#define EP_AC_C CTL_T(EP_AC_C_FAKE)
+#define EP_AC_A ALT_T(EP_AC_A_FAKE)
+#define EP_AC_G GUI_T(EP_AC_G_FAKE)
+#define EP_AC_S SFT_T(EP_AC_S_FAKE)
 
 
-// SYM keys
-#define SYM_C CTL_T(SYM_C_FAKE)
-#define SYM_A ALT_T(SYM_A_FAKE)
-#define SYM_G GUI_T(SYM_G_FAKE)
-#define SYM_S SFT_T(SYM_S_FAKE)
+// NUM intl keys
+#define EP_CEDL A(KC_C)
+#define EP_GBP A(KC_3)
+#define EP_EUR S(A(KC_2))
 
 
 // Dead accent keys
@@ -129,9 +132,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [ACT] = LAYOUT(
-    EP_MENU,  KC_ESC, EP_STAB,  KC_TAB, XXXXXXX,                      KC_PGUP, EP_WDL,  KC_UP,   EP_WDR,  KC_HOME,
-     OSLM_C,  OSLM_A,  OSLM_G,  OSLM_S,  REPEAT,                      EP_LNL,  KC_LEFT, KC_DOWN, KC_RGHT, EP_LNR,
-       UNDO,     CUT,    COPY,   PASTE,    REDO,                      KC_PGDN, EP_STAB, KC_ESC,  KC_TAB,  KC_END,
+    EP_MENU,  KC_ESC, EP_BACK, EP_FRWD, KC_WH_U,                      KC_PGUP, EP_STAB, KC_UP,   KC_TAB, KC_HOME,
+     OSLM_C,  OSLM_A,  OSLM_G,  OSLM_S, KC_WH_D,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_END,
+       UNDO,     CUT,    COPY,   PASTE,    REDO,                      XXXXXXX, XXXXXXX, REPEAT,  XXXXXXX, XXXXXXX,
                                         _______, XXXXXXX,     KC_ENT, KC_BSPC
   ),
 
@@ -139,28 +142,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-                                        ACT_SPC, NUM_SFT,     KC_ENT, KC_BSPC
+                                        ACT_SPC, NUM_SFT,     KC_ENT, KC_SPC
   ),
 
   [NUM] = LAYOUT(
-    EP_PIPB, EP_PIPF, EP_ARR1, EP_ARR2, XXXXXXX,                      KC_PLUS, KC_1,    KC_2,    KC_3,    KC_CIRC,
-      SYM_C,   SYM_A,   SYM_G,   SYM_S, XXXXXXX,                      KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
-    XXXXXXX, EP_PARD, EP_CURD, EP_HOMD, XXXXXXX,                      KC_ASTR, KC_7,    KC_8,    KC_9,    KC_SLSH,
+    EP_PIPB, EP_PIPF, EP_ARR1, EP_ARR2, EP_HOMD,                      KC_PLUS, KC_1,    KC_2,    KC_3,    KC_CIRC,
+    KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, EP_CURD,                      KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
+    XXXXXXX,  EP_GBP, EP_CEDL,  EP_EUR, EP_PARD,                      KC_ASTR, KC_7,    KC_8,    KC_9,    KC_SLSH,
                                         XXXXXXX, _______,    KC_EQL,  KC_UNDS
   ),
 
   [SYM] = LAYOUT(
      KC_GRV,   KC_AT, KC_LCBR, KC_RCBR, KC_HASH,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                      XXXXXXX, KC_LSFT, KC_LGUI, KC_RALT, KC_LCTL,
+    KC_TILD, KC_PIPE, KC_LPRN, KC_RPRN, KC_PERC,                      XXXXXXX, EP_AC_S, EP_AC_G, EP_AC_A, EP_AC_C,
     KC_BSLS,  KC_DLR, KC_LBRC, KC_RBRC, KC_AMPR,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                         KC_LABK, KC_RABK,    _______, XXXXXXX
   ),
 
   [FUN] = LAYOUT(
-    XXXXXXX,   KC_F1,   KC_F2,   KC_F3,  KC_F10,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,
-     KC_PWR,   KC_F4,   KC_F5,   KC_F6,  KC_F11,                      DM_RSTP, FUN_S,   FUN_G,   FUN_A,   FUN_C,
-    QK_BOOT,   KC_F7,   KC_F8,   KC_F9,  KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX,
-                                         KC_SPC, XXXXXXX,    XXXXXXX, _______
+      KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, QK_RBT,
+      KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,                      DM_RSTP, EP_OS_S, EP_OS_G, EP_OS_A, EP_OS_C,
+     KC_F11,  KC_F12,  KC_F13,  KC_F14,  KC_F15,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, QK_BOOT,
+                                         KC_SPC,  KC_PWR,    XXXXXXX, _______
   )
 };
 
@@ -169,7 +172,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // S(FUN_BSP) -> KC_UNDS
 const key_override_t unds_key_override = ko_make_basic(MOD_BIT(KC_LSFT), FUN_BSP, KC_UNDS);
-const key_override_t unds2_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_BSPC, KC_UNDS);
+const key_override_t unds2_key_override = ko_make_basic(MOD_BIT(KC_LSFT), KC_SPC, KC_UNDS);
 
 // S(SYM_ENT) -> KC_EQL
 const key_override_t eql_key_override = ko_make_basic(MOD_BIT(KC_LSFT), SYM_ENT, KC_EQL);
@@ -190,6 +193,9 @@ const key_override_t sbsp_key_override = _ko_make_strict_negmods(MOD_BIT(KC_RSFT
 // G(S(KC_BSPC)) -> C(KC_K)
 const key_override_t gsbsp_key_override = _ko_make_strict(MOD_BIT(KC_LGUI) | MOD_BIT(KC_RSFT), KC_BSPC, C(KC_K));
 
+// G(KC_DEL) -> C(KC_K)
+const key_override_t gdel_key_override = _ko_make_strict(MOD_BIT(KC_LGUI), KC_DEL, C(KC_K));
+
 const key_override_t **key_overrides = (const key_override_t *[]) {
   &unds_key_override,
   &unds2_key_override,
@@ -200,6 +206,7 @@ const key_override_t **key_overrides = (const key_override_t *[]) {
   &ques_key_override,
   &sbsp_key_override,
   &gsbsp_key_override,
+  &gdel_key_override,
   NULL
 };
 
@@ -345,31 +352,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    case FUN_C:
+    case EP_AC_C:
       if (record->event.pressed && record->tap.count > 0) {
         tap_code16(EP_DGRV);
-        layer_off(FUN);
+        layer_clear();
       }
       break;
 
-    case FUN_A:
+    case EP_AC_A:
       if (record->event.pressed && record->tap.count > 0) {
         tap_code16(EP_DCIR);
-        layer_off(FUN);
+        layer_clear();
       }
       break;
 
-    case FUN_G:
+    case EP_AC_G:
       if (record->event.pressed && record->tap.count > 0) {
         tap_code16(EP_ACUT);
-        layer_off(FUN);
+        layer_clear();
       }
       break;
 
-    case FUN_S:
+    case EP_AC_S:
       if (record->event.pressed && record->tap.count > 0) {
         tap_code16(EP_DTIL);
-        layer_off(FUN);
+        layer_clear();
       }
       break;
 
@@ -412,6 +419,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case EP_HOMD:
       if (record->event.pressed) {
         SEND_STRING("~/");
+      }
+      break;
+
+    case EP_MENU:
+      if (record->event.pressed) {
+        tap_code16(C(KC_F2));
+        tap_code(KC_RIGHT);
+        tap_code(KC_DOWN);
       }
       break;
 

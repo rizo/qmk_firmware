@@ -17,6 +17,10 @@
 // #define ONESHOT_TAP_TOGGLE 2
 #define ONESHOT_TIMEOUT 900
 
+#define MOUSEKEY_WHEEL_DELAY 0
+#define MOUSEKEY_WHEEL_INTERVAL 15
+#define MOUSEKEY_WHEEL_DELTA 2
+
 #define _ko_make_strict(trigger_mods_, trigger_, replacement_) { \
   .trigger           = trigger_, \
   .trigger_mods      = trigger_mods_, \
