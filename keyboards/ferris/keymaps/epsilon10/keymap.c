@@ -99,18 +99,18 @@ oslm_state_t oslm_s = {
 #define EP_SY_S SFT_T(EP_SY_S_FAKE)
 
 // DO: shortcuts
-#define EP_UNDO G(KC_Z)
-#define EP_REDO S(G(KC_Z))
-#define EP_COPY G(KC_C)
-#define EP_PSTE G(KC_V)
-#define EP_CUT G(KC_X)
+#define EP_UNDO C(KC_Z)
+#define EP_REDO S(C(KC_Z))
+#define EP_COPY C(KC_C)
+#define EP_PSTE C(KC_V)
+#define EP_CUT C(KC_X)
 #define EP_BACK KC_WBAK
 #define EP_FRWD KC_WFWD
 #define EP_STAB S(KC_TAB)
 #define EP_WDL C(KC_LEFT)
 #define EP_WDR C(KC_RIGHT)
-#define EP_FLUP KC_HOME
-#define EP_FLDW KC_END
+#define EP_FLUP C(KC_HOME)
+#define EP_FLDW C(KC_END)
 #define EP_LNLF KC_HOME
 #define EP_LNRT KC_END
 
