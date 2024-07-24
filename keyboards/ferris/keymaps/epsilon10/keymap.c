@@ -147,9 +147,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [EP_SY] = LAYOUT(
-    KC_CIRC, KC_LCBR,  KC_DLR, KC_RCBR, KC_HASH,                      KC_EQL,  KC_1,    KC_2,    KC_3,    KC_GRV,
-    EP_SY_G, EP_SY_A, EP_SY_C, EP_SY_S, KC_PERC,                      KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
-    KC_TILD, KC_LABK, KC_PIPE, KC_RABK, KC_AMPR,                      KC_SLSH, KC_7,    KC_8,    KC_9,    KC_BSLS,
+    KC_CIRC, KC_DLR,  KC_LCBR, KC_RCBR, KC_ASTR,                      KC_EQL,  KC_1,    KC_2,    KC_3,    KC_GRV,
+    EP_SY_G, EP_SY_A, EP_SY_C, EP_SY_S, KC_AMPR,                      KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
+    KC_TILD, KC_PERC, KC_LABK, KC_RABK, KC_PIPE,                      KC_SLSH, KC_7,    KC_8,    KC_9,    KC_BSLS,
                                         XXXXXXX, _______,    KC_LBRC, KC_RBRC
   ),
 
@@ -315,16 +315,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // SY A-LPRN
     case EP_SY_A:
       if (record->event.pressed && record->tap.count > 0) {
-        tap_code16(KC_LPRN);
+        tap_code16(KC_HASH);
       } else {
         ret = true;
       }
       break;
 
-    // SY C-ASTR
+    // SY C-LPRN
     case EP_SY_C:
       if (record->event.pressed && record->tap.count > 0) {
-        tap_code16(KC_ASTR);
+        tap_code16(KC_LPRN);
       } else {
         ret = true;
       }
