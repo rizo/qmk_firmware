@@ -14,7 +14,7 @@ enum layers {
 
 // Custom keys.
 enum keycodes {
-  EP_DO_C_FAKE = SAFE_RANGE,
+  EP_DOSP_FAKE = SAFE_RANGE,
   EP_PLUS_FAKE,
 
   EP_SY_C_FAKE,
@@ -72,8 +72,7 @@ oslm_state_t oslm_s = {
 
 
 // TY: thumb keys
-#define EP_DO_C LT(EP_DO, EP_DO_C_FAKE)
-#define EP_SFSP SFT_T(KC_SPC)
+#define EP_DOSP LT(EP_DO, EP_DOSP_FAKE)
 #define EP_SYEN LT(EP_SY, KC_ENT)
 #define EP_FNBS LT(EP_FN, KC_BSPC)
 #define EP_LBRC LT(EP_DO, KC_LBRC)
@@ -133,7 +132,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-                                        EP_DO_C, KC_LSFT,    EP_SYEN, EP_FNBS
+                                        EP_DOSP, KC_LSFT,    EP_SYEN, EP_FNBS
   ),
 
   [EP_DO] = LAYOUT(
@@ -151,17 +150,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [EP_SY] = LAYOUT(
-     KC_GRV,   KC_1,     KC_2,    KC_3,  KC_EQL,                      KC_PLUS, KC_LCBR, KC_DLR,  KC_RCBR, KC_CIRC,
-       KC_0,   KC_4,     KC_5,    KC_6, KC_MINS,                      KC_ASTR, EP_SY_S, EP_SY_C, EP_SY_A, EP_SY_G,
+     KC_GRV,   KC_1,     KC_2,    KC_3,  KC_EQL,                      KC_ASTR, KC_LCBR, KC_DLR,  KC_RCBR, KC_CIRC,
+       KC_0,   KC_4,     KC_5,    KC_6, KC_MINS,                      KC_PLUS, EP_SY_S, EP_SY_C, EP_SY_A, EP_SY_G,
     KC_BSLS,   KC_7,     KC_8,    KC_9, KC_SLSH,                      KC_PERC, KC_LABK, KC_PIPE, KC_RABK, KC_AMPR,
                                         EP_LBRC, EP_RBRC,    _______, XXXXXXX
   ),
 
   [EP_FN] = LAYOUT(
-    KC_CAPS,   KC_F1,   KC_F2,  KC_F3,   KC_F10,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, TO(EP_GM),
+     KC_PWR,   KC_F1,   KC_F2,  KC_F3,   KC_F10,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, TO(EP_GM),
     KC_PSCR,   KC_F4,   KC_F5,  KC_F6,   KC_F11,                      DM_RSTP, EP_FN_S, EP_FN_C, EP_FN_A, EP_FN_G,
      KC_INS,   KC_F7,   KC_F8,  KC_F9,   KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, EP_CEDL,
-                                         KC_SPC,  KC_PWR,    XXXXXXX, _______
+                                         KC_SPC, KC_CAPS,    XXXXXXX, _______
   ),
 
   [EP_GM] = LAYOUT(
@@ -305,7 +304,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   oneshot_mods_state = get_oneshot_mods();
 
   switch (keycode) {
-    case EP_DO_C:
+    case EP_DOSP:
       if (record->event.pressed && record->tap.count > 0) {
         tap_code16(KC_SPC);
       }
@@ -457,7 +456,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // END SYMBOL SHORTCUTS
 
     default:
-      // Clear current OSLM state.
+      // Clear current OSLM layer state.
       if (IS_LAYER_ON(EP_MD) && record->event.pressed) {
         clear_oneshot_layer_state(ONESHOT_PRESSED);
       }
