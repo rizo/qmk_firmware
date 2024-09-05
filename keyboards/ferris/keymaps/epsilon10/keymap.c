@@ -136,9 +136,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [EP_DO] = LAYOUT(
-     REPEAT,  KC_ESC, EP_BACK, EP_FRWD, KC_WH_U,                      KC_PGUP, EP_STAB, KC_UP,   KC_TAB,  EP_FLUP,
-    EP_OS_G, EP_OS_A, EP_OS_C, EP_OS_S, KC_WH_D,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, EP_FLDW,
-    EP_UNDO,  EP_CUT, EP_COPY, EP_PSTE, EP_REDO,                      XXXXXXX, EP_LNLF, KC_ESC,  EP_LNRT, XXXXXXX,
+     REPEAT,  KC_ESC, EP_BACK, EP_FRWD, KC_WH_U,                      KC_PGUP, EP_WDL,  KC_UP,   EP_WDR,  EP_FLUP,
+    EP_OS_G, EP_OS_A, EP_OS_C, EP_OS_S, KC_WH_D,                      EP_LNLF, KC_LEFT, KC_DOWN, KC_RGHT, EP_LNRT,
+    EP_UNDO,  EP_CUT, EP_COPY, EP_PSTE, EP_REDO,                      KC_PGDN, EP_STAB, KC_ESC,  KC_TAB,  EP_FLDW,
                                         _______, XXXXXXX,     KC_ENT, KC_BSPC
   ),
 
@@ -454,6 +454,39 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
     // END SYMBOL SHORTCUTS
+
+    // S(KC_EQL): ../
+    case KC_EQL:
+      if (record->event.pressed && (mods_state == MOD_BIT(KC_LSFT))) {
+        del_mods(MOD_BIT(KC_LSFT));
+        SEND_STRING("../");
+        add_mods(MOD_BIT(KC_LSFT));
+      } else {
+        ret = true;
+      }
+      break;
+
+    // S(KC_MINS): ./
+    case KC_MINS:
+      if (record->event.pressed && (mods_state == MOD_BIT(KC_LSFT))) {
+        del_mods(MOD_BIT(KC_LSFT));
+        SEND_STRING("./");
+        add_mods(MOD_BIT(KC_LSFT));
+      } else {
+        ret = true;
+      }
+      break;
+
+    // S(KC_SLSH): ~/
+    case KC_SLSH:
+      if (record->event.pressed && (mods_state == MOD_BIT(KC_LSFT))) {
+        del_mods(MOD_BIT(KC_LSFT));
+        SEND_STRING("~/");
+        add_mods(MOD_BIT(KC_LSFT));
+      } else {
+        ret = true;
+      }
+      break;
 
     default:
       // Clear current OSLM layer state.
