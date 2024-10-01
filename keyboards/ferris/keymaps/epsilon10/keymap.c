@@ -3,10 +3,9 @@
 
 enum layers {
   EP_TY,
-  EP_SY,
-  EP_NM,
   EP_DO,
   EP_MD,
+  EP_SY,
   EP_FN,
   EP_GM
 };
@@ -72,9 +71,10 @@ oslm_state_t oslm_s = {
 
 
 // TY: thumb keys
-#define EP_DOSP LT(EP_DO, EP_DOSP_FAKE)
-#define EP_SYEN LT(EP_SY, KC_ENT)
-#define EP_FNBS LT(EP_FN, KC_BSPC)
+#define EP_DOSP LT(EP_DO, KC_SPC)
+#define EP_SYMO MO(EP_SY)
+#define EP_FNEN LT(EP_FN, KC_ENT)
+#define EP_SFBS SFT_T(KC_BSPC)
 #define EP_LBRC LT(EP_DO, KC_LBRC)
 #define EP_RBRC SFT_T(KC_RBRC)
 
@@ -132,7 +132,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-                                        EP_DOSP, KC_LSFT,    EP_SYEN, EP_FNBS
+                                        EP_DOSP, EP_SYMO,    EP_FNEN, EP_SFBS
   ),
 
   [EP_DO] = LAYOUT(
@@ -150,35 +150,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [EP_SY] = LAYOUT(
-     KC_GRV,   KC_1,     KC_2,    KC_3,  KC_EQL,                      KC_ASTR, KC_LCBR, KC_DLR,  KC_RCBR, KC_CIRC,
-       KC_0,   KC_4,     KC_5,    KC_6, KC_MINS,                      KC_PLUS, EP_SY_S, EP_SY_C, EP_SY_A, EP_SY_G,
-    KC_BSLS,   KC_7,     KC_8,    KC_9, KC_SLSH,                      KC_PERC, KC_LABK, KC_PIPE, KC_RABK, KC_AMPR,
-                                        EP_LBRC, EP_RBRC,    _______, XXXXXXX
+    KC_CIRC, KC_HASH, KC_LCBR, KC_RCBR, KC_ASTR,                      KC_EQL,  KC_1,    KC_2,    KC_3,    KC_GRV,
+    EP_SY_G, EP_SY_A, EP_SY_C, EP_SY_S, KC_PLUS,                      KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
+    KC_AMPR, KC_PIPE, KC_LABK, KC_RABK, KC_PERC,                      KC_SLSH, KC_7,    KC_8,    KC_9,    KC_BSLS,
+                                        XXXXXXX, _______,    EP_LBRC, EP_RBRC
   ),
 
   [EP_FN] = LAYOUT(
-     KC_PWR,   KC_F1,   KC_F2,  KC_F3,   KC_F10,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, TO(EP_GM),
+     KC_PWR,   KC_F1,   KC_F2,  KC_F3,   KC_F10,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, KC_CAPS,
     KC_PSCR,   KC_F4,   KC_F5,  KC_F6,   KC_F11,                      DM_RSTP, EP_FN_S, EP_FN_C, EP_FN_A, EP_FN_G,
      KC_INS,   KC_F7,   KC_F8,  KC_F9,   KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, EP_CEDL,
-                                         KC_SPC, KC_CAPS,    XXXXXXX, _______
+                                         KC_SPC, XXXXXXX,    _______, XXXXXXX
   ),
 
   [EP_GM] = LAYOUT(
-    KC_ESC,     KC_Q,    KC_W,   KC_E,     KC_R,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(EP_TY),
+    KC_ESC,     KC_Q,    KC_W,   KC_E,     KC_R,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
    KC_LSFT,     KC_A,    KC_S,   KC_D,     KC_F,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
    KC_LCTL,     KC_Z,    KC_X,   KC_C,     KC_V,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                         KC_SPC,  KC_TAB,    XXXXXXX, XXXXXXX
+                                         KC_SPC, KC_TAB,     XXXXXXX, XXXXXXX
   )
 };
 
 
 // KEY OVERRIDES
 
-// S(EP_FNBS) -> KC_UNDS
-const key_override_t unds_ko = ko_make_basic(MOD_BIT(KC_LSFT), EP_FNBS, KC_UNDS);
+// S(EP_DOSP) -> KC_UNDS
+const key_override_t unds_ko = ko_make_basic(MOD_BIT(KC_LSFT), EP_DOSP, KC_UNDS);
 
-// S(EP_SYEN) -> KC_AT
-const key_override_t at_ko = ko_make_basic(MOD_BIT(KC_LSFT), EP_SYEN, KC_AT);
+// S(EP_SYMO) -> KC_AT
+const key_override_t at_ko = ko_make_basic(MOD_BIT(KC_LSFT), EP_SYMO, KC_AT);
 
 // S(KC_COMMA) -> KC_SCLN
 const key_override_t scln_ko = ko_make_basic(MOD_BIT(KC_LSFT), KC_COMMA, KC_SCLN);
@@ -305,18 +305,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   switch (keycode) {
     case EP_DOSP:
-      if (record->event.pressed && record->tap.count > 0) {
-        tap_code16(KC_SPC);
-      }
       // Intercept hold release to clear OSM/OSLM state.
-      else if (!record->event.pressed && record->tap.count == 0) {
+      if (!record->event.pressed && record->tap.count == 0) {
         layer_clear();
         clear_oneshot_mods();
         unregister_mods(mods_state);
-        ret = true;
-      } else {
-        ret = true;
       }
+      ret = true;
       break;
 
     // DO: OS_C
@@ -342,7 +337,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // BEGIN SY MT
     case EP_SY_S:
       if (record->event.pressed && record->tap.count > 0) {
-        tap_code16(KC_LPRN);
+        tap_code16(KC_RPRN);
       } else {
         ret = true;
       }
@@ -350,7 +345,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case EP_SY_C:
       if (record->event.pressed && record->tap.count > 0) {
-        tap_code16(KC_HASH);
+        tap_code16(KC_LPRN);
       } else {
         ret = true;
       }
@@ -358,7 +353,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case EP_SY_A:
       if (record->event.pressed && record->tap.count > 0) {
-        tap_code16(KC_RPRN);
+        tap_code16(KC_DLR);
       } else {
         ret = true;
       }
