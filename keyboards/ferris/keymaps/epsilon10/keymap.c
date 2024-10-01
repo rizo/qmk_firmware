@@ -73,8 +73,8 @@ oslm_state_t oslm_s = {
 // TY: thumb keys
 #define EP_DOSP LT(EP_DO, KC_SPC)
 #define EP_SYMO MO(EP_SY)
-#define EP_FNEN LT(EP_FN, KC_ENT)
-#define EP_SFBS SFT_T(KC_BSPC)
+#define EP_SFEN SFT_T(KC_ENT)
+#define EP_FNBS LT(EP_FN, KC_BSPC)
 #define EP_LBRC LT(EP_DO, KC_LBRC)
 #define EP_RBRC SFT_T(KC_RBRC)
 
@@ -132,7 +132,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-                                        EP_DOSP, EP_SYMO,    EP_FNEN, EP_SFBS
+                                        EP_DOSP, EP_SYMO,    EP_SFEN, EP_FNBS
   ),
 
   [EP_DO] = LAYOUT(
@@ -160,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_PWR,   KC_F1,   KC_F2,  KC_F3,   KC_F10,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, KC_CAPS,
     KC_PSCR,   KC_F4,   KC_F5,  KC_F6,   KC_F11,                      DM_RSTP, EP_FN_S, EP_FN_C, EP_FN_A, EP_FN_G,
      KC_INS,   KC_F7,   KC_F8,  KC_F9,   KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, EP_CEDL,
-                                         KC_SPC, XXXXXXX,    _______, XXXXXXX
+                                         KC_SPC, XXXXXXX,    XXXXXXX, _______
   ),
 
   [EP_GM] = LAYOUT(
