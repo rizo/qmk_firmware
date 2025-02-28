@@ -40,6 +40,29 @@ enum keycodes {
   REPEAT,
 };
 
+// One-Shot Layer-Mod (OLSM)
+// =========================
+//
+// **Faster access to alphas**
+// No need to release the layer key to access alphas. Alphas are immediately
+// available after tapping the OSLM key. Once the one-shot is fired, you're
+// back to the layer. This allows for much faster activation of multiple
+// consecutive mod shortcuts.
+//
+// **Easier activation**
+// To activate multiple OLSM keys, they can be tapped quickly all at once, or
+// they can be sequentially (and as slowly as desired) held and activated by
+// tapping the last OSLM key. As long as the last OSLM key is tapped, all held
+// OLSM keys will be activated as one-shot.
+//
+// **Hold OSLM for regular mods**
+// Holding the OSLM key produces a regular modifier activation. This permits
+// using OSLM keys for shortcuts on the layer they are placed on.
+//
+// **Consistent deactivation**
+// When the layer key is released, all OSLM keys are released. There is no
+// timer, no special cancelation key. Just release the layer key and the
+// state is reset.
 
 typedef struct {
   uint16_t trigger;
@@ -70,7 +93,7 @@ oslm_state_t oslm_s = {
 };
 
 
-// TY: thumb keys
+// DO: thumb keys
 #define EP_DOSP LT(EP_DO, KC_SPC)
 #define EP_SYMO MO(EP_SY)
 #define EP_SFEN SFT_T(KC_ENT)
@@ -78,24 +101,24 @@ oslm_state_t oslm_s = {
 #define EP_LBRC LT(EP_DO, KC_LBRC)
 #define EP_RBRC SFT_T(KC_RBRC)
 
-// FN: one-shot keys
+// FN: one-shot mods
 #define EP_FN_G OSM(MOD_LGUI)
 #define EP_FN_A OSM(MOD_LALT)
 #define EP_FN_C OSM(MOD_LCTL)
 #define EP_FN_S OSM(MOD_LSFT)
 
-// SY: mod tap
+// SY: mod tap placeholders
 #define EP_SY_G GUI_T(EP_SY_G_FAKE)
 #define EP_SY_A ALT_T(EP_SY_A_FAKE)
 #define EP_SY_C CTL_T(EP_SY_C_FAKE)
 #define EP_SY_S SFT_T(EP_SY_S_FAKE)
 
-// DO: shortcuts
+// Shortcuts
 #define EP_UNDO C(KC_Z)
 #define EP_REDO S(C(KC_Z))
-#define EP_COPY C(KC_C)
-#define EP_PSTE C(KC_V)
-#define EP_CUT C(KC_X)
+#define EP_COPY KC_COPY
+#define EP_PSTE KC_PSTE
+#define EP_CUT KC_CUT
 #define EP_BACK KC_WBAK
 #define EP_FRWD KC_WFWD
 #define EP_STAB S(KC_TAB)
@@ -111,20 +134,11 @@ oslm_state_t oslm_s = {
 #define EP_GBP A(KC_3)
 #define EP_EUR S(A(KC_2))
 
-// International keys (macos)
-/* #define EP_CEDL A(KC_C) */
-
 // Dead accent keys (linux)
 #define EP_DTIL RALT(S(KC_GRV))
 #define EP_ACUT RALT(KC_QUOT)
 #define EP_DCIR RALT(KC_6)
 #define EP_DGRV RALT(KC_GRV)
-
-// Dead accent keys (macos)
-// #define EP_DTIL A(KC_N)
-// #define EP_ACUT A(KC_E)
-// #define EP_DCIR A(KC_I)
-// #define EP_DGRV A(KC_GRV)
 
 // KEYMAP
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -259,8 +273,7 @@ void processrepeat_key(uint16_t keycode, const keyrecord_t *record) {
   }
 }
 
-// OSLM
-
+// OSLM: process a OSLM key
 void process_osml(oslm_state_t *oslm_state, uint16_t keycode, keyrecord_t *record) {
   static uint16_t mods = 0;
   if (record->event.pressed) {
@@ -304,6 +317,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   oneshot_mods_state = get_oneshot_mods();
 
   switch (keycode) {
+    // -- BEGIN OSLM KEYS ---
+
     case EP_DOSP:
       // Intercept hold release to clear OSM/OSLM state.
       if (!record->event.pressed && record->tap.count == 0) {
@@ -333,6 +348,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case EP_OS_S:
       process_osml(&oslm_s, keycode, record);
       break;
+
+    // -- END OSLM KEYS ---
 
     // BEGIN SY MT
     case EP_SY_S:
@@ -484,7 +501,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
 
     default:
-      // Clear current OSLM layer state.
+      // OSLM: Clear current OSLM layer state after press.
       if (IS_LAYER_ON(EP_MD) && record->event.pressed) {
         clear_oneshot_layer_state(ONESHOT_PRESSED);
       }
