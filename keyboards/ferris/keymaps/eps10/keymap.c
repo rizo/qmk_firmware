@@ -176,9 +176,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [EP_DO] = LAYOUT(
-     REPEAT,  KC_ESC, EP_BACK, EP_FRWD, KC_WH_U,                      KC_PGUP, EP_STAB, KC_UP,   KC_TAB,  EP_FLUP,
-    EP_OS_G, EP_OS_A, EP_OS_C, EP_OS_S, KC_WH_D,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, EP_FLDW,
-    EP_UNDO,  EP_CUT, EP_COPY, EP_PSTE, EP_REDO,                      XXXXXXX, EP_LNLF, KC_ESC,  EP_LNRT, XXXXXXX,
+     REPEAT,  KC_ESC, EP_BACK, EP_FRWD, KC_WH_U,                      KC_PGUP, EP_WDL,  KC_UP,   EP_WDR,  EP_FLUP,
+    EP_OS_G, EP_OS_A, EP_OS_C, EP_OS_S, KC_WH_D,                      EP_LNLF, KC_LEFT, KC_DOWN, KC_RGHT, EP_LNRT,
+    EP_UNDO,  EP_CUT, EP_COPY, EP_PSTE, EP_REDO,                      KC_PGDN, EP_STAB, KC_ESC,  KC_TAB,  EP_FLDW,
                                         _______, _______,     KC_ENT, KC_BSPC
   ),
 
