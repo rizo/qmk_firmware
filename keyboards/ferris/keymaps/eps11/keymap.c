@@ -1,13 +1,11 @@
 #include QMK_KEYBOARD_H
 
-
 enum layers {
   EP_TY,
   EP_DO,
   EP_MD,
   EP_SY,
-  EP_FN,
-  EP_GM
+  EP_FN
 };
 
 
@@ -30,10 +28,6 @@ enum keycodes {
   EP_OS_S,
 
   // SHORTCUTS
-  EP_PIPB, // <|
-  EP_PIPF, // |>
-  EP_ARR1, // ->
-  EP_ARR2, // =>
   EP_CURD, // ./
   EP_PARD, // ../
   EP_HOMD, // ~/
@@ -101,18 +95,19 @@ oslm_state_t oslm_s = {
 #define EP_SYEN LT(EP_SY, KC_ENT)
 #define EP_SFEN SFT_T(KC_ENT)
 #define EP_FNBS LT(EP_FN, KC_BSPC)
+
 #define EP_LBRC LT(EP_DO, KC_LBRC)
 #define EP_RBRC SFT_T(KC_RBRC)
 
 // FN: one-shot mods
-#define EP_FN_G OSM(MOD_LGUI)
-#define EP_FN_A OSM(MOD_LALT)
-#define EP_FN_C OSM(MOD_LCTL)
-#define EP_FN_S OSM(MOD_LSFT)
+#define EP_FN_G OSM(MOD_RGUI)
+#define EP_FN_A OSM(MOD_RALT)
+#define EP_FN_C OSM(MOD_RCTL)
+#define EP_FN_S OSM(MOD_RSFT)
 
 // SY: mod tap placeholders
 #define EP_SY_G GUI_T(EP_SY_G_FAKE)
-#define EP_SY_A ALT_T(EP_SY_A_FAKE)
+#define EP_SY_A MT(MOD_RALT, EP_SY_A_FAKE)
 #define EP_SY_C CTL_T(EP_SY_C_FAKE)
 #define EP_SY_S SFT_T(EP_SY_S_FAKE)
 
@@ -169,24 +164,24 @@ oslm_state_t oslm_s = {
 // KEYMAP
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [EP_TY] = LAYOUT(
-       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
-       EP_A,    EP_R,    EP_S,    EP_T,    KC_D,                      KC_H,    EP_N,    EP_E,    EP_I,    EP_O,
-       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
-                                        EP_DOSP, EP_SYEN,    EP_SFEN, EP_FNBS
+       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                   KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
+       EP_A,    EP_R,    EP_S,    EP_T,    KC_D,                   KC_H,    EP_N,    EP_E,    EP_I,    EP_O,
+       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                   KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_EXLM,
+                                        EP_DOSP, EP_SYEN, EP_SFEN, EP_FNBS
   ),
 
   [EP_DO] = LAYOUT(
-     REPEAT,  KC_ESC, EP_BACK, EP_FRWD, KC_WH_U,                      KC_PGUP, EP_WDL,  KC_UP,   EP_WDR,  EP_FLUP,
-    EP_OS_G, EP_OS_A, EP_OS_C, EP_OS_S, KC_WH_D,                      EP_LNLF, KC_LEFT, KC_DOWN, KC_RGHT, EP_LNRT,
-    EP_UNDO,  EP_CUT, EP_COPY, EP_PSTE, EP_REDO,                      KC_PGDN, EP_STAB, KC_ESC,  KC_TAB,  EP_FLDW,
-                                        _______, _______,     KC_ENT, KC_BSPC
+     REPEAT,  KC_ESC, EP_BACK, EP_FRWD, KC_WH_U,                   KC_PGUP, EP_WDL,  KC_UP,   EP_WDR,  EP_FLUP,
+    EP_OS_G, EP_OS_A, EP_OS_C, EP_OS_S, KC_WH_D,                   EP_LNLF, KC_LEFT, KC_DOWN, KC_RGHT, EP_LNRT,
+    EP_UNDO,  EP_CUT, EP_COPY, EP_PSTE, EP_REDO,                   KC_PGDN, EP_STAB, KC_ESC,  KC_TAB,  EP_FLDW,
+                                        _______, _______, KC_ENT,  KC_BSPC
   ),
 
   [EP_MD] = LAYOUT(
-       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
-       KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
-       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SCLN,
-                                        _______, XXXXXXX,     KC_ENT, KC_SPC
+       KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                   KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
+       KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                   KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
+       KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                   KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SCLN,
+                                        _______, XXXXXXX, KC_ENT,  KC_BSPC
   ),
 
   [EP_SY] = LAYOUT(
@@ -197,10 +192,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [EP_FN] = LAYOUT(
-     KC_PWR,   KC_F1,   KC_F2,  KC_F3,   KC_F10,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, KC_CAPS,
-     KC_INS,   KC_F4,   KC_F5,  KC_F6,   KC_F11,                      DM_RSTP, EP_FN_S, EP_FN_C, EP_FN_A, EP_FN_G,
-    QK_BOOT,   KC_F7,   KC_F8,  KC_F9,   KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, EP_CEDL,
-                                         KC_SPC, KC_PSCR,    XXXXXXX, _______
+     KC_PWR,   KC_F1,   KC_F2,   KC_F3,  KC_F10,                   DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, KC_CAPS,
+     KC_INS,   KC_F4,   KC_F5,   KC_F6,  KC_F11,                   DM_RSTP, EP_FN_S, EP_FN_C, EP_FN_A, EP_FN_G,
+    QK_BOOT,   KC_F7,   KC_F8,   KC_F9,  KC_F12,                   DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, EP_CEDL,
+                                         KC_SPC, KC_PSCR, XXXXXXX, _______
   )
 };
 
@@ -303,14 +298,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case EP_DOSP:
       // Intercept hold press to reset OSM/OSLM state.
-      if (record->event.pressed && record->tap.count == 0) {
+      if (!record->event.pressed && record->tap.count == 0) {
         layer_clear();
         clear_oneshot_mods();
         unregister_mods(mods_state);
         advance = true;
-      }
-      // S(EP_DOSP) => KC_UNDS
-      else if (record->event.pressed && mods_state == MOD_BIT(KC_LSFT)) {
+      } else if (record->event.pressed && record->tap.count == 1 && mods_state == MOD_BIT(KC_LSFT)) {
         tap_code16(KC_UNDS);
         advance = false;
       } else {
@@ -320,7 +313,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     // S(EP_SYEN) => KC_AT
     case EP_SYEN:
-      if (record->event.pressed && mods_state == MOD_BIT(KC_LSFT)) {
+      if (record->event.pressed && record->tap.count == 1 && mods_state == MOD_BIT(KC_LSFT)) {
         tap_code16(KC_AT);
         advance = false;
       } else {
@@ -390,7 +383,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // BEGIN SY MT
     case EP_SY_S:
       if (record->event.pressed && record->tap.count > 0) {
-        tap_code16(KC_RPRN);
+        tap_code16(KC_LPRN);
         advance = false;
       } else {
         advance = true;
@@ -468,33 +461,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // END FN MT
 
     // BEGIN SYMBOL SHORTCUTS
-    case EP_PIPB:
-      if (record->event.pressed) {
-        SEND_STRING("<|");
-        advance = false;
-      }
-      break;
-
-    case EP_PIPF:
-      if (record->event.pressed) {
-        SEND_STRING("|>");
-        advance = false;
-      }
-      break;
-
-    case EP_ARR1:
-      if (record->event.pressed) {
-        SEND_STRING("->");
-        advance = false;
-      }
-      break;
-
-    case EP_ARR2:
-      if (record->event.pressed) {
-        SEND_STRING("=>");
-        advance = false;
-      }
-      break;
 
     case EP_CURD:
       if (record->event.pressed) {
