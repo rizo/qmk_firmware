@@ -34,7 +34,7 @@ enum keycodes {
   EP_CURD, // ./
   EP_PARD, // ../
   EP_HOMD, // ~/
-  
+
   EP_MENU,
 
   REPEAT,
@@ -109,7 +109,7 @@ oslm_state_t oslm_s = {
 
 // SY: mod tap placeholders
 #define EP_SY_G GUI_T(EP_SY_G_FAKE)
-#define EP_SY_A ALT_T(EP_SY_A_FAKE)
+#define EP_SY_A MT(MOD_LALT, EP_SY_A_FAKE)
 #define EP_SY_C CTL_T(EP_SY_C_FAKE)
 #define EP_SY_S SFT_T(EP_SY_S_FAKE)
 
@@ -153,28 +153,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      REPEAT,  KC_ESC, EP_BACK, EP_FRWD, KC_WH_U,                      KC_PGUP, EP_WDL,  KC_UP,   EP_WDR,  EP_FLUP,
     EP_OS_G, EP_OS_A, EP_OS_C, EP_OS_S, KC_WH_D,                      EP_LNLF, KC_LEFT, KC_DOWN, KC_RGHT, EP_LNRT,
     EP_UNDO,  EP_CUT, EP_COPY, EP_PSTE, EP_REDO,                      KC_PGDN, EP_STAB, KC_ESC,  KC_TAB,  EP_FLDW,
-                                        _______, XXXXXXX,     KC_ENT, KC_BSPC
+                                        _______, _______,     KC_ENT, KC_BSPC
   ),
 
   [EP_MD] = LAYOUT(
        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y,    KC_QUOT,
        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SCLN,
-                                        _______, XXXXXXX,     KC_ENT, KC_SPC
+                                        _______, _______,     KC_ENT, KC_SPC
   ),
 
   [EP_SY] = LAYOUT(
     KC_CIRC, KC_HASH, KC_LCBR, KC_RCBR, KC_ASTR,                      KC_EQL,  KC_1,    KC_2,    KC_3,    KC_GRV,
     EP_SY_G, EP_SY_A, EP_SY_C, EP_SY_S, KC_PLUS,                      KC_MINS, KC_4,    KC_5,    KC_6,    KC_0,
     KC_AMPR, KC_PIPE, KC_LABK, KC_RABK, KC_PERC,                      KC_SLSH, KC_7,    KC_8,    KC_9,    KC_BSLS,
-                                        XXXXXXX, _______,    EP_LBRC, EP_RBRC
+                                        _______, _______,    EP_LBRC, EP_RBRC
   ),
 
   [EP_FN] = LAYOUT(
      KC_PWR,   KC_F1,   KC_F2,  KC_F3,   KC_F10,                      DM_REC1, KC_MUTE, KC_VOLD, KC_VOLU, KC_CAPS,
-    KC_PSCR,   KC_F4,   KC_F5,  KC_F6,   KC_F11,                      DM_RSTP, EP_FN_S, EP_FN_C, EP_FN_A, EP_FN_G,
-     KC_INS,   KC_F7,   KC_F8,  KC_F9,   KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, EP_CEDL,
-                                         KC_SPC, XXXXXXX,    XXXXXXX, _______
+     KC_INS,   KC_F4,   KC_F5,  KC_F6,   KC_F11,                      DM_RSTP, EP_FN_S, EP_FN_C, EP_FN_A, EP_FN_G,
+    QK_BOOT,   KC_F7,   KC_F8,  KC_F9,   KC_F12,                      DM_PLY1, KC_MPRV, KC_MPLY, KC_MNXT, EP_CEDL,
+                                         KC_SPC, KC_PSCR,    XXXXXXX, _______
   ),
 
   [EP_GM] = LAYOUT(
