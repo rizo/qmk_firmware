@@ -262,14 +262,14 @@ void process_osml(oslm_state_t *oslm_state, uint16_t keycode, keyrecord_t *recor
     // get mods at the time of pressed event.
     mods = get_mods();
   } else {
-    // clear held mod
-    unregister_mods(oslm_state->mod);
-
     // released: check if it's a tap
     if (timer_elapsed(oslm_state->timer) < TAPPING_TERM) {
       // tap: keep all current mods and set oneshot layer
       set_oneshot_mods(mods);
       set_oneshot_layer(EP_MD, ONESHOT_START);
+    } else {
+      // hold/release: clear held mod
+      unregister_mods(oslm_state->mod);
     }
   }
 }
@@ -297,8 +297,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   switch (keycode) {
     case EP_DOSP:
-      // Intercept hold press to reset OSM/OSLM state.
-      if (!record->event.pressed && record->tap.count == 0) {
+      // Reset OSM/OSLM state.
+      if (record->tap.count == 0) {
+        // Clear all layers and mods on hold (press and release)
         layer_clear();
         clear_oneshot_mods();
         unregister_mods(mods_state);
@@ -524,6 +525,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       // OSLM: Clear current OSLM layer state after press.
       if (IS_LAYER_ON(EP_MD) && record->event.pressed) {
         clear_oneshot_layer_state(ONESHOT_PRESSED);
+        unregister_mods(mods_state);
       }
       advance = true;
   }
