@@ -27,13 +27,6 @@ enum keycodes {
   EP_OS_G,
   EP_OS_S,
 
-  // SHORTCUTS
-  EP_CURD, // ./
-  EP_PARD, // ../
-  EP_HOMD, // ~/
-
-  EP_MENU,
-
   REPEAT,
 };
 
@@ -107,7 +100,7 @@ oslm_state_t oslm_s = {
 
 // SY: mod tap placeholders
 #define EP_SY_G GUI_T(EP_SY_G_FAKE)
-#define EP_SY_A MT(MOD_RALT, EP_SY_A_FAKE)
+#define EP_SY_A MT(MOD_LALT, EP_SY_A_FAKE)
 #define EP_SY_C CTL_T(EP_SY_C_FAKE)
 #define EP_SY_S SFT_T(EP_SY_S_FAKE)
 
@@ -322,6 +315,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
+    // S(KC_BSPC) => KC_DEL
+    case KC_BSPC:
+      if (record->event.pressed && mods_state == MOD_BIT(KC_RSFT)) {
+        del_mods(MOD_BIT(KC_RSFT));
+        tap_code16(KC_DEL);
+        add_mods(MOD_BIT(KC_RSFT));
+        advance = false;
+      } else {
+        advance = true;
+      }
+      break;
+
     // S(KC_DOT) => KC_SEMI
     case KC_DOT:
       if (record->event.pressed && mods_state == MOD_BIT(KC_LSFT)) {
@@ -461,35 +466,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     // END FN MT
 
-    // BEGIN SYMBOL SHORTCUTS
-
-    case EP_CURD:
-      if (record->event.pressed) {
-        SEND_STRING("./");
-        advance = false;
-      }
-      break;
-
-    case EP_PARD:
-      if (record->event.pressed) {
-        SEND_STRING("../");
-        advance = false;
-      }
-      break;
-
-    case EP_HOMD:
-      if (record->event.pressed) {
-        SEND_STRING("~/");
-        advance = false;
-      }
-      break;
-    // END SYMBOL SHORTCUTS
-
-    // S(KC_EQL): ../
+    // S(KC_EQL): endash
     case KC_EQL:
       if (record->event.pressed && (mods_state == MOD_BIT(KC_LSFT))) {
         del_mods(MOD_BIT(KC_LSFT));
-        SEND_STRING("../");
+        tap_code16((KC_X));
         add_mods(MOD_BIT(KC_LSFT));
         advance = false;
       } else {
@@ -497,11 +478,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    // S(KC_MINS): ./
+    // S(KC_MINS): emdash
     case KC_MINS:
       if (record->event.pressed && (mods_state == MOD_BIT(KC_LSFT))) {
         del_mods(MOD_BIT(KC_LSFT));
-        SEND_STRING("./");
+        tap_code16((KC_X));
         add_mods(MOD_BIT(KC_LSFT));
         advance = false;
       } else {
@@ -509,11 +490,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 
-    // S(KC_SLSH): ~/
+    // S(KC_SLSH): bullet
     case KC_SLSH:
       if (record->event.pressed && (mods_state == MOD_BIT(KC_LSFT))) {
         del_mods(MOD_BIT(KC_LSFT));
-        SEND_STRING("~/");
+        tap_code16((KC_X));
         add_mods(MOD_BIT(KC_LSFT));
         advance = false;
       } else {
