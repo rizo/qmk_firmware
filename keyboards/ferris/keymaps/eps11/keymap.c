@@ -389,7 +389,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // BEGIN SY MT
     case EP_SY_S:
       if (record->event.pressed && record->tap.count > 0) {
-        tap_code16(KC_LPRN);
+        tap_code16(KC_RPRN);
         advance = false;
       } else {
         advance = true;
